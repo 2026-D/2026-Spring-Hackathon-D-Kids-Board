@@ -1,0 +1,19 @@
+services:
+
+  web:
+    build: .
+    # 今のディレクトリのDockerfileを使う
+    container_name: kids_board_web
+    # コンテナの名前
+    ports:
+      - "8000:8000"
+      # 左：ローカルPC/右：コンテナ
+      # localhost:8000でアクセルできる
+    volumes:
+      - .:/app
+      # ローカルPCとコンテナのファイルを共有し、コードの変更が即反映される（開発用）
+    command: poetry run python manage.py runserver 0.0.0.0:8000
+    # Django起動コマンド
+    # 0.0.0.0にすることでコンテナ外(ローカルPC)からアクセスできるようになる
+
+
