@@ -1,19 +1,54 @@
-services:
+services: #コンテナに関する定義をする宣言
 
-  web:
-    build: .
-    # 今のディレクトリのDockerfileを使う
-    container_name: kids_board_web
-    # コンテナの名前
-    ports:
+  web: #サービス名
+    build: . # 今のディレクトリのDockerfileを使う
+    
+    container_name: kids_board_web # コンテナの名前
+  
+    ports: #ポートのマッピングを設定する
       - "8000:8000"
       # 左：ローカルPC/右：コンテナ
       # localhost:8000でアクセルできる
-    volumes:
-      - .:/app
-      # ローカルPCとコンテナのファイルを共有し、コードの変更が即反映される（開発用）
+    volumes: #ボリュームに関する定義をする
+      - .:/app # Dockerfileの WORKDIR /app を指定している
+      # Docker Enginの管理外(ローカルPC)のボリュームをマウントしている(バインドマウント)
+    
+    # ここから Djangoがdbにアクセスするための設定
+    environment:
+      - DATABASE_NAME=${MYSQL_DATABASE}  # MySQLのデータベース領域名
+      - DATABASE_USER=${MYSQL_USER} # MySQLのユーザー名
+      - DATABASE_PASSWORD=${MYSQL_PASSWORD} # MySQLのパスワード名
+      - DATABASE_HOST=db #dbサービスのサービス名
+      # DATABASE_⚪︎⚪︎⚪︎: DjangoがOSに聞きに行く時の名前(自身で任意の名前を決める)
+      # ${MYSQL_⚪︎⚪︎⚪︎}: .envファイルに書いた値をここに持って来るという指定
+
+    depends_on: #依存関係
+      - db #DBが立ち上がってからDjangoを動かす命令
     command: poetry run python manage.py runserver 0.0.0.0:8000
     # Django起動コマンド
     # 0.0.0.0にすることでコンテナ外(ローカルPC)からアクセスできるようになる
+
+
+  db: #サービス名
+    image: mysql:8.0
+    # MySQL8.0の公式Dockerイメージを指定
+    container_name: mysql_db
+    volumes:
+    - mysql_data:/var/lib/mysql
+    # マウント先
+    # mysql_data→ データのラベルのようなもの(自身で決める)
+    # /var/lib/mysql→ MySQLが決めた保存先
+    restart: always #必ず再起動する
+
+    # ここからMySQLの設定
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} # MySQLのrootパスワード
+      MYSQL_DATABASE: ${MYSQL_DATABASE} # MySQLのデータベース領域名 
+      MYSQL_USER: ${MYSQL_USER} #　MySQLのユーザー名
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD} # MySQLのパスワード
+
+volumes:
+  mysql_data:
+# Docker Engin内のDBのボリュームの保存先のラベルを明示的に指定している
 
 
