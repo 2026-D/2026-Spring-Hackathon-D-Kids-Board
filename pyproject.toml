@@ -16,3 +16,47 @@ dependencies = [
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[dependency-groups]
+dev = [
+    "ruff (>=0.15.11,<0.16.0)"
+]
+
+[tool.ruff]
+
+# 行長は100まで
+line-length = 100
+
+#インデントの幅を４スペースに設定
+indent-width = 4 
+
+# python 3.8をターゲットバージョンに設定
+target-version = "py38"
+
+# 対象外
+exclude = [
+    ".git", # gitの内部データ
+    ".venv", # Poetryが作った仮想環境
+    "build", #ビルドディレクトリ
+    "dist", # 配布物ディレクトリ
+    "node_modules", # JSの依存パッケージ
+    ".ruff_cache", # Ruffのキャッシュ
+    "__pycache__" # pythonの実行用キャッシュ
+]
+
+[tool.ruff.lint]
+
+# pythonの構文エラー検出ルール
+select = [ "E4", "E7","E9","F"]
+# 上記のルールで引っ掛かると全てエラー報告
+ignore = []
+# 見つけたエラーを自動修正
+fixable = ["ALL"]
+# 自動修正させたくないルールを記載する(現在はなし)
+unfixable = []
+
+
+[tool.ruff.format]
+quote-style = "double" # ダブルクォーテーションで揃える
+indent-style = "space" #インデントはスペースで設定
+
