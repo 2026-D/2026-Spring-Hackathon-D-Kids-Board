@@ -1,0 +1,9 @@
+# コミットした瞬間に裏側で自動的にruffが走る設定
+# ruffの公式ドキュメント
+repos:
+- repo: https://github.com/astral-sh/ruff-pre-commit
+  rev: v0.15.11
+  hooks:
+    - id: ruff
+      args: [--fix]
+    - id: ruff-format
