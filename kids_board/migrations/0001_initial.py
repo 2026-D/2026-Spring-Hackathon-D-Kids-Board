@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -15,55 +14,95 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='PrepCategory',
+            name="PrepCategory",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('category_type', models.CharField(max_length=50, unique=True)),
-                ('display_order', models.PositiveBigIntegerField(default=0)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("category_type", models.CharField(max_length=50, unique=True)),
+                ("display_order", models.PositiveBigIntegerField(default=0)),
             ],
             options={
-                'db_table': 'prep_categories',
-                'ordering': ['display_order'],
+                "db_table": "prep_categories",
+                "ordering": ["display_order"],
             },
         ),
         migrations.CreateModel(
-            name='Child',
+            name="Child",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('child_name', models.CharField(max_length=50)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('deleted_at', models.DateTimeField(blank=True, null=True)),
-                ('family', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='children', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("child_name", models.CharField(max_length=50)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("deleted_at", models.DateTimeField(blank=True, null=True)),
+                (
+                    "family",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="children",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
             options={
-                'db_table': 'children',
+                "db_table": "children",
             },
         ),
         migrations.CreateModel(
-            name='PrepItem',
+            name="PrepItem",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('item_name', models.CharField(max_length=255)),
-                ('is_custom', models.BooleanField(default=False)),
-                ('is_active', models.BooleanField(default=True)),
-                ('display_order', models.PositiveIntegerField(default=0)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
-                ('deleted_at', models.DateTimeField(blank=True, null=True)),
-                ('category', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='prep_items', to='kids_board.prepcategory')),
-                ('child', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='prep_items', to='kids_board.child')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+                    ),
+                ),
+                ("item_name", models.CharField(max_length=255)),
+                ("is_custom", models.BooleanField(default=False)),
+                ("is_active", models.BooleanField(default=True)),
+                ("display_order", models.PositiveIntegerField(default=0)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
+                ("deleted_at", models.DateTimeField(blank=True, null=True)),
+                (
+                    "category",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.PROTECT,
+                        related_name="prep_items",
+                        to="kids_board.prepcategory",
+                    ),
+                ),
+                (
+                    "child",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="prep_items",
+                        to="kids_board.child",
+                    ),
+                ),
             ],
             options={
-                'db_table': 'prep_items',
+                "db_table": "prep_items",
             },
         ),
         migrations.AddConstraint(
-            model_name='child',
-            constraint=models.UniqueConstraint(fields=('family', 'child_name'), name='unique_family_child_name'),
+            model_name="child",
+            constraint=models.UniqueConstraint(
+                fields=("family", "child_name"), name="unique_family_child_name"
+            ),
         ),
         migrations.AddConstraint(
-            model_name='prepitem',
-            constraint=models.UniqueConstraint(fields=('child', 'category', 'item_name'), name='unique_child_category_item_name'),
+            model_name="prepitem",
+            constraint=models.UniqueConstraint(
+                fields=("child", "category", "item_name"), name="unique_child_category_item_name"
+            ),
         ),
     ]
