@@ -1,0 +1,40 @@
+{% extends 'kids_board/base.html' %}
+
+{% load django_bootstrap5 %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block extra_css %}
+<style>
+    @media (min-width: 992px) {
+    .pc-only-padding {
+        padding: 0 0 0 60rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="#">
+    <!--やることリスト作成欄-->
+    <div class="m-3 rounded shadow" style= "background-color: var(--pink-100)">
+        <p class="m-3 p-2 fs-2">あたらしく つくる</p>
+        <div class="d-flex flex-wrap justify-content-center align-items-center gap-4 pc-only-padding">
+            <a class="rounded-circle p-0 m-0" href="#">
+                <img src="{% static 'images/btn_pen.png' %}" alt="やることリスト作成" class="mx-3 mb-4" style="width: 135px; height: auto;">
+            </a>
+            <a class="rounded-circle p-0 m-0" href="#">
+                <img src="{% static 'images/btn_custom.png' %}" alt="カスタム作成" class="mx-3 mb-4" style="width: 135px; height: auto; ">
+            </a>
+        </div>
+    </div>
+    <!--やることリスト表示欄-->
+    <div class="m-3 rounded shadow d-flex flex-row align-items-center" style= "background-color: var(--yellow-200)">
+        <p class="m-3 p-2 fs-2">やることリスト いちらん</p>
+        <img src="{% static 'images/check-circle-cyan.png' %}" alt="チェックマークシアン" class="" style="width: 45px; height: auto;">
+    </div>
+</div>
+
+
+{% endblock %}
