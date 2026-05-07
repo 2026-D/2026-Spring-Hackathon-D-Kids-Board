@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "kids_board.apps.KidsBoardConfig",
+    "django_bootstrap5",
 ]
 
 MIDDLEWARE = [
