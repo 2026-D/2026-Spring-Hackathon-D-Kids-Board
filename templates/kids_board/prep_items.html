@@ -7,10 +7,22 @@
 
 {% block extra_css %}
 <style>
+    /*やることリスト作成欄のボタン表示（PC)の位置を調整*/
     @media (min-width: 992px) {
     .pc-only-padding {
         padding: 0 0 0 60rem;
         }
+    }
+    /*やることカードのスタイル*/
+    .prep-card {
+        width: clamp(100px, 14vw, 180px);
+        height: clamp(100px, 14vw, 180px);
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
     }
 </style>
 {% endblock %}
@@ -18,23 +30,167 @@
 {% block content %}
 <div class="#">
     <!--やることリスト作成欄-->
-    <div class="m-3 rounded shadow" style= "background-color: var(--pink-100)">
+    <div class="m-3 p=2 rounded shadow" style= "background-color: var(--pink-100)">
         <p class="m-3 p-2 fs-2">あたらしく つくる</p>
         <div class="d-flex flex-wrap justify-content-center align-items-center gap-4 pc-only-padding">
-            <a class="rounded-circle p-0 m-0" href="#">
-                <img src="{% static 'images/btn_pen.png' %}" alt="やることリスト作成" class="mx-3 mb-4" style="width: 135px; height: auto;">
+            <a class="p-0 m-0" href="#">
+                <img src="{% static 'images/button_icon/btn_pen.png' %}" alt="やることリスト作成" class="mx-3 mb-4" style="width: 135px; height: auto;">
             </a>
-            <a class="rounded-circle p-0 m-0" href="#">
-                <img src="{% static 'images/btn_custom.png' %}" alt="カスタム作成" class="mx-3 mb-4" style="width: 135px; height: auto; ">
+            <a class="p-0 m-0" href="#">
+                <img src="{% static 'images/button_icon/btn_custom.png' %}" alt="カスタム作成" class="mx-3 mb-4" style="width: 135px; height: auto; ">
             </a>
         </div>
     </div>
     <!--やることリスト表示欄-->
-    <div class="m-3 rounded shadow d-flex flex-row align-items-center" style= "background-color: var(--yellow-200)">
-        <p class="m-3 p-2 fs-2">やることリスト いちらん</p>
-        <img src="{% static 'images/check-circle-cyan.png' %}" alt="チェックマークシアン" class="" style="width: 45px; height: auto;">
+    <div class="m-3 p-2 p-md-5 rounded shadow" style= "background-color: var(--yellow-200)">
+        <div class="d-flex flex-row align-items-center">
+            <p class="m-3 p-2 fs-2">やることリスト いちらん</p>
+            <img src="{% static 'images/button_icon/check-circle2.png' %}" alt="チェックマークシアン" class="" style="width: 45px; height: auto;">
+        </div>
+        <!-- prep_items -->
+        <div class="rounded shadow m-2 p-4 pe-lg-5 d-flex flex-column flex-lg-row align-items-start justify-content-between" style="background-color: #fff;">
+            <!--カード-->
+            <div class="prep-card rounded shadow border-0 m-2 p-2" style="background-color: #fff;" type="button">
+                <p class="m-0">ごはん</p>
+                <img src="{% static 'images/prep_item/12_cutlery.png' %}" alt="カトラリー" class="mx-auto w-35 h-auto">
+            </div>
+            <!--入力欄（閲覧専用）-->
+            <div class="d-flex flex-column justify-content-center align-items-start gap-2">
+                <p class="m-0">ようびを していする</p>
+                <div class="d-flex flex-wrap flex-row gap-2 align-items-start">
+                    <div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="">
+                            <label class="form-check-label" for="checkDefault">
+                                げつようび
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="">
+                            <label class="form-check-label" for="checkChecked">
+                                かようび
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="">
+                            <label class="form-check-label" for="checkChecked">
+                                すいようび
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="">
+                            <label class="form-check-label" for="checkChecked">
+                                もくようび
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="">
+                            <label class="form-check-label" for="checkChecked">
+                                きんようび
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="">
+                            <label class="form-check-label" for="checkChecked">
+                                どようび
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="">
+                            <label class="form-check-label" for="checkChecked">
+                                にちようび
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input" type="checkbox" role="switch" >
+                    <label class="form-check-label" for="switchCheckDefault">へいじつだけに する（しゅくじつは ふくまない）</label>
+                </div>
+                <div class="d-flex flex-row flex-wrap flex-md-nowrap gap-4 align-items-center justify-content-start form-check">
+                    <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDate">
+                    <label class="form-check-label text-nowrap" for="switchCheckDate">ひづけを していする</label>
+                    <input type="text" class="form-control js-datepicker p-0 text-center" id="datePickerInput" placeholder="クリックで せんたく">
+                </div>
+                <p class="m-0">やるタイミング</p>
+                <div class="d-flex flex-wrap flex-row gap-4 align-items-start">
+                    <div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="">
+                            <label class="form-check-label" for="checkDefault">
+                                あさ
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="">
+                            <label class="form-check-label" for="checkChecked">
+                                かえってきてから
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="">
+                            <label class="form-check-label" for="checkChecked">
+                                よる
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <p class="m-0">こどもせんたく</p>
+                <div class="d-flex flex-wrap flex-row gap-4 align-items-start">
+                    <div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="">
+                            <label class="form-check-label" for="checkDefault">
+                                こども１
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="">
+                            <label class="form-check-label" for="checkChecked">
+                                こども２
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="">
+                            <label class="form-check-label" for="checkChecked">
+                                こども３
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--ボタン-->
+            <div class="d-flex flex-row justify-content-center align-items-end gap-2 align-self-end">
+                <a class="p-0 m-0" href="#">
+                    <img src="{% static 'images/button_icon/btn_pen_edit.png' %}" alt="やることリスト作成" class="mx-3 my-4" style="width: 100px; height: auto;">
+                </a>
+                <a class="p-0 m-0" href="#">
+                    <img src="{% static 'images/button_icon/btn_trash.png' %}" alt="やることリスト削除" class="mx-3 my-4" style="width: 100px; height: auto;">
+                </a>
+            </div>
+        </div>
     </div>
 </div>
-
-
+{% endblock %}
+{% block extra_js %}
 {% endblock %}
