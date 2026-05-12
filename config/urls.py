@@ -16,8 +16,9 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("", include("kids_board.urls")),  # ""はhttp://localhost:8000/　#kids_board/urls.pyを使う
 ]
