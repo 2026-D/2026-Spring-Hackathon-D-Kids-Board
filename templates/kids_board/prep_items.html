@@ -106,8 +106,8 @@
             </div>
             <!--ボタン-->
             <div class="d-flex flex-row justify-content-center align-items-end gap-4 align-self-end">
-                <a class="p-0 m-0" href="#">
-                    <img src="{% static 'images/button_icon/btn_pen_edit.png' %}" alt="やることリスト作成" class="mx-1 my-4" style="width: 100px; height: auto;">
+                <a class="p-0 m-0" href="{% url 'prep_items_edit' prep_item.id %}">
+                    <img src="{% static 'images/button_icon/btn_pen_edit.png' %}" alt="やることリスト編集" class="mx-1 my-4" style="width: 100px; height: auto;">
                 </a>
                 <a class="p-0 m-0" href="#">
                     <img src="{% static 'images/button_icon/btn_trash.png' %}" alt="やることリスト削除" class="mx-1 my-4" style="width: 100px; height: auto;">

@@ -18,7 +18,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth.views import LogoutView
-from kids_board.views import HomeView, KidsBoardView, PrepItemsMornView, PrepItemsView, ScheduleView
+from kids_board.views import (
+    HomeView,
+    KidsBoardView,
+    PrepItemsMornView,
+    PrepItemsView,
+    PrepItemEditView,
+    ScheduleView,
+)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -41,6 +48,11 @@ urlpatterns = [
         "prep_items/",
         PrepItemsView.as_view(template_name="kids_board/prep_items.html"),
         name="prep_items",
+    ),
+    path(
+        "prep_items/<int:prep_item_id>/edit/",
+        PrepItemEditView.as_view(template_name="kids_board/prep_items.html"),
+        name="prep_items_edit",
     ),
     path(
         "schedule/", ScheduleView.as_view(template_name="kids_board/schedule.html"), name="schedule"
