@@ -16,12 +16,13 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.contrib.auth.views import LogoutView
 from kids_board.views import HomeView, KidsBoardView, PrepItemsMornView, PrepItemsView, ScheduleView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("", include("kids_board.urls")),  # ""はhttp://localhost:8000/　#kids_board/urls.pyを使う
     path(
         "logout/", LogoutView.as_view(next_page="/home/"), name="logout"
     ),  # todo:ログアウト後のリダイレクト先をtopに変更
@@ -43,5 +44,5 @@ urlpatterns = [
     ),
     path(
         "schedule/", ScheduleView.as_view(template_name="kids_board/schedule.html"), name="schedule"
-    ),
+    )
 ]
