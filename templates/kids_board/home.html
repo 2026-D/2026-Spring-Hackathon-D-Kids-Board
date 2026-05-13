@@ -1,0 +1,180 @@
+{% extends 'kids_board/base.html' %}
+
+{% load django_bootstrap5 %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block extra_css %}
+<style>
+    /*ログアウトボタンの配置*/
+    form {
+        display: flex;
+        justify-content: flex-end;
+    }
+    /*ログアウトボタンのスタイル*/
+    .btn{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 20px;
+    }
+    h2 {
+        text-align: center;
+        padding: 20px;
+    }
+    p{
+        text-align: center;
+        margin: 0;
+    }
+    /*こども追加前の要素の配置*/
+    .home-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-top: 50px;
+    }
+    /*こども追加後の要素のスタイル*/
+    .px-custom {
+        padding-left: 15%;
+        padding-right: 15%;
+    }
+    /*こども追加前*/
+    .circle-home {
+        width: 60%;
+        height: 150px;
+        background-color: #fff;
+        border-radius: 20px;
+        padding: 20px;
+    }
+    /*こども追加後*/
+    .circle-home-child {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        border-radius: 50%;
+        max-width: 200px;
+    }
+    /*ボタンの外側の円*/
+    .circle-outline {
+        width: 10%%;
+        height: 10%%;
+        border-radius: 50%;
+        border: 2px solid #000;
+    }
+    /*ボタンの内側の円*/
+    .circle-inline {
+        width: 90%;
+        height: 90%;
+        border: 2px solid #000;
+        border-radius: 50%;
+        padding: 20px;
+    }
+    /*ボタンの中の子供の名前*/
+    .circle-text {
+        width: 80%;   /* 円に収まる幅 */
+        text-align: center;
+        overflow: hidden;
+        word-break: break-word;  /* 長い名前を折り返す */
+    }
+    /*アイコン*/
+    .button-image {
+        width: 70%;
+        height: auto;
+    }
+
+    .circle-text p {
+        font-size: 0.9rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<form action="{% url 'logout' %}" method="post">
+    {% csrf_token %}
+    <button class="btn btn-outline-dark" type="submit">
+        <img src="{% static 'images/button_icon/box-arrow-right.png' %}" alt="ログアウト">
+        <p>ログアウト</p>
+    </button>
+</form>
+{% comment "こども追加前" %}
+<div class="home-container">
+    <h2>{{ user.username }}さん、ようこそ！</h2>
+    <div class="circle-home shadow d-flex justify-content-center align-items-center">
+        <p>右上の設定ボタンから、<br>こどもを追加してください。</p>
+    </div>
+</div>
+{% endcomment %}
+
+{% comment "こども追加後" %}{% endcomment %}
+<!--こども4人以上は折り返して表示-->
+
+<h2>{{ user.username }}</h2>
+<div class="row g-2 justify-content-start px-custom">
+    {% comment "こども変数受け取り" %}
+    {% for child in children %}
+    <a class="col-12 col-md-3 d-flex justify-content-center link-underline link-underline-opacity-0 link-dark" href="{% url 'kids_board' %}">  <!-- スマホ:1列、PC:4列 -->
+        <div class="circle-home-child circle-outline d-flex justify-content-center align-items-center">
+            <div class="circle-inline d-flex flex-column justify-content-center align-items-center">
+                <div class="circle-text d-flex flex-column justify-content-start align-items-center">
+                    <img class="button-image" src="{% static 'images/avatar_icon/12_lion.png' %}" alt="こどもアイコン">
+                    <p>{{ child.name }}</p>
+                </div>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+    {% endcomment %}
+    <a class="col-12 col-md-3 d-flex justify-content-center link-underline link-underline-opacity-0 link-dark" href="{% url 'kids_board' %}">  <!-- スマホ:1列、PC:4列 -->
+        <div class="circle-home-child circle-outline d-flex justify-content-center align-items-center">
+            <div class="circle-inline d-flex flex-column justify-content-center align-items-center">
+                <div class="circle-text d-flex flex-column justify-content-start align-items-center">
+                    <img class="button-image" src="{% static 'images/avatar_icon/12_lion.png' %}" alt="こどもアイコン">
+                    <p>こども１</p>
+                </div>
+            </div>
+        </div>  
+    </a>
+    <a class="col-12 col-md-3 d-flex justify-content-center link-underline link-underline-opacity-0 link-dark" href="{% url 'kids_board' %}">  <!-- スマホ:1列、PC:4列 -->
+        <div class="circle-home-child circle-outline d-flex justify-content-center align-items-center">
+            <div class="circle-inline d-flex flex-column justify-content-center align-items-center">
+                <div class="circle-text d-flex flex-column justify-content-start align-items-center">
+                    <img class="button-image" src="{% static 'images/avatar_icon/12_lion.png' %}" alt="こどもアイコン">
+                    <p>こども２</p>
+                </div>
+            </div>
+        </div>
+    </a>
+    <a class="col-12 col-md-3 d-flex justify-content-center link-underline link-underline-opacity-0 link-dark" href="{% url 'kids_board' %}">  <!-- スマホ:1列、PC:4列 -->
+        <div class="circle-home-child circle-outline d-flex justify-content-center align-items-center">
+            <div class="circle-inline d-flex flex-column justify-content-center align-items-center">
+                <div class="circle-text d-flex flex-column justify-content-start align-items-center">
+                    <img class="button-image" src="{% static 'images/avatar_icon/12_lion.png' %}" alt="こどもアイコン">
+                    <p>こども３</p>
+                </div>
+            </div>
+        </div>
+    </a>
+    <a class="col-12 col-md-3 d-flex justify-content-center link-underline link-underline-opacity-0 link-dark" href="{% url 'kids_board' %}">  <!-- スマホ:1列、PC:4列 -->
+        <div class="circle-home-child circle-outline d-flex justify-content-center align-items-center">
+            <div class="circle-inline d-flex flex-column justify-content-center align-items-center">
+                <div class="circle-text d-flex flex-column justify-content-start align-items-center">
+                    <img class="button-image" src="{% static 'images/avatar_icon/12_lion.png' %}" alt="こどもアイコン">
+                    <p>こども4</p>
+                </div>
+            </div>
+        </div>
+    </a>
+    <a class="col-12 col-md-3 d-flex justify-content-center link-underline link-underline-opacity-0 link-dark" href="{% url 'kids_board' %}">  <!-- スマホ:1列、PC:4列 -->
+        <div class="circle-home-child circle-outline d-flex justify-content-center align-items-center">
+            <div class="circle-inline d-flex flex-column justify-content-center align-items-center">
+                <div class="circle-text d-flex flex-column justify-content-start align-items-center">
+                    <img class="button-image" src="{% static 'images/avatar_icon/12_lion.png' %}" alt="こどもアイコン">
+                    <p>こども５</p>
+                </div>
+            </div>
+        </div>
+    </a>
+</div>
+{% endblock %}

@@ -1,0 +1,150 @@
+{% extends 'kids_board/base.html' %}
+
+{% load django_bootstrap5 %}
+{% load static %}
+
+{% block title %}Kids Board{% endblock %}
+
+{% block extra_css %}
+<style>
+/*図形*/
+.circle{
+    aspect-ratio: 1 / 1; /* 幅に連動して高さを揃える */
+    border-radius: 50%;
+}
+/*花丸表示用*/
+.circle-num-wrap{
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+.circle-num-badge{
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    width:  300%;
+    height: auto;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+/* レスポンシブサイズ */
+.circle-task{
+    width: clamp(220px, 26vw, 380px);
+}
+.circle-num{
+    width: clamp(24px, 6vw, 34px);
+    height: clamp(24px, 6vw, 34px);
+    /*position: relative;
+    z-index: 2;*/
+    flex: 0 0 auto;
+}
+.circle-check{
+    width: clamp(84px, 11vw, 140px);
+}
+/*幅に連動して高さを揃える*/
+.w-15{
+    width: 15%;
+}
+.w-35{
+    width: 35%;
+}
+.w-80{
+    width: 80%;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="text-center py-5">
+    <div class="d-flex flex-wrap justify-content-center align-items-baseline gap-1">
+        <p class="fs-4">きょうは </p>
+        {% comment "日付表示" %}
+        <p class="fs-1 fw-bold ">{% now "month" %}</p>
+        <p class="fs-4">がつ</p>
+        <p class="fs-1 fw-bold ">{% now "day" %}</p>
+        <p class="fs-4">にち</p>
+        <p class="fs-1 fw-bold ">{% now "weekday" %}</p>
+        <p class="fs-4">ようび</p>
+        {% endcomment %}
+        <p class="fs-1 fw-bold ">4</p>
+        <p class="fs-4">がつ</p>
+        <p class="fs-1 fw-bold ">12</p>
+        <p class="fs-4">にち</p>
+        <p class="fs-1 fw-bold ">ど</p>
+        <p class="fs-4">ようび</p>
+    </div>
+</div>
+<div class="container">
+    <div class="row gy-4">
+        <div class="col-12 col-md d-flex justify-content-center align-items-center">
+            <div class="circle circle-task w-80 h-auto d-flex flex-column justify-content-center align-items-center" style="background-color: var(--yellow-300);">
+                <div class="circle-num-wrap">
+                    <div class="m-3 circle circle-num d-flex justify-content-center align-items-center" style="background-color: var(--yellow-100);">
+                        <p class="m-0">1</p>
+                    </div>
+                    {% if show_badge %}
+                    <img src="{% static 'images/good.png' %}" alt="" class="circle-num-badge">
+                    {% endif %}
+                </div>
+                <p class="fs-4">あさ やること</p>
+                <a class="d-flex justify-content-center align-items-center"  href="{% url 'prep_items_morn' %}">
+                    <img src="{% static 'images/button_icon/btn_start.png' %}" alt="はじめる" class="mx-auto w-35 h-auto">
+                </a>
+            </div>
+        </div>
+        <div class="col-12 col-md d-flex justify-content-center align-items-center">
+            <div class="circle circle-task w-80 h-auto d-flex flex-column justify-content-center align-items-center" style="background-color: var(--teal-300);">
+                <div class="circle-num-wrap">
+                    <div class="m-3 circle circle-num d-flex justify-content-center align-items-center" style="background-color: var(--yellow-100);">
+                        <p class="m-0">2</p>
+                    </div>
+                    {% if show_badge %}
+                    <img src="{% static 'images/good.png' %}" alt="" class="circle-num-badge">
+                    {% endif %}
+                </div>
+                <p class="fs-4">かえって やること</p>
+                <a class="d-flex justify-content-center align-items-center"  href="#">
+                    <img src="{% static 'images/button_icon/btn_start.png' %}" alt="はじめる" class="mx-auto w-35 h-auto">
+                </a>
+            </div>
+        </div>
+        <div class="col-12 col-md d-flex justify-content-center align-items-center">
+            <div class="circle circle-task w-80 h-auto d-flex flex-column justify-content-center align-items-center" style="background-color: var(--cyan-300);">
+                <div class="circle-num-wrap">
+                    <div class="m-3 circle circle-num d-flex justify-content-center align-items-center" style="background-color: var(--yellow-100);">
+                        <p class="m-0">3</p>
+                    </div>
+                    {% if show_badge %}
+                    <img src="{% static 'images/good.png' %}" alt="" class="circle-num-badge">
+                    {% endif %}
+                </div>
+                <p class="fs-4">よる やること</p>
+                <a class="d-flex justify-content-center align-items-center"  href="#">
+                    <img src="{% static 'images/button_icon/btn_start.png' %}" alt="はじめる" class="mx-auto w-35 h-auto">
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="py-5 g-4 d-flex flex-row justify-content-center align-items-center">
+        <img class="w-15" src="{% static 'images/avatar_icon/12_lion.png' %}" alt="こどもアイコン">
+        <div class="d-flex flex-column justify-content-center align-items-center">
+            {% comment "こども変数受け取り" %}
+            <p class="fs-3 m-3">{% child.name %} さん の きょうの よてい</p>
+            {% endcomment %}
+            <p class="fs-3 m-3">こども さん の きょうの よてい</p>
+            <div class="d-flex flex-row justify-content-center align-items-center gap-4">
+                {% comment "こどもの予定表示" %}
+                {% for schedule in schedules %}
+                <p class="fs-2 fw-bold m-0 px-3 rounded" style="background-color: {{ schedule.bg_color }};">
+                {{ schedule.label }}
+                </p>
+                {% endfor %}
+                {% endcomment %}
+                <p class="fs-2 fw-bold m-0 px-3 rounded" style="background-color: var(--cyan-400);"> がっこう </p>
+                <p class="fs-2 fw-bold m-0 px-3 rounded" style="background-color: var(--pink-200);"> ルーム </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
