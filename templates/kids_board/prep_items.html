@@ -85,8 +85,7 @@
                            {% if date.checked %}checked{% endif %}>
                     <label class="form-check-label text-nowrap" 
                            for="switchCheckDate{{ prep_item.id }}_{{ forloop.counter }}">ひづけを していする</label>
-                    <input type="text" readonly tabindex="-1" class="form-control js-datepicker p-0 text-center"
-                           id="datePickerInput{{ prep_item.id }}_{{ forloop.counter }}"
+                    <input type="text" readonly tabindex="-1" class="form-control p-0 text-center"
                            value="{{ date.value|default:'' }}">
                 </div>
                 {% endfor %}
@@ -134,7 +133,6 @@
                     <label class="form-check-label text-nowrap" 
                            for="switchCheckDate{{ prep_item.id }}_{{ forloop.counter }}">ひづけを していする</label>
                     <input type="text" class="form-control js-datepicker p-0 text-center"
-                           id="datePickerInput{{ prep_item.id }}_{{ forloop.counter }}"
                            value="{{ date.value|default:'' }}"
                            placeholder="クリックで せんたく">
                 </div>
