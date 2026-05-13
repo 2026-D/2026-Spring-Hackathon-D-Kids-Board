@@ -49,7 +49,9 @@
         </div>
         <!-- prep_items -->
         {% for prep_item in prep_items %}
-        <div class="rounded shadow m-2 m-lg-4 p-4 pe-lg-5 d-flex flex-column flex-lg-row align-items-center justify-content-between" style="background-color: #fff;">
+        <div class="rounded shadow m-2 m-lg-4 p-4 pe-lg-5 d-flex flex-column flex-lg-row align-items-center justify-content-between"
+            style="background-color: #fff;"
+            data-prep-item-card="{{ prep_item.id }}">
             <!--カード-->
             <div class="prep-card rounded shadow border-0 m-4 p-2" style="background-color: #fff;" type="button">
                 <p class="m-0">{{ prep_item.name}}</p>
@@ -106,8 +108,12 @@
             </div>
             <!--ボタン-->
             <div class="d-flex flex-row justify-content-center align-items-end gap-4 align-self-end">
-                <a class="p-0 m-0" href="{% url 'prep_items_edit' prep_item.id %}">
-                    <img src="{% static 'images/button_icon/btn_pen_edit.png' %}" alt="やることリスト編集" class="mx-1 my-4" style="width: 100px; height: auto;">
+                <a
+                    href="#"
+                    class="p-0 m-0 js-edit-prep" 
+                    data-prep-id="{{ prep_item.id }}" 
+                    data-api-url="{% url 'prep_items_edit_api' prep_item.id %}">
+                    <img src="{% static 'images/button_icon/btn_pen_edit.png' %}" alt="やることリスト編集" class="mx-1 my-4 js-edit-prep" style="width: 100px; height: auto;">
                 </a>
                 <a class="p-0 m-0" href="#">
                     <img src="{% static 'images/button_icon/btn_trash.png' %}" alt="やることリスト削除" class="mx-1 my-4" style="width: 100px; height: auto;">
@@ -123,4 +129,5 @@
 </div>
 {% endblock %}
 {% block extra_js %}
+<script src="{% static 'js/prep_items.js' %}"></script>
 {% endblock %}
