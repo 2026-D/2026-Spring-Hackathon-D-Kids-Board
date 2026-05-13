@@ -6,7 +6,9 @@ function getCookie(name) {
     return cookieValue ? decodeURIComponent(cookieValue) : null;
 }
 
-// 編集ボタン押下を監視
+// Alpine.js で表示/編集切り替えが完全に管理されているため、ここはコメントアウト
+// 将来、保存ボタンなどを実装する時に復活させる
+/*
 document.addEventListener("click", async (event) => {
     const editButton = event.target.closest(".js-edit-prep");
     if (!editButton) return;
@@ -43,3 +45,4 @@ document.addEventListener("click", async (event) => {
         console.error(e);
     }
 });
+*/
