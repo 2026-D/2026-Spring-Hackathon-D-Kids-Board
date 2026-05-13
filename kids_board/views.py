@@ -1,8 +1,7 @@
 from django.contrib.auth import login  # 登録ユーザーをログイン状態にする
 from django.shortcuts import render, redirect  # renderはHTML表示 #redirectは別ページ移動
 
-from .forms import SignUpForm  # forms.pyからSignUpFormを読み込む
-from .forms import LoginForm  # forms.pyからLoginFormを読み込む
+from .forms import SignUpForm, LoginForm  # forms.pyからSignUpForm, LoginFormを読み込む
 
 
 def signup_view(request):  # signup/へのアクセス時に動く処理
