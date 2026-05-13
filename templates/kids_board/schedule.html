@@ -1,0 +1,317 @@
+{% extends 'kids_board/base.html' %}
+
+{% load django_bootstrap5 %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* テーブル全体に fixed を指定 */
+    .weekly-schedule-table {
+        table-layout: fixed;
+        min-width: 340px;
+        width: 800px;
+
+    }
+    /*左右のカレンダーの幅調整用*/
+    .weekly-pane,
+    .month-pane {
+        width: 95%;
+    }
+    /*週・月カレンダーを画面ごとに表示する大きさを固定*/
+    @media (min-width: 768px) {
+        .weekly-pane {
+            max-width: 820px;
+        }
+
+        .month-pane {
+            max-width: 420px;
+        }
+    }
+    @media (min-width: 1200px) {
+        .weekly-pane {
+            width: 820px;
+        }
+        .month-pane {
+            width: 420px;
+        }
+    }
+    /*週カレンダーの横線だけ表示、tdとthの幅と高さを固定*/
+    .weekly-schedule-table td,
+    .weekly-schedule-table th {
+        border-right: 2px solid var(--purple-100);
+        border-top: none;
+        border-bottom: none;
+        height: 40px;
+        padding: .25rem;
+    }
+    /* スマホ表示の際のスクロール中も一番左の列を固定表示 */
+    .weekly-schedule-table td:first-child,
+    .weekly-schedule-table th:first-child {
+        position: sticky;
+        left: 0;
+        z-index: 2;
+    }
+    /*月カレンダーを７列で折り返し表示*/
+    .calendar-row-7 > * {
+    flex: 0 0 auto;
+    width: calc(100% / 7);
+    }
+    /* 日付セルのサイズを固定 */
+    .calendar-row-7 > * {
+        flex: 0 0 auto;
+        width: calc(100% / 7);
+        min-height: 40px;
+    }
+    /*月カレンダーのボーダーの色指定*/
+    .calendar-row-7 > * {
+        border: 2px solid var(--purple-100);
+        border-radius: 4px;
+    }
+    /*月カレンダーの要素の中を中央に揃える*/
+    .calendar-row-7 > .col{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div>
+    <p class="m-4 fs-2 text-center">よていひょう</p>
+    <!--日付表示-->
+    <div class="d-flex flex-row flex-wrap justify-content-center align-items-center">
+        <p class="fs-1 fw-bold mx-2 my-0">4</p>
+        <p class="fs-4 mx-2 my-0">がつ</p>
+        <p class="fs-1 fw-bold mx-2 my-0">12</p>
+        <p class="fs-4 mx-2 my-0">にち から</p>
+
+        <span class="w-100 d-md-none"></span> <!-- スマホのみここで改行 -->
+
+        <p class="fs-1 fw-bold mx-2 my-0">4</p>
+        <p class="fs-4 mx-2 my-0">がつ</p>
+        <p class="fs-1 fw-bold mx-2 my-0">18</p>
+        <p class="fs-4 mx-2 my-0">にち</p>
+    </div>
+    <!--予定表示-->
+    <div class="row g-3 justify-content-center align-items-start">
+        <!--週ごと(左)-->
+        <div class="col-12 col-xl-auto d-flex justify-content-center">
+            <div class="rounded shadow pb-3 pe-3 weekly-pane" style="background-color: var(--purple-100);">
+                <div class="table-responsive">
+                    <table class="table table-sm text-center align-middle mb-0 weekly-schedule-table">
+                    <thead>
+                        <tr class="text-center">
+                            <th style="background-color: var(--purple-100);"><!--記載なしでOK--></th>
+                            <th style="background-color: var(--purple-100);">12</th>
+                            <th style="background-color: var(--purple-100);">13</th>
+                            <th style="background-color: var(--purple-100);">14</th>
+                            <th style="background-color: var(--purple-100);">15</th>
+                            <th style="background-color: var(--purple-100);">16</th>
+                            <th style="background-color: var(--purple-100);">17</th>
+                            <th style="background-color: var(--purple-100);">18</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="text-center">
+                            <td style="background-color: var(--purple-100);"><!--記載なしでOK--></td>
+                            <td style="background-color: var(--purple-100);">にち</td>
+                            <td style="background-color: var(--purple-100);">げつ</td>
+                            <td style="background-color: var(--purple-100);">か</td>
+                            <td style="background-color: var(--purple-100);">すい</td>
+                            <td style="background-color: var(--purple-100);">もく</td>
+                            <td style="background-color: var(--purple-100);">きん</td>
+                            <td style="background-color: var(--purple-100);">ど</td>
+                        </tr>
+                        <tr class="text-center">
+                            <td style="background-color: var(--purple-100);">7じ</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="text-center">
+                            <td style="background-color: var(--purple-100);">8じ</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="text-center">
+                            <td style="background-color: var(--purple-100);">9じ</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="text-center">
+                            <td style="background-color: var(--purple-100);">10じ</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="text-center">
+                            <td style="background-color: var(--purple-100);">11じ</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="text-center">
+                            <td style="background-color: var(--purple-100);">12じ</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="text-center">
+                            <td style="background-color: var(--purple-100);">13じ</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="text-center">
+                            <td style="background-color: var(--purple-100);">14じ</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="text-center">
+                            <td style="background-color: var(--purple-100);">15じ</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="text-center">
+                            <td style="background-color: var(--purple-100);">16じ</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="text-center">
+                            <td style="background-color: var(--purple-100);">17じ</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="text-center">
+                            <td style="background-color: var(--purple-100);">18じ</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!--カレンダー(右)-->
+        <div class="col-12 col-xl-auto d-flex justify-content-center">
+            <div class="d-flex flex-column justify-content-center align-items-start month-pane">
+                <!--月ごと-->
+                <div class="rounded shadow" style="background-color: var(--purple-100);">
+                    <div class="m-2 p-3">
+                        <!-- ヘッダー：月切り替え部分 -->
+                        <div class="d-flex justify-content-between align-items-center rounded mb-3 " style="background-color: #fff">
+                            <button class="border-0 fw-bold" style="color: var(--secondary); background-color: #fff;">〈</button>
+                            <p class="current-month fs-5 m-2">4がつ</p>
+                            <button class="border-0 fw-bold" style="color: var(--secondary); background-color: #fff;">〉</button>
+                        </div>
+                        <!--曜日-->
+                        <div class="row calendar-row-7 justify-content-center align-items-center text-center">
+                            <div class="col text-nowrap" style="background-color: #fff;">にち</div>
+                            <div class="col text-nowrap" style="background-color: #fff;">げつ</div>
+                            <div class="col text-nowrap" style="background-color: #fff;">か</div>
+                            <div class="col text-nowrap" style="background-color: #fff;">すい</div>
+                            <div class="col text-nowrap" style="background-color: #fff;">もく</div>
+                            <div class="col text-nowrap" style="background-color: #fff;">きん</div>
+                            <div class="col text-nowrap" style="background-color: #fff;">ど</div>
+                        </div>
+
+                        <!--日付-->
+                        <div class="row calendar-row-7 justify-content-start align-items-center text-center">
+                            <div class="col" style="background-color: #fff;">1</div>
+                            <div class="col" style="background-color: #fff;">2</div>
+                            <div class="col" style="background-color: #fff;">3</div>
+                            <div class="col" style="background-color: #fff;">4</div>
+                            <div class="col" style="background-color: #fff;">5</div>
+                            <div class="col" style="background-color: #fff;">6</div>
+                            <div class="col" style="background-color: #fff;">7</div>
+                            <div class="col" style="background-color: #fff;">8</div>
+                            <div class="col" style="background-color: #fff;">9</div>
+                            <div class="col" style="background-color: #fff;">10</div>
+                            <div class="col" style="background-color: #fff;">11</div>
+                            <div class="col" style="background-color: #fff;">12</div>
+                            <div class="col" style="background-color: #fff;">13</div>
+                            <div class="col" style="background-color: #fff;">14</div>
+                            <div class="col" style="background-color: #fff;">15</div>
+                            <div class="col" style="background-color: #fff;">16</div>
+                            <div class="col" style="background-color: #fff;">17</div>
+                            <div class="col" style="background-color: #fff;">18</div>
+                            <div class="col" style="background-color: #fff;">19</div>
+                            <div class="col" style="background-color: #fff;">20</div>
+                            <div class="col" style="background-color: #fff;">21</div>
+                            <div class="col" style="background-color: #fff;">22</div>
+                            <div class="col" style="background-color: #fff;">23</div>
+                            <div class="col" style="background-color: #fff;">24</div>
+                            <div class="col" style="background-color: #fff;">25</div>
+                            <div class="col" style="background-color: #fff;">26</div>
+                            <div class="col" style="background-color: #fff;">27</div>
+                            <div class="col" style="background-color: #fff;">28</div>
+                            <div class="col" style="background-color: #fff;">29</div>
+                            <div class="col" style="background-color: #fff;">30</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,153 @@
+{% extends 'kids_board/base.html' %}
+
+{% load django_bootstrap5 %}
+{% load static %}
+
+{% block title %}あさ やること{% endblock %}
+
+{% block extra_css %}
+<style>
+.prep-card {
+    width: clamp(100px, 14vw, 180px);
+    height: clamp(100px, 14vw, 180px);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="text-center py-3 mx-5 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+    <div class="d-flex flex-wrap justify-content-center align-items-baseline gap-1">
+        <p class="fs-4">きょうは</p>
+        {% comment "日付表示" %}
+        <p class="fs-1 fw-bold ">{% now "month" %}</p>
+        <p class="fs-4">がつ</p>
+        <p class="fs-1 fw-bold ">{% now "day" %}</p>
+        <p class="fs-4">にち</p>
+        <p class="fs-1 fw-bold ">{% now "weekday" %}</p>
+        <p class="fs-4">ようび</p>
+        {% endcomment %}
+        <p class="fs-1 fw-bold ">4</p>
+        <p class="fs-4">がつ</p>
+        <p class="fs-1 fw-bold ">12</p>
+        <p class="fs-4">にち</p>
+        <p class="fs-1 fw-bold ">ど</p>
+        <p class="fs-4">ようび</p>
+    </div>
+    <div class="d-flex flex-column justify-content-center align-items-center">
+        <p class="fs-3 m-3">きょうの よてい</p>
+        <div class="d-flex flex-row justify-content-center align-items-center gap-4">
+            {% comment "予定変数受け取り" %}
+            {% if schedules %}
+                {% for schedule in schedules %}
+                <p class="fs-2 fw-bold m-0 px-3 rounded" style="background-color: {{ schedule.bg_color }};">
+                {{ schedule.label }}
+                </p>
+                {% endfor %}
+            {% else %}
+                <p class="fs-5">なし</p>
+            {% endif %}{% endcomment %}
+            <p class="fs-2 fw-bold m-0 px-3 rounded" style="background-color: var(--cyan-400);"> がっこう </p>
+            <p class="fs-2 fw-bold m-0 px-3 rounded" style="background-color: var(--pink-200);"> ルーム </p>
+        </div>
+    </div>
+</div>
+<h2 class="mx-5 my-2">あさ やること</h2>
+<div class="d-flex justify-content-center align-items-center">
+    <div class="mx-3 p-4 shadow rounded container text-center" style="background-color: var(--yellow-300);">
+        <div class="row row-cols-3 row-cols-sm-5">
+            {% comment "prep_item変数受け取り" %}
+            {% comment "todo:できたマークの表示の実装" %}
+            {% comment "お支度名とアイコン画像がなかったら、やることリストを登録するように誘導" %}
+            {% if prep_items %}
+                {% for prep_item in prep_items %}
+                <div class="col d-flex justify-content-center align-items-center">
+                    <button class="prep-card rounded shadow border-0 m-2 p-2" style="background-color: #fff;" type="button">
+                        {% comment "お支度名とアイコン画像がなかったら、何も表示しない" %}
+                        <p class="m-0">
+                            {% if prep_item.name %}
+                            {{ prep_item.name }}
+                            {% endif %}
+                            {% if prep_item.icon_name %}
+                            {{ prep_item.icon_name }}
+                            {% endif %}
+                        </p>
+                        {% if prep_item.icon_image %}
+                        <img src="{% static prep_item.icon_image %}" alt="{{ prep_item.icon_name }}" class="mx-auto w-35 h-auto">
+                        {% endif %}
+                    </button>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="w-100">
+                    <div class="p-4 rounded shadow border-0 m-2 p-2 text-center" style="background-color: #fff;" type="button">
+                        <p class="m-0">やることリストを とうろくしましょう！</p>
+                        <div class="btn btn-primary mt-2" onclick="location.href='{% url 'prep_items' %}' ">とうろく</div>
+                    </div>
+                </div>
+            {% endif %}
+            {% endcomment %}
+            <div class="col d-flex justify-content-center align-items-center">
+                <button class="prep-card rounded shadow border-0 m-2 p-2" style="background-color: #fff;" type="button">
+                    <p class="m-0">かみをとく</p>
+                    <img src="{% static 'images/prep_item/9_hair.png' %}" alt="かみをとく" class="mx-auto w-35 h-auto">
+                </button>
+            </div>
+            <div class="col d-flex justify-content-center align-items-center">
+                <button class="prep-card rounded shadow border-0 m-2 p-2" style="background-color: #fff;" type="button">
+                    <p class="m-0">ごはん</p>
+                    <img src="{% static 'images/prep_item/12_cutlery.png' %}" alt="カトラリー" class="mx-auto w-35 h-auto">
+                </button>
+            </div>
+            <div class="col d-flex justify-content-center align-items-center">
+                <button class="prep-card rounded shadow border-0 m-2 p-2" style="background-color: #fff;" type="button">
+                    <p class="m-0">ごはん</p>
+                    <img src="{% static 'images/prep_item/12_cutlery.png' %}" alt="カトラリー" class="mx-auto w-35 h-auto">
+                </button>
+            </div>
+            <div class="col d-flex justify-content-center align-items-center">
+                <button class="prep-card rounded shadow border-0 m-2 p-2" style="background-color: #fff;" type="button">
+                    <p class="m-0">ごはん</p>
+                    <img src="{% static 'images/prep_item/12_cutlery.png' %}" alt="カトラリー" class="mx-auto w-35 h-auto">
+                </button>
+            </div>
+            <div class="col d-flex justify-content-center align-items-center">
+                <button class="prep-card rounded shadow border-0 m-2 p-2" style="background-color: #fff;" type="button">
+                    <p class="m-0">ごはん</p>
+                    <img src="{% static 'images/prep_item/12_cutlery.png' %}" alt="カトラリー" class="mx-auto w-35 h-auto">
+                </button>
+            </div>
+            <div class="col d-flex justify-content-center align-items-center">
+                <button class="prep-card rounded shadow border-0 m-2 p-2" style="background-color: #fff;" type="button">
+                    <p class="m-0">ごはん</p>
+                    <img src="{% static 'images/prep_item/12_cutlery.png' %}" alt="カトラリー" class="mx-auto w-35 h-auto">
+                </button>
+            </div>
+            <div class="col d-flex justify-content-center align-items-center">
+                <button class="prep-card rounded shadow border-0 m-2 p-2" style="background-color: #fff;" type="button">
+                    <p class="m-0">ごはん</p>
+                    <img src="{% static 'images/prep_item/12_cutlery.png' %}" alt="カトラリー" class="mx-auto w-35 h-auto">
+                </button>
+            </div>
+            <div class="col d-flex justify-content-center align-items-center">
+                <button class="prep-card rounded shadow border-0 m-2 p-2" style="background-color: #fff;" type="button">
+                    <p class="m-0">ごはん</p>
+                    <img src="{% static 'images/prep_item/12_cutlery.png' %}" alt="カトラリー" class="mx-auto w-35 h-auto">
+                </button>
+            </div>
+            <div class="col d-flex justify-content-center align-items-center">
+                <button class="prep-card rounded shadow border-0 m-2 p-2" style="background-color: #fff;" type="button">
+                    <p class="m-0">ごはん</p>
+                    <img src="{% static 'images/prep_item/12_cutlery.png' %}" alt="カトラリー" class="mx-auto w-35 h-auto">
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
