@@ -81,6 +81,14 @@ class PrepItem(models.Model):
         choices=CategoryType.choices,
     )
 
+    # お支度項目アイコンの画像パスを保存するカラム
+    prep_icon = models.CharField(
+        max_length=255,
+        # アイコン未設定を許可
+        null=True,
+        blank=True,
+    )
+
     # お支度項目の名前を持っているデータのカラム
     item_name = models.CharField(max_length=255)
 
