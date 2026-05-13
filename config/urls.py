@@ -52,7 +52,7 @@ urlpatterns = [
     path(
         "prep_items/<int:prep_item_id>/edit/",
         PrepItemEditView.as_view(template_name="kids_board/prep_items.html"),
-        name="prep_items_edit",
+        name="prep_items_edit_api",
     ),
     path(
         "schedule/", ScheduleView.as_view(template_name="kids_board/schedule.html"), name="schedule"
