@@ -10,7 +10,7 @@ from django.conf import settings
 
 
 # 🔽こどもテーブル
-class Children(models.Model):
+class Child(models.Model):
     # 親id FK
     parent = models.ForeignKey(
         # childが削除されたら、このモデルのデータも消える(CASCADE)
@@ -21,17 +21,21 @@ class Children(models.Model):
     )
     # 画像のパスのデータを持っているカラム
     child_icon = models.CharField(max_length=255, blank=True, null=True)
+
     # 子どもの名前のデータを持っているカラム
     child_name = models.CharField(max_length=50)
+
     # 作成日時のデータを持っているカラム
     created_at = models.DateTimeField(auto_now_add=True)
+
     # 更新日時のデータを持っているカラム
     updated_at = models.DateTimeField(auto_now=True)
-    # 削除日時のデータを持っているカラム
+
+    # 子どもを論理削除するためのカラム
     deleted_at = models.DateTimeField(null=True, blank=True)
 
     # 子どもに紐づくお支度項目を管理する中間テーブル
-    prep_item = models.ManyToManyField(
+    prep_items = models.ManyToManyField(
         "PrepItem",
         related_name="children",
         verbose_name="お支度項目",
@@ -56,7 +60,13 @@ class Children(models.Model):
 
 
 # 🔽お支度項目テーブル
-class PrepItems(models.Model):
+class PrepItem(models.Model):
+    # 朝・帰宅後・夜のお支度カテゴリを管理する選択肢
+    class CategoryType(models.TextChoices):
+        MORNING = "morning", "朝"
+        AFTERNOON = "afternoon", "帰宅後"
+        NIGHT = "night", "夜"
+
     # 親id FK
     parent = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -64,29 +74,37 @@ class PrepItems(models.Model):
         # 逆参照
         related_name="prep_items",
     )
-    # 朝/帰宅後/夜のカテゴリデータを持っているカラム
-    category_type = models.CharField(max_length=20)
+    # 朝/帰宅後/夜のカテゴリを管理するカラム
+    category_type = models.CharField(
+        max_length=20,
+        # CategoryTypeで定義したカテゴリのみ選択できるように制限
+        choices=CategoryType.choices,
+    )
+
     # お支度項目の名前を持っているデータのカラム
     item_name = models.CharField(max_length=255)
+
     # ユーザーが独自で作成した項目か判断するフラグ
     is_custom = models.BooleanField(default=False)
-    # このお支度項目を現在使うかどうかの有効フラグ
+
+    # このお支度項目を一覧に表示するかどうかを管理するフラグ
+    # Falseの場合は項目一覧に表示しない
     is_active = models.BooleanField(default=True)
+
     # カテゴリ内でのお支度項目の表示順を管理するカラム
     display_order = models.PositiveIntegerField(default=0)
+
     # 作成日時
     created_at = models.DateTimeField(auto_now_add=True)
+
     # 更新日時
     updated_at = models.DateTimeField(auto_now=True)
-    # 削除日時
-    deleted_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         db_table = "prep_items"
 
-        # category_typeはアルファベット順で並ぶため、
-        # 画面表示時のカテゴリ順(朝→帰宅後→夜)はviews側で制御する
-        ordering = ["category_type", "display_order"]
+        # お支度項目をdisplay_order順に並び替える
+        ordering = ["display_order"]
 
         constraints = [
             # 同じユーザー内で同一カテゴリ・同名のお支度項目を重複登録できないようにする
@@ -166,50 +184,86 @@ class PrepRule(models.Model):
 
 
 # 🔽一日の項目履歴テーブル
-class PrepItemsLogs(models.Model):
+class PrepItemLog(models.Model):
     # お支度項目FK
     prep_item = models.ForeignKey(
-        "PrepItems",
+        "PrepItem",
         on_delete=models.CASCADE,
-        related_name="prep_items_logs",
+        related_name="logs",
     )
     # 子どもFK
     child = models.ForeignKey(
-        "Children",
+        "Child",
         on_delete=models.CASCADE,
-        related_name="prep_items_logs",
+        related_name="logs",
     )
+    # お支度項目がいつの日付のデータなのかを持っているカラム
+    target_date = models.DateField()
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    # 完了/未完了フラグ
     is_completed = models.BooleanField(default=False)
 
     class Meta:
-        db_table = "daily_prep_items"
+        db_table = "prep_items_logs"
+
+        # このテーブルの制約一覧を定義
+        constraints = [
+            # 同じ子ども・同じお支度項目・同じ日付の
+            # 履歴データが重複しないように制限
+            models.UniqueConstraint(
+                fields=["child", "prep_item", "target_date"], name="unique_child_prep_item_date"
+            )
+        ]
 
     def __str__(self):
         # prep_itemはオブジェクトのため、そのままでは文字列にならないのでstr()で変換する
         return str(self.prep_item)
 
 
-# スケジュールテーブル
+# 🔽スケジュールテーブル
 class Schedule(models.Model):
+    # スケジュールタグの表示色を管理する選択肢
+    class ColorType(models.IntegerChoices):
+        RED = 1, "赤"
+        YELLOW = 2, "黄色"
+        GREEN = 3, "緑"
+        EMERALD_GREEN = 4, "エメラルドグリーン"
+        SKY_BLUE = 5, "水色"
+        BLUE = 6, "青"
+        PURPLE = 7, "紫"
+        PINK = 8, "ピンク"
+        ORANGE = 9, "オレンジ"
+        WHITE = 10, "白"
+
+    # 子どもFK
     child = models.ForeignKey(
-        Children,
+        Child,
         on_delete=models.CASCADE,
         related_name="schedules",
     )
+    # スケジュールの日付のデータのカラム
+    # (例)5/10:学校
+    schedule_date = models.DateField()
 
+    # 具体的な予定名のデータのカラム
     title = models.CharField(max_length=255)
-    schedule_type = models.CharField(max_length=20)
-    color = models.IntegerField()
 
-    day_of_week = models.PositiveSmallIntegerField(null=True, blank=True)
-    specific_date = models.DateField(null=True, blank=True)
+    # タグ色・表示色の色番号を管理するカラム
+    color = models.IntegerField(
+        # ColorTypeで定義した色のみ選択できるように制限
+        choices=ColorType.choices
+    )
 
-    start_time = models.TimeField()
-    end_time = models.TimeField()
+    # 開始時間
+    start_time = models.TimeField(null=True, blank=True)  # 時間未定を許可
 
+    # 終了時間
+    end_time = models.TimeField(null=True, blank=True)  # 時間未定を許可
+
+    # 作成日時
     created_at = models.DateTimeField(auto_now_add=True)
+
+    # 更新日時
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
