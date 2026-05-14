@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 
 
@@ -40,7 +40,7 @@ class SignUpForm(UserCreationForm):  # UserCreationFormを継承
         self.fields["password1"].help_text = ""
         self.fields["password2"].help_text = ""
 
-        self.fields["password1"].label = "パスワード"
+        self.fields["password1"].label = "パスワード"  # 画面の表示名を日本語にする
         self.fields["password2"].label = "パスワード確認用"
 
         self.fields["password1"].widget.attrs.update(  # <input> のclassやplaceholderを設定する
@@ -50,6 +50,28 @@ class SignUpForm(UserCreationForm):  # UserCreationFormを継承
         )
 
         self.fields["password2"].widget.attrs.update(
+            {
+                "class": "form-control",
+            }
+        )
+
+
+class LoginForm(AuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.label_suffix = ""  # フォームのlabelの最後につく文字を空にする
+
+        self.fields["username"].label = "ユーザー名"  # 画面の表示名を日本語にする
+        self.fields["password"].label = "パスワード"
+
+        self.fields["username"].widget.attrs.update(
+            {
+                "class": "form-control",
+            }
+        )
+
+        self.fields["password"].widget.attrs.update(
             {
                 "class": "form-control",
             }
