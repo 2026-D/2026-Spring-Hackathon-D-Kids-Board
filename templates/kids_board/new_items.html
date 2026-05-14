@@ -57,67 +57,67 @@
         <div class="d-flex flex-wrap flex-column justify-content-center align-items-start p-0 p-md-2 gap-2 order-2 order-md-1">
             <p class="m-0 p-0">やることを えらぶ</p>
             <div class="container text-center js-prep-card-grid">
-                <div class="row row-cols-lg-6 row-cols-3">
-                    <!--後で、用意したprep_itemsをここに追加する？バックエンドから渡す？-->
+                <div class="row row-cols-lg-6 row-cols-md-4 row-cols-3">
+                    {% comment %}バックエンド連携後は {% for item in prep_items %} ループに置き換え、data-prep-item-id="{{ item.id }}" にする{% endcomment %}
                     <div class="col">
-                        <div class="prep-card rounded shadow border-0 m-0 my-1 p-2" style="background-color: #fff;" type="button" value="">
+                        <div class="prep-card rounded shadow border-0 m-0 my-1 p-2" style="background-color: #fff;" type="button" data-prep-item-id="1">
                             <p class="m-0">ごはん</p>
                             <img src="{% static 'images/prep_item/12_cutlery.png' %}" class="mx-auto w-35 h-auto">
                         </div>
                     </div>
                     <div class="col">
-                        <div class="prep-card rounded shadow border-0 m-0 my-1 p-2" style="background-color: #fff;" type="button">
+                        <div class="prep-card rounded shadow border-0 m-0 my-1 p-2" style="background-color: #fff;" type="button" data-prep-item-id="2">
                             <p class="m-0">ごはん</p>
                             <img src="{% static 'images/prep_item/12_cutlery.png' %}" class="mx-auto w-35 h-auto">
                         </div>
                     </div>
-                    <div class="col"><div class="prep-card rounded shadow border-0 m-0 my-1 p-2" style="background-color: #fff;" type="button">
+                    <div class="col"><div class="prep-card rounded shadow border-0 m-0 my-1 p-2" style="background-color: #fff;" type="button" data-prep-item-id="3">
                             <p class="m-0">ごはん</p>
                             <img src="{% static 'images/prep_item/12_cutlery.png' %}" class="mx-auto w-35 h-auto">
                         </div></div>
-                    <div class="col"><div class="prep-card rounded shadow border-0 m-0 my-1 p-2" style="background-color: #fff;" type="button">
+                    <div class="col"><div class="prep-card rounded shadow border-0 m-0 my-1 p-2" style="background-color: #fff;" type="button" data-prep-item-id="4">
                             <p class="m-0">ごはん</p>
                             <img src="{% static 'images/prep_item/12_cutlery.png' %}" class="mx-auto w-35 h-auto">
                         </div>
                     </div>
                     <div class="col">
-                        <div class="prep-card rounded shadow border-0 m-0 my-1 p-2" style="background-color: #fff;" type="button">
+                        <div class="prep-card rounded shadow border-0 m-0 my-1 p-2" style="background-color: #fff;" type="button" data-prep-item-id="5">
                             <p class="m-0">ごはん</p>
                             <img src="{% static 'images/prep_item/12_cutlery.png' %}" class="mx-auto w-35 h-auto">
                         </div>
                     </div>
                     <div class="col">
-                        <div class="prep-card rounded shadow border-0 m-0 my-1 p-2" style="background-color: #fff;" type="button">
+                        <div class="prep-card rounded shadow border-0 m-0 my-1 p-2" style="background-color: #fff;" type="button" data-prep-item-id="6">
                             <p class="m-0">ごはん</p>
                             <img src="{% static 'images/prep_item/12_cutlery.png' %}" class="mx-auto w-35 h-auto">
                         </div>
                     </div>
-                    <div class="col"><div class="prep-card rounded shadow border-0 m-0 my-1 p-2" style="background-color: #fff;" type="button">
+                    <div class="col"><div class="prep-card rounded shadow border-0 m-0 my-1 p-2" style="background-color: #fff;" type="button" data-prep-item-id="7">
                             <p class="m-0">ごはん</p>
                             <img src="{% static 'images/prep_item/12_cutlery.png' %}" class="mx-auto w-35 h-auto">
                         </div></div>
-                    <div class="col"><div class="prep-card rounded shadow border-0 m-0 my-1 p-2" style="background-color: #fff;" type="button">
+                    <div class="col"><div class="prep-card rounded shadow border-0 m-0 my-1 p-2" style="background-color: #fff;" type="button" data-prep-item-id="8">
                             <p class="m-0">ごはん</p>
                             <img src="{% static 'images/prep_item/12_cutlery.png' %}" class="mx-auto w-35 h-auto">
                         </div>
                     </div>
                     <div class="col">
-                        <div class="prep-card rounded shadow border-0 m-0 my-1 p-2" style="background-color: #fff;" type="button">
+                        <div class="prep-card rounded shadow border-0 m-0 my-1 p-2" style="background-color: #fff;" type="button" data-prep-item-id="9">
                             <p class="m-0">ごはん</p>
                             <img src="{% static 'images/prep_item/12_cutlery.png' %}" class="mx-auto w-35 h-auto">
                         </div>
                     </div>
                     <div class="col">
-                        <div class="prep-card rounded shadow border-0 m-0 my-1 p-2" style="background-color: #fff;" type="button">
+                        <div class="prep-card rounded shadow border-0 m-0 my-1 p-2" style="background-color: #fff;" type="button" data-prep-item-id="10">
                             <p class="m-0">ごはん</p>
                             <img src="{% static 'images/prep_item/12_cutlery.png' %}" class="mx-auto w-35 h-auto">
                         </div>
                     </div>
-                    <div class="col"><div class="prep-card rounded shadow border-0 m-0 my-1 p-2" style="background-color: #fff;" type="button">
+                    <div class="col"><div class="prep-card rounded shadow border-0 m-0 my-1 p-2" style="background-color: #fff;" type="button" data-prep-item-id="11">
                             <p class="m-0">ごはん</p>
                             <img src="{% static 'images/prep_item/12_cutlery.png' %}" class="mx-auto w-35 h-auto">
                         </div></div>
-                    <div class="col"><div class="prep-card rounded shadow border-0 m-0 my-1 p-2" style="background-color: #fff;" type="button">
+                    <div class="col"><div class="prep-card rounded shadow border-0 m-0 my-1 p-2" style="background-color: #fff;" type="button" data-prep-item-id="12">
                             <p class="m-0">ごはん</p>
                             <img src="{% static 'images/prep_item/12_cutlery.png' %}" class="mx-auto w-35 h-auto">
                         </div>
@@ -188,6 +188,9 @@
                 {% endfor %}
             </div>
         </div>
+    <!-- 選択されたカードのID（バックエンドPOST用） -->
+    <input type="hidden" name="selected_prep_item_id" id="js-selected-prep-item-id" value="">
+
     <!--PC用ボタン-->
     <div class="d-flex flex-column justify-content-center align-items-center gap-2 order-1 order-md-2">
         <div class="pc-only-padding d-none d-md-flex flex-row justify-content-center align-items-center mt-md-5" >
@@ -294,6 +297,11 @@ document.addEventListener("DOMContentLoaded", function () {
             card.classList.remove("is-selected"); // すでに選択されているカードから選択クラスを削除
         });
         clickedCard.classList.add("is-selected"); // クリックされたカードに選択クラスを追加
+
+        // hidden inputに選択されたカードのIDをセット（バックエンドPOST用）
+        const selectedId = clickedCard.dataset.prepItemId ?? "";
+        const hiddenInput = document.getElementById("js-selected-prep-item-id");
+        if (hiddenInput) hiddenInput.value = selectedId;
     });
 });
 </script>

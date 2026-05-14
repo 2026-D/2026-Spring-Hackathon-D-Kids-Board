@@ -155,13 +155,23 @@
                 {% endfor %}
             </div>
         </div>
-        <!--ボタン-->
-        <div class="d-flex flex-row justify-content-center align-items-end gap-4 align-self-end">
+        <!--ボタン(表示モード時)-->
+        <div class="d-flex flex-row justify-content-center align-items-end gap-4 align-self-end" x-show.important="!editMode" x-cloak>
             <button type="button" class="btn btn-link p-0 m-0" @click="editMode = !editMode">
                 <img src="{% static 'images/button_icon/btn_pen_edit.png' %}" alt="やることリスト編集" class="mx-1 my-4" style="width: 100px; height: auto;">
             </button>
-            <button type="button" class="btn btn-link p-0 m-0" href="#">
+            <button type="button" class="btn btn-link p-0 m-0" href="#" x-show.important="!editMode" x-cloak>
                 <img src="{% static 'images/button_icon/btn_trash.png' %}" alt="やることリスト削除" class="mx-1 my-4" style="width: 100px; height: auto;">
+            </button>
+        </div>
+        <!--ボタン(編集モード時)-->
+        <!--保存ボタンは、POST成功後に表示モードへ切り替える形へ後日修正-->
+        <div class="d-flex flex-row justify-content-center align-items-end gap-4 align-self-end" x-show.important="editMode" x-cloak>
+            <button type="button" class="btn btn-link p-0 m-0" @click="editMode = false">
+                <img src="{% static 'images/button_icon/btn_save.png' %}" alt="やることリスト保存" class="mx-1 my-4" style="width: 100px; height: auto;">
+            </button>
+            <button type="button" class="btn btn-link p-0 m-0" href="#" x-show.important="editMode" x-cloak @click="editMode = false">
+                <img src="{% static 'images/button_icon/btn_cancel.png' %}" alt="やることリストキャンセル" class="mx-1 my-4" style="width: 100px; height: auto;">
             </button>
         </div>
     </div>
