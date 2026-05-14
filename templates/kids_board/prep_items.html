@@ -35,7 +35,7 @@
 <div class="m-3 p=2 p-md-5 rounded shadow" style= "background-color: var(--pink-100)">
     <p class="m-3 p-2 fs-2">あたらしく つくる</p>
     <div class="d-flex flex-wrap justify-content-center align-items-center gap-4 pc-only-padding">
-        <a class="p-0 m-0" href="#">
+        <a class="p-0 m-0" href="{% url 'new_items' %}">
             <img src="{% static 'images/button_icon/btn_pen.png' %}" alt="やることリスト作成" class="mx-3 mb-4" style="width: 135px; height: auto;">
         </a>
         <a class="p-0 m-0" href="{% url 'custom_items' %}">
