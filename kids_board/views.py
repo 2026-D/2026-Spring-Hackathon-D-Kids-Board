@@ -10,11 +10,8 @@ def signup_view(request):  # signup/へのアクセス時に動く処理
         form = SignUpForm(request.POST)  # 入力された内容をフォームに入れる
 
         if form.is_valid():  # 入力チェック
-            user = form.save()  # ユーザーをUserテーブルに保存
-            login(request, user)  # 登録後、ログイン状態を維持
-            return redirect(
-                "signup"
-            )  # 登録が成功した後、homeを作成していない為、仮でsignupページへ移動させる
+            form.save()  # ユーザーをUserテーブルに保存
+            return redirect("login")  # 登録後、loginページへ移動
     else:
         form = SignUpForm()  # signup/ページを最初にを開いた時（GET）でフォームは空
 
