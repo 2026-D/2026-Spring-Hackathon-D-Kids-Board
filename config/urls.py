@@ -24,6 +24,7 @@ from kids_board.views import (
     PrepItemsMornView,
     PrepItemsView,
     PrepItemEditView,
+    CustomItemsEditView,
     ScheduleView,
 )
 
@@ -55,6 +56,11 @@ urlpatterns = [
         name="prep_items_edit_api",
     ),
     path(
+        "custom_items/",
+        CustomItemsEditView.as_view(template_name="kids_board/custom_items.html"),
+        name="custom_items",
+    ),
+    path(
         "schedule/", ScheduleView.as_view(template_name="kids_board/schedule.html"), name="schedule"
-    )
+    ),
 ]
