@@ -27,6 +27,7 @@ from kids_board.views import (
     CustomItemsEditView,
     NewItemsEditView,
     ScheduleView,
+    SettingsView,
 )
 
 urlpatterns = [
@@ -68,5 +69,8 @@ urlpatterns = [
     ),
     path(
         "schedule/", ScheduleView.as_view(template_name="kids_board/schedule.html"), name="schedule"
+    ),
+    path(
+        "settings/", SettingsView.as_view(template_name="kids_board/settings.html"), name="settings"
     ),
 ]

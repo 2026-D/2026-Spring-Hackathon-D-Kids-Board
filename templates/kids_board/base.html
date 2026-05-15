@@ -275,7 +275,7 @@
                         <a class="nav-link" href="#"><img src="{% static 'images/button_icon/volume-up.png' %}" alt="volume" width="60" height="60"></a>
                     </div>
                     <div class="nav-item">
-                        <a class="nav-link" href="#"><img src="{% static 'images/button_icon/gear.png' %}" alt="settings" width="60" height="60"></a>
+                        <a class="nav-link" href="{% url 'settings' %}"><img src="{% static 'images/button_icon/gear.png' %}" alt="settings" width="60" height="60"></a>
                     </div>
                 </div>
 
@@ -292,7 +292,7 @@
                             <a class="nav-link" href="#"><img src="{% static 'images/button_icon/volume-up.png' %}" alt="volume"></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#"><img src="{% static 'images/button_icon/gear.png' %}" alt="settings"></a>
+                            <a class="nav-link" href="{% url 'settings' %}"><img src="{% static 'images/button_icon/gear.png' %}" alt="settings"></a>
                         </li>
                     </ul>
                 </div>

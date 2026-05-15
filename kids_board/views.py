@@ -444,3 +444,7 @@ class NewItemsEditView(TemplateView):
 
 class ScheduleView(LoginRequiredMixin, TemplateView):
     template_name = "kids_board/schedule.html"
+
+
+class SettingsView(LoginRequiredMixin, TemplateView):
+    template_name = "kids_board/settings.html"
