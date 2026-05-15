@@ -1,6 +1,5 @@
 from django.db import models
 from django.conf import settings
-from django.core.exceptions import ValidationError
 
 
 # ファミリーテーブル
@@ -10,26 +9,47 @@ from django.core.exceptions import ValidationError
 # UserテーブルをFamilyテーブルとして使用
 
 
-# こどもテーブル
+# 🔽こどもテーブル
 class Child(models.Model):
-    family = models.ForeignKey(
+    # 親id FK
+    parent = models.ForeignKey(
         # childが削除されたら、このモデルのデータも消える(CASCADE)
         # related_name="children　→ Userテーブル(family)から、このユーザーの子供一覧を取れる
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="children",
     )
+    # 画像のパスのデータを持っているカラム
+    child_icon = models.CharField(max_length=255, blank=True, null=True)
 
+    # 子どもの名前のデータを持っているカラム
     child_name = models.CharField(max_length=50)
+
+    # 作成日時のデータを持っているカラム
     created_at = models.DateTimeField(auto_now_add=True)
+
+    # 更新日時のデータを持っているカラム
     updated_at = models.DateTimeField(auto_now=True)
+
+    # 子どもを論理削除するためのカラム
     deleted_at = models.DateTimeField(null=True, blank=True)
+
+    # 子どもに紐づくお支度項目を管理する中間テーブル
+    prep_items = models.ManyToManyField(
+        "PrepItem",
+        related_name="children",
+        verbose_name="お支度項目",
+        # お支度項目が未選択でも子どもを保存できる
+        blank=True,
+    )
 
     class Meta:
         db_table = "children"
         constraints = [
+            # parentとchild_nameをユニーク制約にする事で、
+            # 同じユーザーに同名の子どもを登録できないようにしている
             models.UniqueConstraint(
-                fields=["family", "child_name"], name="unique_family_child_name"
+                fields=["parent", "child_name"], name="unique_parent_child_name"
             )
         ]
 
@@ -39,49 +59,66 @@ class Child(models.Model):
         return self.child_name
 
 
-# お支度カテゴリーテーブル
-class PrepCategory(models.Model):
-    category_type = models.CharField(max_length=50, unique=True)
-    display_order = models.PositiveBigIntegerField(default=0)
-
-    class Meta:
-        db_table = "prep_categories"
-        # 朝/帰宅後/夜の並び順を固定している
-        ordering = ["display_order"]
-
-    def __str__(self):
-        return self.category_type
-
-
-# お支度項目テーブル
+# 🔽お支度項目テーブル
 class PrepItem(models.Model):
-    child = models.ForeignKey(
-        Child,
+    # 朝・帰宅後・夜のお支度カテゴリを管理する選択肢
+    class CategoryType(models.TextChoices):
+        MORNING = "morning", "朝"
+        AFTERNOON = "afternoon", "帰宅後"
+        NIGHT = "night", "夜"
+
+    # 親id FK
+    parent = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
+        # 逆参照
         related_name="prep_items",
     )
-    category = models.ForeignKey(
-        PrepCategory,
-        # PROTECT→ PrepItem(子)が存在する限り、PrepCategory(親)は削除できない
-        on_delete=models.PROTECT,
-        related_name="prep_items",
+    # 朝/帰宅後/夜のカテゴリを管理するカラム
+    category_type = models.CharField(
+        max_length=20,
+        # CategoryTypeで定義したカテゴリのみ選択できるように制限
+        choices=CategoryType.choices,
     )
 
+    # お支度項目アイコンの画像パスを保存するカラム
+    prep_icon = models.CharField(
+        max_length=255,
+        # アイコン未設定を許可
+        null=True,
+        blank=True,
+    )
+
+    # お支度項目の名前を持っているデータのカラム
     item_name = models.CharField(max_length=255)
+
+    # ユーザーが独自で作成した項目か判断するフラグ
     is_custom = models.BooleanField(default=False)
+
+    # このお支度項目を一覧に表示するかどうかを管理するフラグ
+    # Falseの場合は項目一覧に表示しない
     is_active = models.BooleanField(default=True)
+
+    # カテゴリ内でのお支度項目の表示順を管理するカラム
     display_order = models.PositiveIntegerField(default=0)
 
+    # 作成日時
     created_at = models.DateTimeField(auto_now_add=True)
+
+    # 更新日時
     updated_at = models.DateTimeField(auto_now=True)
-    deleted_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
         db_table = "prep_items"
+
+        # お支度項目をdisplay_order順に並び替える
+        ordering = ["display_order"]
+
         constraints = [
+            # 同じユーザー内で同一カテゴリ・同名のお支度項目を重複登録できないようにする
             models.UniqueConstraint(
-                fields=["child", "category", "item_name"],
-                name="unique_child_category_item_name",
+                fields=["parent", "category_type", "item_name"],
+                name="unique_parent_category_type_item_name",
             )
         ]
 
@@ -89,52 +126,60 @@ class PrepItem(models.Model):
         return self.item_name
 
 
-# 表示ルールテーブル
+# 🔽表示ルールテーブル
 class PrepRule(models.Model):
     # TextChoices → 選択肢を定義するためのクラス
-    # rule_typeに入る値をweekdayとspecificの２つに限定し、バグを防ぐ
     class RuleType(models.TextChoices):
-        # "weekday" → DBに保存される値
-        # "平日" → 画面に表示される名前
+        # 左側の値　→ DBに保存される値
+        # 右側の値 → 画面に表示される名前
+
+        # 各ルールの判定処理はviews.py側で行う
+
+        # 毎週平日(月〜金)に表示するルール
         WEEKDAY = "weekday", "平日"
+
+        # 祝日に表示するルール
+        # ※祝日判定には別途pythonライブラリ(jpholiday)が必要
+        HOLIDAY = "holiday", "祝日"
+
+        # 毎週特定の曜日に表示するルール
+        DAY_OF_WEEK = "day_of_week", "曜日指定"
+
+        # その日だけのルール（例)予定：遠足/項目：お弁当・水筒・レジャーシート
         SPECIFIC = "specific", "特定日"
 
+    # お支度項目Fk
     prep_item = models.ForeignKey(
         "PrepItem",
         on_delete=models.CASCADE,
         related_name="rules",
     )
 
+    # ルールの種類を管理するカラム
     rule_type = models.CharField(
         max_length=20,
-        # RuleType.choicesを使用して、rule_typeに入る値を制限している
+        # RuleType　で定義した選択肢のみ保存できるように制限
         choices=RuleType.choices,
-        # 🔽ミノルさんコード
-        # rule_type = models.CharField(max_length=20)
     )
 
-    weekday = models.BooleanField(default=False)
-    day_of_week = models.PositiveSmallIntegerField(null=True, blank=True)
-
-    # しほ：特定日を共通データとして使い回しつつ、無いケースも許容し、参照整合性を壊さないための設定
-    specific_date = models.ForeignKey(
-        # 特定日テーブル(SpecificDate)を参照
-        "SpecificDate",
-        # PrepRule が存在する限り SpecificDate は削除されない
-        on_delete=models.PROTECT,
-        # NULLを許可(曜日ルール(weekday)では特定は必要ない)
+    # 「何曜日か」を数字で保存するためのカラム(曜日指定ルール)
+    # 0=月曜, 6=日曜
+    # PositiveSmallIntegerField:0以上の小さい整数を保存する
+    day_of_week = models.PositiveSmallIntegerField(
+        # 曜日指定ルールの時のみ使用するため、
+        # NULLと空入力を許可
         null=True,
-        # 入力的に空を許可(フォーム入力しなくてもエラーにしないため)
         blank=True,
-        # 逆参照の名前(逆から見た時にわかりやすくするため)
-        related_name="prep_rules",
     )
 
-    # 🔽ミノルさんコード
-    # DateFieldだと特定日を使い回せず、ER図の設計とズレるため使用しない
-    # specific_date = models.DateField(null=True, blank=True)
-
+    # 特定日ルールで使用する日付カラム
+    specific_date = models.DateField(
+        null=True,
+        blank=True,
+    )
+    # 作成日時
     created_at = models.DateTimeField(auto_now_add=True)
+    # 更新日時
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -145,78 +190,88 @@ class PrepRule(models.Model):
         # "weekday"　→ "平日"
         return self.get_rule_type_display()
 
-        # 🔽ミノルさんコード
-        # 関連モデルへの依存を避けるため、シンプルにrule_typeのみを返すため使用しない
-        # return f"{self.prep_item.item_name} - {self.rule_type}"
 
-
-# 特定日テーブル
-class SpecificDate(models.Model):
-    start_at = models.DateField()
-    end_at = models.DateField()
-
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        db_table = "specific_dates"
-
-    # しほ：バリデーションエラー
-    # clean()はこのデータが正しいかチェックする関数
-    def clean(self):
-        # 開始日が終了日より後にならないようにする
-        if self.start_at > self.end_at:
-            # raise → エラーを発生させる
-            raise ValidationError("開始日は終了日より前にしてください")
-
-    def __str__(self):
-        # 期間が分かるように開始日と終了日を表示
-        # 例：{{ specific_date }}→　2026-05-01 ~ 2026-05-07
-        return f"{self.start_at} ~ {self.end_at}"
-
-
-# 一日の項目テーブル
-class DailyPrepItem(models.Model):
+# 🔽一日の項目履歴テーブル
+class PrepItemLog(models.Model):
+    # お支度項目FK
     prep_item = models.ForeignKey(
         "PrepItem",
         on_delete=models.CASCADE,
-        related_name="daily_items",
+        related_name="logs",
     )
+    # 子どもFK
+    child = models.ForeignKey(
+        "Child",
+        on_delete=models.CASCADE,
+        related_name="logs",
+    )
+    # お支度項目がいつの日付のデータなのかを持っているカラム
+    target_date = models.DateField()
 
-    created_at = models.DateTimeField(auto_now_add=True)
+    # 完了/未完了フラグ
     is_completed = models.BooleanField(default=False)
 
     class Meta:
-        db_table = "daily_prep_items"
+        db_table = "prep_items_logs"
+
+        # このテーブルの制約一覧を定義
+        constraints = [
+            # 同じ子ども・同じお支度項目・同じ日付の
+            # 履歴データが重複しないように制限
+            models.UniqueConstraint(
+                fields=["child", "prep_item", "target_date"], name="unique_child_prep_item_date"
+            )
+        ]
 
     def __str__(self):
         # prep_itemはオブジェクトのため、そのままでは文字列にならないのでstr()で変換する
         return str(self.prep_item)
 
-        # 🔽ミノルさんコード
-        # status = "完了" if self.is_completed else "未完了"　← UIの表示はHTML側でやるので使用しない
-        # return f"{self.prep_item.item_name} - {status}"
 
-
-# スケジュールテーブル
+# 🔽スケジュールテーブル
 class Schedule(models.Model):
+    # スケジュールタグの表示色を管理する選択肢
+    class ColorType(models.IntegerChoices):
+        RED = 1, "赤"
+        YELLOW = 2, "黄色"
+        GREEN = 3, "緑"
+        EMERALD_GREEN = 4, "エメラルドグリーン"
+        SKY_BLUE = 5, "水色"
+        BLUE = 6, "青"
+        PURPLE = 7, "紫"
+        PINK = 8, "ピンク"
+        ORANGE = 9, "オレンジ"
+        WHITE = 10, "白"
+
+    # 子どもFK
     child = models.ForeignKey(
         Child,
         on_delete=models.CASCADE,
         related_name="schedules",
     )
+    # スケジュールの日付のデータのカラム
+    # (例)5/10:学校
+    schedule_date = models.DateField()
 
+    # 具体的な予定名のデータのカラム
     title = models.CharField(max_length=255)
-    schedule_type = models.CharField(max_length=20)
-    color = models.IntegerField()
 
-    day_of_week = models.PositiveSmallIntegerField(null=True, blank=True)
-    specific_date = models.DateField(null=True, blank=True)
+    # タグ色・表示色の色番号を管理するカラム
+    color = models.IntegerField(
+        # ColorTypeで定義した色のみ選択できるように制限
+        choices=ColorType.choices
+    )
 
-    start_time = models.TimeField()
-    end_time = models.TimeField()
+    # 開始時間
+    start_time = models.TimeField(null=True, blank=True)  # 時間未定を許可
 
+    # 終了時間
+    end_time = models.TimeField(null=True, blank=True)  # 時間未定を許可
+
+    # 作成日時
     created_at = models.DateTimeField(auto_now_add=True)
+
+    # 更新日時
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -224,31 +279,3 @@ class Schedule(models.Model):
 
     def __str__(self):
         return self.title
-
-        # 🔽ミノルさんコード
-        # 関連モデルの依存を避けるために、シンプルにtitleを返すため使用しない
-        # return f"{self.title} - {self.child.child_name}"
-
-
-# こどもアイコンテーブル
-class ChildrenIcon(models.Model):
-    icon_name = models.CharField(max_length=255)
-    icon_image = models.CharField(max_length=255)
-
-    class Meta:
-        db_table = "children_icons"
-
-    def __str__(self):
-        return self.icon_name
-
-
-# 項目アイコンテーブル
-class PrepIcon(models.Model):
-    icon_name = models.CharField(max_length=255)
-    icon_image = models.CharField(max_length=255)
-
-    class Meta:
-        db_table = "prep_icons"
-
-    def __str__(self):
-        return self.icon_name

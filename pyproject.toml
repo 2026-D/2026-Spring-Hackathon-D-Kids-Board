@@ -11,7 +11,11 @@ dependencies = [
     "django (==5.0.6)",
     "mysqlclient (>=2.2.8,<3.0.0)",
     "django-bootstrap5 (>=26.2,<27.0)",
+<<<<<<< HEAD
     "gunicorn (>=26.0.0,<27.0.0)"
+=======
+    "jpholiday (>=1.0.3,<2.0.0)"
+>>>>>>> develop
 ]
 
 [tool.poetry]
