@@ -33,7 +33,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("kids_board.urls")),  # ""はhttp://localhost:8000/　#kids_board/urls.pyを使う
     path(
-        "logout/", LogoutView.as_view(next_page="/home/"), name="logout"
+        "logout/", LogoutView.as_view(next_page="login"), name="logout"
     ),  # todo:ログアウト後のリダイレクト先をtopに変更
     path("home/", HomeView.as_view(template_name="kids_board/home.html"), name="home"),
     path(

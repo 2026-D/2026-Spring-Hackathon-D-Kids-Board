@@ -299,18 +299,18 @@
                 {% else %}
                     {% if request.resolver_match.url_name == 'login' %}
                     <div class="nav-item">
-                        <a class="btn btn-outline-primary btn-sign" href="#" role="button">Sign Up</a>
+                        <a class="btn btn-outline-primary btn-sign" href="{% url 'signup' %}" role="button">Sign Up</a>
                     </div>
                     {% elif request.resolver_match.url_name == 'signup' %}
                     <div class="nav-item">
-                        <a class="btn btn-outline-primary btn-sign" href="#" role="button">Login</a>
+                        <a class="btn btn-outline-primary btn-sign" href="{% url 'login' %}" role="button">Login</a>
                     </div>
                     {% else %}
                     <div class="nav-item">
-                        <a class="btn btn-outline-primary btn-sign" href="#" role="button">Login</a>
+                        <a class="btn btn-outline-primary btn-sign" href="{% url 'login' %}" role="button">Login</a>
                     </div>
                     <div class="nav-item">
-                        <a class="btn btn-outline-primary btn-sign" href="#" role="button">Sign Up</a>
+                        <a class="btn btn-outline-primary btn-sign" href="{% url 'signup' %}" role="button">Sign Up</a>
                     </div>
                     {% endif %}
                 {% endif %}
