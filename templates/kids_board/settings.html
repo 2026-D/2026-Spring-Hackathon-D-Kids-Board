@@ -30,16 +30,16 @@
         <img src="{% static 'images/button_icon/pencil-square.png' %}" type="button" alt="編集" class="my-2" style="width: 20px; height: auto;">
         <img src="{% static 'images/button_icon/trash.png' %}" type="button" alt="削除" class="my-2" style="width: 20px; height: auto;">
     </div>
-    <div class="d-flex flex-row align-items-center justify-content-center gap-3" type="button">
+    <a class="d-flex flex-row align-items-center justify-content-center gap-3 link-dark link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"  href="#" role="button">
         <img src="{% static 'images/avatar_icon/add_child.png' %}" alt="こども追加" class="my-2" style="width: 45px; height: auto; hover: opacity(0.8);">
         <div class="my-2" style="width: 150px; max-width: 150px;">
             <p class="m-0">こどもを追加</p>
         </div>
         <div style="width: 46px; height: auto;"></div>
-    </div>
+    </a>
     <div class="d-flex flex-row align-items-center justify-content-center">
         <p class="text-center p-3 pt-4 my-2">ファミリーアカウント</p>
-        <img src="{% static 'images/button_icon/pencil-square.png' %}" type="button" alt="編集" class="my-2 link-opacity-50-hover" style="width: 20px; height: auto;">
+        <img src="{% static 'images/button_icon/pencil-square.png' %}" type="button" data-bs-toggle="modal" data-bs-target="#editFamilyModal" alt="編集" class="my-2" style="width: 20px; height: auto;">
     </div>
     <div class="d-flex flex-row align-items-center justify-content-center">
         <div class="d-flex flex-column align-items-start justify-content-center" style="width: 150px; max-width: 150px;">
@@ -53,4 +53,17 @@
     </div>
 </div>
 
+<!-- ===== モーダル ===== -->
+<div id="modal-container">
+  {% include "kids_board/modals/add_child.html" %}
+  {% include "kids_board/modals/delete_child.html" %}
+  {% include "kids_board/modals/delete_family.html" %}
+  {% include "kids_board/modals/edit_child.html" %}
+  {% include "kids_board/modals/edit_family.html" %}
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/edit_family.js' %}"></script>
 {% endblock %}

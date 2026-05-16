@@ -275,7 +275,7 @@
                         <a class="nav-link" href="#"><img src="{% static 'images/button_icon/volume-up.png' %}" alt="volume" width="60" height="60"></a>
                     </div>
                     <div class="nav-item">
-                        <a class="nav-link" href="{% url 'settings' %}"><img src="{% static 'images/button_icon/gear.png' %}" alt="settings" width="60" height="60"></a>
+                        <button class="nav-link" data-bs-toggle="modal" data-bs-target="#enterSettingsModal" id="enterSettingsModal"><img src="{% static 'images/button_icon/gear.png' %}" alt="settings" width="60" height="60"></button>
                     </div>
                 </div>
 
@@ -292,7 +292,7 @@
                             <a class="nav-link" href="#"><img src="{% static 'images/button_icon/volume-up.png' %}" alt="volume"></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'settings' %}"><img src="{% static 'images/button_icon/gear.png' %}" alt="settings"></a>
+                            <button class="nav-link" data-bs-toggle="modal" data-bs-target="#enterSettingsModal" id="enterSettingsModal"><img src="{% static 'images/button_icon/gear.png' %}" alt="settings"></button>
                         </li>
                     </ul>
                 </div>
@@ -379,3 +379,12 @@
     {% endblock %}
 </body>
 </html>
+
+<!-- ===== モーダル ===== -->
+<div id="modal-container">
+  {% include "kids_board/modals/enter_settings.html" %}
+</div>
+
+{% block extra_js %}
+<script src="{% static 'js/settings.js' %}"></script>
+{% endblock %}
