@@ -11,4 +11,46 @@
 {% endblock %}
 
 {% block content %}
+
+<div>
+    <p class="text-center p-3 pt-4">こどもの編集・追加・削除</p>
+    <div class="d-flex flex-row align-items-center justify-content-center gap-3">
+        <img src="{% static 'images/avatar_icon/99_default_avater.png' %}" alt="デフォルトアバター" class="my-2" style="width: 45px; height: auto;">
+        <div class="my-2" style="width: 150px; max-width: 150px;">
+            <p class="m-0">こども1</p>
+        </div>
+        <img src="{% static 'images/button_icon/pencil-square.png' %}" type="button" alt="編集" class="my-2" style="width: 20px; height: auto;">
+        <img src="{% static 'images/button_icon/trash.png' %}" type="button" alt="削除" class="my-2" style="width: 20px; height: auto;">
+    </div>
+    <div class="d-flex flex-row align-items-center justify-content-center gap-3">
+        <img src="{% static 'images/avatar_icon/99_default_avater.png' %}"  class="my-2" alt="デフォルトアバター" style="width: 45px; height: auto;">
+        <div class="my-2" style="width: 150px; max-width: 150px;">
+            <p class="m-0" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">こどもの長い名前の場合の表示</p>
+        </div>
+        <img src="{% static 'images/button_icon/pencil-square.png' %}" type="button" alt="編集" class="my-2" style="width: 20px; height: auto;">
+        <img src="{% static 'images/button_icon/trash.png' %}" type="button" alt="削除" class="my-2" style="width: 20px; height: auto;">
+    </div>
+    <div class="d-flex flex-row align-items-center justify-content-center gap-3" type="button">
+        <img src="{% static 'images/avatar_icon/add_child.png' %}" alt="こども追加" class="my-2" style="width: 45px; height: auto; hover: opacity(0.8);">
+        <div class="my-2" style="width: 150px; max-width: 150px;">
+            <p class="m-0">こどもを追加</p>
+        </div>
+        <div style="width: 46px; height: auto;"></div>
+    </div>
+    <div class="d-flex flex-row align-items-center justify-content-center">
+        <p class="text-center p-3 pt-4 my-2">ファミリーアカウント</p>
+        <img src="{% static 'images/button_icon/pencil-square.png' %}" type="button" alt="編集" class="my-2 link-opacity-50-hover" style="width: 20px; height: auto;">
+    </div>
+    <div class="d-flex flex-row align-items-center justify-content-center">
+        <div class="d-flex flex-column align-items-start justify-content-center" style="width: 150px; max-width: 150px;">
+            <p>名前</p>
+            <p>{{ user.username}}</p>
+            <p>メールアドレス</p>
+            <p>{{ user.email }}</p>
+            <p>パスワード</p>
+            <p>********</p>
+        </div>
+    </div>
+</div>
+
 {% endblock %}
