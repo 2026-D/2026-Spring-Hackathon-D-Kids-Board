@@ -12,7 +12,7 @@
 
 {% block content %}
 
-<div>
+<div class="d-flex flex-column align-items-center justify-content-center">
     <p class="text-center p-3 pt-4">こどもの編集・追加・削除</p>
     <div class="d-flex flex-row align-items-center justify-content-center gap-3">
         <img src="{% static 'images/avatar_icon/99_default_avater.png' %}" alt="デフォルトアバター" class="my-2" style="width: 45px; height: auto;">
@@ -38,13 +38,13 @@
             <img src="{% static 'images/button_icon/trash.png' %}" alt="削除" style="width: 20px; height: auto;">
         </button>
     </div>
-    <a class="d-flex flex-row align-items-center justify-content-center gap-3 link-dark link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"  href="#" role="button">
+    <button type="button" class="d-flex flex-row align-items-center justify-content-center text-start gap-3 link-dark link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover border-0" data-bs-toggle="modal" data-bs-target="#addChildModal" aria-label="こどもを追加">
         <img src="{% static 'images/avatar_icon/add_child.png' %}" alt="こども追加" class="my-2" style="width: 45px; height: auto; hover: opacity(0.8);">
         <div class="my-2" style="width: 150px; max-width: 150px;">
             <p class="m-0">こどもを追加</p>
         </div>
         <div style="width: 46px; height: auto;"></div>
-    </a>
+    </button>
     <div class="d-flex flex-row align-items-center justify-content-center">
         <p class="text-center p-3 pt-4 my-2">ファミリーアカウント</p>
         <button type="button" class="p-0 border-0 bg-transparent my-2" data-bs-toggle="modal" data-bs-target="#editFamilyModal" aria-label="ファミリー情報を編集">
@@ -63,17 +63,7 @@
     </div>
 </div>
 
-<!-- ===== モーダル ===== -->
-<div id="modal-container">
-  {% include "kids_board/modals/add_child.html" %}
-  {% include "kids_board/modals/delete_child.html" %}
-  {% include "kids_board/modals/delete_family.html" %}
-  {% include "kids_board/modals/edit_child.html" %}
-  {% include "kids_board/modals/edit_family.html" %}
-</div>
-
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'js/edit_family.js' %}"></script>
 {% endblock %}

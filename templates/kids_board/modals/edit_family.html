@@ -1,33 +1,33 @@
 {% load static %}
 
 <!-- ================= アカウント編集モーダル ================= -->
-<div class="modal" id="editFamilyModal" tabindex="-1" aria-labelledby="editFamilyModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="editFamilyModalLabel">ファミリー情報の編集</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <form>
-          <div class="mb-3">
-            <label for="familyNameInput" class="form-label">ファミリーの名前</label>
-            <input type="text" class="form-control" id="familyNameInput" value="{{ user.username }}">
-          </div>
-          <div class="mb-3">
-            <label for="familyEmailInput" class="form-label">メールアドレス</label>
-            <input type="email" class="form-control" id="familyEmailInput" value="{{ user.email }}">
-          </div>
-          <div class="mb-3">
-            <label for="familyPasswordInput" class="form-label">パスワード</label>
-            <input type="password" class="form-control" id="familyPasswordInput" value="********">
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer d-flex justify-content-between">
-        <button type="button" class="btn btn-outline-primary border-0 fw-normal" data-bs-dismiss="modal">キャンセル</button>
-        <button type="button" class="btn btn-primary">保存</button>
-      </div>
+<div class="modal fade" id="editFamilyModal" tabindex="-1" aria-labelledby="editFamilyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="editFamilyModalLabel">ファミリー情報の編集</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="familyNameInput" class="form-label">ファミリーの名前</label>
+                        <input type="text" class="form-control" id="familyNameInput" value="{{ user.username }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="familyEmailInput" class="form-label">メールアドレス</label>
+                        <input type="email" class="form-control" id="familyEmailInput" value="{{ user.email }}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="familyPasswordInput" class="form-label">パスワード</label>
+                        <input type="password" class="form-control" id="familyPasswordInput" value="********">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-between">
+                <button type="button" class="btn btn-outline-primary border-0 fw-normal" data-bs-dismiss="modal">キャンセル</button>
+                <button type="button" class="btn btn-primary">保存</button>
+            </div>
+        </div>
     </div>
-  </div>
 </div>

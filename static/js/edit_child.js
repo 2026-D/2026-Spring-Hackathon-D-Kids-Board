@@ -1,8 +1,10 @@
 
 // 子ども編集モーダルのJavaScript
 const editChildModal = document.getElementById('editChildModal')
-const nameInput = document.getElementById('childNameInput')
+const nameInput = document.getElementById('editChildNameInput')
 
-editChildModal.addEventListener('shown.bs.modal', () => {
-  nameInput.focus()
-})
+if (editChildModal && nameInput) {
+  editChildModal.addEventListener('shown.bs.modal', () => {
+    nameInput.focus()
+  })
+}

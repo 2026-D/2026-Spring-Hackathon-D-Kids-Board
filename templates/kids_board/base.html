@@ -220,11 +220,15 @@
             text-align: center;
             padding: 20px;
         }
-            /*日付指定のカレンダーの見た目*/
+        /*日付指定のカレンダーの見た目*/
         .js-datepicker{
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+        /* こども削除の赤いボタンのホバー */
+        .btn-danger-red-hover:hover {
+            color: #dc3545;
         }
     </style>
     {% block extra_css %}{% endblock %}
@@ -383,11 +387,20 @@
 <!-- ===== モーダル ===== -->
 <div id="modal-container">
     {% include "kids_board/modals/enter_settings.html" %}
+    {% include "kids_board/modals/add_child.html" %}
+    {% include "kids_board/modals/delete_child.html" %}
+    {% include "kids_board/modals/delete_family.html" %}
+    {% include "kids_board/modals/edit_child.html" %}
+    {% include "kids_board/modals/edit_family.html" %}
 </div>
 
 {% bootstrap_javascript %}  {# JSは</body>直前が正しい #}
 {% block extra_js %}
 <script src="{% static 'js/settings.js' %}"></script>
+<script src="{% static 'js/edit_family.js' %}"></script>
+<script src="{% static 'js/add_child.js' %}"></script>
+<script src="{% static 'js/edit_child.js' %}"></script>
+<script src="{% static 'js/delete_child.js' %}"></script>
 {% endblock %}
 </body>
 </html>
