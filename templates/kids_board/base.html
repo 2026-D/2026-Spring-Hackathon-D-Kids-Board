@@ -275,7 +275,7 @@
                         <a class="nav-link" href="#"><img src="{% static 'images/button_icon/volume-up.png' %}" alt="volume" width="60" height="60"></a>
                     </div>
                     <div class="nav-item">
-                        <button class="nav-link" data-bs-toggle="modal" data-bs-target="#enterSettingsModal" id="enterSettingsModal"><img src="{% static 'images/button_icon/gear.png' %}" alt="settings" width="60" height="60"></button>
+                        <button class="nav-link" type="button" data-bs-toggle="modal" data-bs-target="#enterSettingsModal"><img src="{% static 'images/button_icon/gear.png' %}" alt="settings" width="60" height="60"></button>
                     </div>
                 </div>
 
@@ -292,7 +292,7 @@
                             <a class="nav-link" href="#"><img src="{% static 'images/button_icon/volume-up.png' %}" alt="volume"></a>
                         </li>
                         <li class="nav-item">
-                            <button class="nav-link" data-bs-toggle="modal" data-bs-target="#enterSettingsModal" id="enterSettingsModal"><img src="{% static 'images/button_icon/gear.png' %}" alt="settings"></button>
+                            <button class="nav-link" type="button" data-bs-toggle="modal" data-bs-target="#enterSettingsModal"><img src="{% static 'images/button_icon/gear.png' %}" alt="settings"></button>
                         </li>
                     </ul>
                 </div>
@@ -382,9 +382,12 @@
 
 <!-- ===== モーダル ===== -->
 <div id="modal-container">
-  {% include "kids_board/modals/enter_settings.html" %}
+    {% include "kids_board/modals/enter_settings.html" %}
 </div>
 
+{% bootstrap_javascript %}  {# JSは</body>直前が正しい #}
 {% block extra_js %}
 <script src="{% static 'js/settings.js' %}"></script>
 {% endblock %}
+</body>
+</html>

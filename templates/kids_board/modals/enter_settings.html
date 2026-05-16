@@ -10,10 +10,16 @@
       </div>
       <div class="modal-body">
         <p>おうちのひとと いっしょに そうさしてください。<br>パスワードを にゅうりょくしてください。</p>
+        <form>
+          <div class="mb-3">
+            <label for="passwordInput" class="form-label">パスワード</label>
+            <input type="password" class="form-control" id="passwordInput" placeholder="password">
+          </div>
+        </form>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
-        <button type="button" class="btn btn-primary" id="enterSettingsButton">OK</button>
+      <div class="modal-footer d-flex justify-content-between">
+        <button type="button" class="btn btn btn-outline-primary border-0 fw-normal" data-bs-dismiss="modal">キャンセル</button>
+        <button type="button" class="btn btn-primary" id="enterSettingsButton" data-settings-url="{% url 'settings' %}">OK</button>
       </div>
     </div>
   </div>

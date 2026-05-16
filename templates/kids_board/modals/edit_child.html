@@ -1,0 +1,28 @@
+{% load static %}
+
+<!-- ================= アカウント編集モーダル ================= -->
+<div class="modal" id="editChildModal" tabindex="-1" aria-labelledby="editChildModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="editChildModalLabel">こども1 の編集</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="childNameInput" class="form-label">名前</label>
+            <input type="text" class="form-control" id="childNameInput" value="{{ user.username }}">
+          </div>
+          <div class="mb-3">
+            <label for="childAvatarInput" class="form-label">アイコン</label>
+            <input type="file" class="form-control" id="childAvatarInput" accept="image/*">
+        </form>
+      </div>
+      <div class="modal-footer d-flex justify-content-between">
+        <button type="button" class="btn btn-outline-primary border-0 fw-normal" data-bs-dismiss="modal">キャンセル</button>
+        <button type="button" class="btn btn-primary">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
