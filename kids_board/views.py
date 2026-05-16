@@ -45,9 +45,9 @@ def login_view(request):  # login/へのアクセス時に動く処理
     )
 
 
-def logout_view(request):
-    logout(request)
-    return redirect("login")
+def logout_view(request):  # logout/へのアクセス時に動く処理
+    logout(request)  # ログイン状態を解除する
+    return redirect("login")  # ログアウト後にloginページへ移動する
 
 
 # todo:LoginRequiredMixinを追加
