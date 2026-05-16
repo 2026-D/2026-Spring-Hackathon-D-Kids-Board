@@ -1,4 +1,9 @@
 <!-- こども削除モーダル -->
+<style>
+  .btn-danger-red-hover:hover {
+    color: #dc3545;
+  }
+</style>
 <div class="modal fade" id="deleteChildModal" tabindex="-1" aria-labelledby="deleteChildModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -12,7 +17,7 @@
       </div>
       <div class="modal-footer d-flex justify-content-between">
         <button type="button" class="btn btn-outline-primary border-0 fw-normal" data-bs-dismiss="modal">キャンセル</button>
-        <button type="button" class="btn btn-danger">削除する</button>
+        <button type="button" class="btn btn-danger btn-danger-red-hover">削除する</button>
       </div>
     </div>
   </div>
