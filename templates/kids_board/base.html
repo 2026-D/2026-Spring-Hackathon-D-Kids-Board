@@ -279,7 +279,7 @@
                         <a class="nav-link" href="#"><img src="{% static 'images/button_icon/volume-up.png' %}" alt="volume" width="60" height="60"></a>
                     </div>
                     <div class="nav-item">
-                        <button class="nav-link" type="button" data-bs-toggle="modal" data-bs-target="#enterSettingsModal"><img src="{% static 'images/button_icon/gear.png' %}" alt="settings" width="60" height="60"></button>
+                        <button class="nav-link bg-transparent border-0" type="button" data-bs-toggle="modal" data-bs-target="#enterSettingsModal"><img src="{% static 'images/button_icon/gear.png' %}" alt="settings" width="60" height="60"></button>
                     </div>
                 </div>
 
@@ -296,7 +296,7 @@
                             <a class="nav-link" href="#"><img src="{% static 'images/button_icon/volume-up.png' %}" alt="volume"></a>
                         </li>
                         <li class="nav-item">
-                            <button class="nav-link" type="button" data-bs-toggle="modal" data-bs-target="#enterSettingsModal"><img src="{% static 'images/button_icon/gear.png' %}" alt="settings"></button>
+                            <button class="nav-link bg-transparent border-0" type="button" data-bs-toggle="modal" data-bs-target="#enterSettingsModal"><img src="{% static 'images/button_icon/gear.png' %}" alt="settings"></button>
                         </li>
                     </ul>
                 </div>
@@ -379,10 +379,6 @@
             syncSwitch();
         });
     </script>
-    {% block extra_js %}
-    {% endblock %}
-</body>
-</html>
 
 <!-- ===== モーダル ===== -->
 <div id="modal-container">
