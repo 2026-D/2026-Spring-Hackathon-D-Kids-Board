@@ -54,10 +54,10 @@
     <div class="rounded shadow m-2 m-lg-4 p-4 pe-lg-5 d-flex flex-column flex-lg-row align-items-center justify-content-between"
         :style="editMode? 'background-color:#fff; border: 3px solid var(--cyan-400);' : 'background-color: #fff; border: 3px solid #fff;'"
         x-data="{editMode: false}"><!--editModeがfalseは表示モード、trueは編集モード-->
-        <!--表示用-->
+        <!--表示モード-->
         <!--カード-->
-        <div class="prep-card rounded shadow border-0 m-4 p-2" style="background-color: #fff;" type="button">
-            <p class="m-0">{{ prep_item.name}}</p>
+        <div class="prep-card rounded shadow border-0 m-4 p-2" style="background-color: #fff;" type="button" x-show.important="!editMode" x-cloak>
+            <p class="m-0 prep-item-name">{{ prep_item.name }}</p>
             <img src="{% static prep_item.prep_icon %}" class="mx-auto w-35 h-auto">
         </div>
         <!--入力欄（閲覧専用）-->
@@ -107,7 +107,18 @@
                 {% endfor %}
             </div>
         </div>
-        <!--入力欄（編集モード）-->
+        <!-- 編集モード -->
+        <!-- カード -->
+        <div class="prep-card rounded shadow border-0 m-4 p-2" style="background-color: #fff;" type="button" x-show.important="editMode" x-cloak>
+            <input class="m-0" value="{{ prep_item.name }}" style="width: 75%; text-align: center;">
+            <div class="d-flex flex-row justify-content-center align-items-center m-2 gap-2">
+                <img src="{% static prep_item.prep_icon %}" class="mx-auto w-35 h-auto">
+                <button type="button" class="p-0 border-0 bg-transparent my-2" data-bs-toggle="modal" data-bs-target="#choicePrepItemIconsModal" aria-label="アイコンを編集">
+                    <img src="{% static 'images/button_icon/pencil-square.png' %}" alt="編集" style="width: 20px; height: auto;">
+                </button>
+            </div>
+        </div>
+        <!--入力欄-->
         <div class="d-flex flex-column justify-content-center align-items-start gap-2" x-show.important="editMode" x-cloak>
             <p class="m-0">ようびを していする</p>
             <div class="d-flex flex-wrap flex-row gap-2 align-items-start">

@@ -149,7 +149,7 @@ class PrepItemsView(LoginRequiredMixin, TemplateView):
             },
             {
                 "id": 4,
-                "name": "えんそくのじゅんび",
+                "name": "えんそくのじゅんびみたいにながいもじがはいっているときの表示の仕方を確認するようにする",
                 "prep_icon": "images/prep_item/2_backpack.png",
                 "weekdays": [
                     {"name": "げつようび", "checked": False},
@@ -279,7 +279,7 @@ class CustomItemsEditView(TemplateView):
             },
             {
                 "id": 4,
-                "name": "えんそくのじゅんび",
+                "name": "えんそくのじゅんびみたいにながいもじがはいっているときの表示の仕方を確認するようにする",
                 "prep_icon": "images/prep_item/2_backpack.png",
                 "weekdays": [
                     {"name": "げつようび", "checked": False},
@@ -403,7 +403,7 @@ class NewItemsEditView(TemplateView):
             },
             {
                 "id": 4,
-                "name": "えんそくのじゅんび",
+                "name": "えんそくのじゅんびみたいにながいもじがはいっているときの表示の仕方を確認するようにする",
                 "prep_icon": "images/prep_item/2_backpack.png",
                 "weekdays": [
                     {"name": "げつようび", "checked": False},
