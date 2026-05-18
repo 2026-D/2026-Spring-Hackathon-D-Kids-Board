@@ -8,12 +8,12 @@
 {% block extra_css %}
 <style>
     /*ログアウトボタンの配置*/
-    form {
+    .logout-form {
         display: flex;
         justify-content: flex-end;
     }
     /*ログアウトボタンのスタイル*/
-    .btn{
+    .logout-form .btn{
         display: flex;
         align-items: center;
         justify-content: center;
@@ -26,6 +26,10 @@
     p{
         text-align: center;
         margin: 0;
+    }
+     /* settingに入る確認モーダルのテキスト */
+    .enter_settings_text {
+        text-align: left;
     }
     /*こども追加前の要素の配置*/
     .home-container {
@@ -91,7 +95,7 @@
 
 {% block content %}
 
-<form action="{% url 'logout' %}" method="post">
+<form class="logout-form" action="{% url 'logout' %}" method="post">
     {% csrf_token %}
     <button class="btn btn-outline-dark" type="submit">
         <img src="{% static 'images/button_icon/box-arrow-right.png' %}" alt="ログアウト">
