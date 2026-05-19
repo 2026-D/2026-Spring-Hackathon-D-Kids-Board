@@ -5,12 +5,11 @@ from django.contrib.auth import (
 )  # 登録ユーザーをログイン状態にする # ログアウト状態にする
 from django.shortcuts import render, redirect  # renderはHTML表示 #redirectは別ページ移動
 from .forms import SignUpForm, LoginForm, ChildForm  # forms.pyからSignUpForm, LoginFormを読み込む
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView
 from django.urls import reverse_lazy
-from .models import PrepItem
+from .models import PrepItem, Child
 from django.contrib.auth.mixins import LoginRequiredMixin  # ログイン必須のクラスを読み込む
 from django.contrib.auth.decorators import login_required
-from .models import Child
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 
@@ -67,21 +66,15 @@ def child_create_view(request):  # 子ども追加処理
             return redirect("home")  # home画面へ遷移
 
 
-@login_required
-def home_view(request):  # DBから子ども情報の一覧を取得、home画面表示
+class HomeView(LoginRequiredMixin, ListView):
+    model = Child
+    template_name = "kids_board/home.html"
+    context_object_name = "children"
+    ordering = ["created_at"]  # 子供の表示順を作成日時順にするための指定
 
-    children = Child.objects.filter(  # childrenテーブルから、表示する子どもの情報を取得
-        parent=request.user,  # ログインしているユーザーの子どもを取得
-        deleted_at__isnull=True,  # 削除されていない子どもだけを取得
-    )
-
-    return render(  # home.htmlを表示
-        request,
-        "kids_board/home.html",
-        {
-            "children": children,  # コンテキスト Python(view) → HTML(template)へ渡すデータ
-        },
-    )
+    def get_queryset(self):
+        # ログインしているユーザー（ファミリー）の子供だけを表示するためのクエリセットを返す
+        return Child.objects.filter(parent=self.request.user, deleted_at__isnull=True)
 
 
 @login_required
@@ -117,31 +110,6 @@ def settings_view(request):  # settings画面を表示
             "children": children,  # コンテキスト
         },
     )
-
-
-# @login_required
-# def kids_board_view(request): # kids_board.htmlを表示する
-
-#     return render(
-#         request,
-#         "kids_board/kids_board.html",
-#     )
-
-# class HomeView(LoginRequiredMixin, TemplateView):
-#     template_name = "/home.html"
-
-# class HomeView(LoginRequiredMixin, TemplateView):
-#     template_name = "kids_board/home.html"
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-
-#         context["children"] = Child.objects.filter(
-#             parent=self.request.user,
-#             deleted_at__isnull=True,
-#         )
-
-#         return context
 
 
 class KidsBoardView(LoginRequiredMixin, TemplateView):
@@ -541,7 +509,3 @@ class NewItemsEditView(TemplateView):
 
 class ScheduleView(LoginRequiredMixin, TemplateView):
     template_name = "kids_board/schedule.html"
-
-
-# class SettingsView(LoginRequiredMixin, TemplateView):
-#     template_name = "kids_board/settings.html"

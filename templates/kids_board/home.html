@@ -102,21 +102,12 @@
         <p>ログアウト</p>
     </button>
 </form>
-
-<div class="home-container">
-    <h2>{{ user.username }}さん、ようこそ！</h2>
-    <div class="circle-home shadow d-flex justify-content-center align-items-center">
-        <p>右上の設定ボタンから、<br>こどもを追加してください。</p>
-    </div>
-</div>
-
-
+{% if children %}
 {% comment "こども追加後" %}{% endcomment %}
 <!--こども4人以上は折り返して表示-->
-
 <h2>{{ user.username }}</h2>
-<div class="row g-2 justify-content-start px-custom">
-    {% comment "こども変数受け取り" %} {% endcomment %}
+<div class="row g-2 justify-content-between px-custom">
+    {% comment "こども変数受け取り" %}{% endcomment %}
     {% for child in children %}
     <a class="col-12 col-md-3 d-flex justify-content-center link-underline link-underline-opacity-0 link-dark" href="{% url 'kids_board' %}">  <!-- スマホ:1列、PC:4列 -->
         <div class="circle-home-child circle-outline d-flex justify-content-center align-items-center">
@@ -129,7 +120,8 @@
         </div>
     </a>
     {% endfor %}
-  
+
+    {% comment "こども表示（仮）" %}
     <a class="col-12 col-md-3 d-flex justify-content-center link-underline link-underline-opacity-0 link-dark" href="{% url 'kids_board' %}">  <!-- スマホ:1列、PC:4列 -->
         <div class="circle-home-child circle-outline d-flex justify-content-center align-items-center">
             <div class="circle-inline d-flex flex-column justify-content-center align-items-center">
@@ -179,8 +171,15 @@
                 </div>
             </div>
         </div>
-    </a>
+    </a>{% endcomment %}
 </div>
-
+{% else %}
+{% comment "こども追加前" %}{% endcomment %}
+<div class="home-container">
+    <h2>{{ user.username }}さん、ようこそ！</h2>
+    <div class="circle-home shadow d-flex justify-content-center align-items-center">
+        <p>右上の設定ボタンから、<br>こどもを追加してください。</p>
+    </div>
+</div>
+{% endif %}
 {% endblock %}
-
