@@ -129,10 +129,8 @@
     <div class="py-5 g-4 d-flex flex-row justify-content-center align-items-center">
         <img class="w-15" src="{% static 'images/avatar_icon/12_lion.png' %}" alt="こどもアイコン">
         <div class="d-flex flex-column justify-content-center align-items-center">
-            {% comment "こども変数受け取り" %}
-            <p class="fs-3 m-3">{% child.name %} さん の きょうの よてい</p>
-            {% endcomment %}
-            <p class="fs-3 m-3">こども さん の きょうの よてい</p>
+            {% comment "こども変数受け取り" %}{% endcomment %}
+            <p class="fs-3 m-3">{{ selected_child.child_name }} さん の きょうの よてい</p>
             <div class="d-flex flex-row justify-content-center align-items-center gap-4">
                 {% comment "こどもの予定表示" %}
                 {% for schedule in schedules %}

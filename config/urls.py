@@ -17,20 +17,8 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
-# from kids_board.views import (
-#     HomeView,
-#     KidsBoardView,
-#     PrepItemsMornView,
-#     PrepItemsView,
-#     PrepItemEditView,
-#     CustomItemsEditView,
-#     NewItemsEditView,
-#     ScheduleView,
-#     SettingsView,
-# )
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("kids_board.urls")),  # ""はhttp://localhost:8000/　#kids_board/urls.pyを使う
-    # path("home/", HomeView.as_view(template_name="kids_board/home.html"), name="home"),
 ]
