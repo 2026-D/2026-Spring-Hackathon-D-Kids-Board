@@ -1,0 +1,551 @@
+{% load static %}
+
+<!-- ================= アイコン選択モーダル ================= -->
+<div class="modal fade" id="choicePrepItemIconsModal" tabindex="-1" aria-labelledby="choicePrepItemIconsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="choicePrepItemIconsModalLabel">アイコン選択</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- アイコン選択 -->
+                <div style="max-height: 300px; overflow-y: auto;">
+                    <div class="container text-center">
+                        <div class="row row-cols-auto justify-content-center">
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                                        <img class="" src="{% static 'images/prep_item/1_allowance.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/2_backpack.png' %}" alt="アイコン" style="width: 32px; height: 32px; ">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/3_bag.png' %}" alt="アイコン" style="width: 32px; height: 32px; ">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/4_toothbrush.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/5_toilet.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/6_sunscreen.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/7_moisturizing_cream.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/8_nail_clippers.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/9_hair.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/10_faucet.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/11_mask.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/12_cutlery.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/13_soap.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/14_medicine.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/15_medicine2.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/16_bath.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/17_cleaning.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/18_clothes.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/19_socks.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/20_school.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/21_sports_uniform.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/22_paper_and_pen.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/23_study.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/24_stationery.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/25_tablet.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/26_pc.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/27_mail.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/28_calendar.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/29_clock.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/30_board.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/31_boxes.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/32_watering.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/33_icecream.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/34_donuts.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/35_pancake.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/36_candy.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/37_badminton.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/38_baseball.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/39_soccer.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/40_tabletennis.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/41_piano.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/42_swimming.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/43_plant.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/71_heart-fill.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/72_star-fill.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/73_suit-spade-fill.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/74_clover.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/75_suit-diamond-fill.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/76_stars.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/77_moon-stars.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/78_pencil.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/79_emoji-smile.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/80_emoji-laughing.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/81_emoji-wink.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/82_emoji-sunglasses.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/83_emoji-heart-eyes.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/91_square-1.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/92_square-2.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/93_square-3.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/94_square-4.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/95_square-5.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/96_square-6.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/97_square-7.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/98_square-8.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/99_square-9.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/111_red.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/112_orange.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/113_yellow.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/114_light_green.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/115_green.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/116_light_blue.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/117_blue.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/118_purple.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/119_pink.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col">
+                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
+                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 45px; height: 45px; ">
+                                        <img class="" src="{% static 'images/prep_item/120_white.png' %}" alt="アイコン" style="width: 32px; height: 32px;">
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <div class="modal-footer d-flex justify-content-between">
+            <button type="button" class="btn btn-outline-primary border-0 fw-normal" data-bs-dismiss="modal">キャンセル</button>
+            <button type="button" class="btn btn-primary">けってい</button>
+        </div>
+    </div>
+  </div>
+</div>

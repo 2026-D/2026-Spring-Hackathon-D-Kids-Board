@@ -230,6 +230,24 @@
         .btn-danger-red-hover:hover {
             color: #dc3545;
         }
+        /*やることカードの名前が長い場合(３行）に省略表示する*/
+        .prep-item-name {
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            word-break: break-word;
+        }
+        /* スマホ（〜767px）の時、やることカードの名前が長い場合に省略表示する（２行）*/
+        @media (max-width: 767px) {
+        .prep-item-name {
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            word-break: break-word;
+        }
+        }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
@@ -387,6 +405,7 @@
     {% include "kids_board/modals/delete_child.html" %}
     {% include "kids_board/modals/edit_child.html" %}
     {% include "kids_board/modals/edit_family.html" %}
+    {% include "kids_board/modals/choice_prep_item_icons.html" %}
 </div>
 
 {% bootstrap_javascript %}  {# JSは</body>直前が正しい #}
@@ -396,6 +415,7 @@
 <script src="{% static 'js/add_child.js' %}"></script>
 <script src="{% static 'js/edit_child.js' %}"></script>
 <script src="{% static 'js/delete_child.js' %}"></script>
+<script src="{% static 'js/choice_prep_item_icons.js' %}"></script>
 {% endblock %}
 </body>
 </html>

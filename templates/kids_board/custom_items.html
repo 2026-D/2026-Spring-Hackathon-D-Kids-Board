@@ -112,10 +112,10 @@
     <!--カード選択入力 + PC用ボタン-->
     <div class="d-flex flex-column justify-content-center align-items-center gap-2 order-1 order-md-2">
         <p class="m-2">アイコンを えらぶ</p>
-        <div class="prep-card-custom rounded shadow border-0 m-2 p-2 d-flex flex-row justify-content-center align-items-center gap-0" style="background-color: #fff; width: 100px; height: 100px;" type="button">
-            <img src="{% static 'images/prep_item/12_cutlery.png' %}" class="m-0 w-35 h-auto" >
-            <img src="{% static 'images/button_icon/pencil-square.png' %}" alt="編集アイコン" class="m-0 mt-md-4" type="button" style="top: 10px; right: 10px; width: 20px; height: auto;">
-        </div>
+        <button type="button" class="prep-card-custom rounded shadow border-0 m-2 p-2 d-flex flex-row justify-content-center align-items-center gap-0" style="background-color: #fff; width: 100px; height: 100px; cursor: pointer;" data-bs-toggle="modal" data-bs-target="#choicePrepItemIconsModal" aria-label="アイコンを選択">
+            <img src="{% static 'images/prep_item/12_cutlery.png' %}" class="m-0 w-35 h-auto" alt="選択アイコン">
+            <img src="{% static 'images/button_icon/pencil-square.png' %}" alt="編集アイコン" class="m-0 mt-md-4" style="top: 10px; right: 10px; width: 20px; height: auto;">
+        </button>
         <div class="d-none d-md-flex flex-row justify-content-center align-items-center mt-md-5">
             <a class="btn btn-outline-primary mt-2 btn-lg btn-cancel" href="{% url 'prep_items' %}">キャンセル</a>
             <button class="btn btn-primary mt-2 btn-lg">つくる</button>
@@ -140,7 +140,7 @@
         <!--表示用-->
         <!--カード-->
         <div class="prep-card rounded shadow border-0 m-4 p-2" style="background-color: #fff;" type="button">
-            <p class="m-0">{{ prep_item.name}}</p>
+            <p class="m-0 prep-item-name">{{ prep_item.name }}</p>
             <img src="{% static prep_item.prep_icon %}" class="mx-auto w-35 h-auto">
         </div>
         <!--入力欄（閲覧専用）-->
