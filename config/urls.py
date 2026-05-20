@@ -34,7 +34,7 @@ urlpatterns = [
     path("", include("kids_board.urls")),  # ""はhttp://localhost:8000/　#kids_board/urls.pyを使う
     path("home/", HomeView.as_view(template_name="kids_board/home.html"), name="home"),
     path(
-        "kids_board/",
+        "kids_board/<int:child_id>/",
         KidsBoardView.as_view(template_name="kids_board/kids_board.html"),
         name="kids_board",
     ),
