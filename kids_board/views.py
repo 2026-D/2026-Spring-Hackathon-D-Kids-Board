@@ -94,11 +94,18 @@ class KidsBoardView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class PrepItemsMornView(LoginRequiredMixin, TemplateView):
+class PrepItemsMornView(LoginRequiredMixin, ListView):
     template_name = "kids_board/prep_items_morn.html"
 
+    model = PrepItem
+    template_name = "kids_board/prep_items_morn.html"
+    context_object_name = "prep_items"
 
-class PrepItemsView(LoginRequiredMixin, TemplateView):
+    def get_queryset(self):
+        return PrepItem.objects.filter(category_type__contains="あさ")
+
+
+class PrepItemsView(LoginRequiredMixin, ListView):
     template_name = "kids_board/prep_items.html"
 
     def get_context_data(self, **kwargs):
