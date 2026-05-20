@@ -1,0 +1,27 @@
+{% load static %}
+
+<!-- ================= settingに入る確認モーダル ================= -->
+<div class="modal fade" id="enterSettingsModal" tabindex="-1" aria-labelledby="enterSettingsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="enterSettingsModalLabel">せってい</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="enter_settings_text">おうちのひとと いっしょに そうさしてください。<br>パスワードを にゅうりょくしてください。</p>
+                <form>
+                    <div class="mb-3">
+                        <label for="passwordInput" class="form-label">パスワード</label>
+                        <input type="password" class="form-control" id="passwordInput" placeholder="password">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer d-flex justify-content-between">
+                <button type="button" class="btn btn btn-outline-primary border-0 fw-normal" data-bs-dismiss="modal">キャンセル</button>
+                <button type="button" class="btn btn-primary" id="enterSettingsButton" data-settings-url="{% url 'settings' %}">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+

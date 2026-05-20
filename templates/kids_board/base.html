@@ -220,11 +220,15 @@
             text-align: center;
             padding: 20px;
         }
-            /*日付指定のカレンダーの見た目*/
+        /*日付指定のカレンダーの見た目*/
         .js-datepicker{
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+        /* こども削除の赤いボタンのホバー */
+        .btn-danger-red-hover:hover {
+            color: #dc3545;
         }
     </style>
     {% block extra_css %}{% endblock %}
@@ -275,7 +279,7 @@
                         <a class="nav-link" href="#"><img src="{% static 'images/button_icon/volume-up.png' %}" alt="volume" width="60" height="60"></a>
                     </div>
                     <div class="nav-item">
-                        <a class="nav-link" href="#"><img src="{% static 'images/button_icon/gear.png' %}" alt="settings" width="60" height="60"></a>
+                        <button class="nav-link bg-transparent border-0" type="button" data-bs-toggle="modal" data-bs-target="#enterSettingsModal"><img src="{% static 'images/button_icon/gear.png' %}" alt="settings" width="60" height="60"></button>
                     </div>
                 </div>
 
@@ -292,25 +296,25 @@
                             <a class="nav-link" href="#"><img src="{% static 'images/button_icon/volume-up.png' %}" alt="volume"></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#"><img src="{% static 'images/button_icon/gear.png' %}" alt="settings"></a>
+                            <button class="nav-link bg-transparent border-0" type="button" data-bs-toggle="modal" data-bs-target="#enterSettingsModal"><img src="{% static 'images/button_icon/gear.png' %}" alt="settings"></button>
                         </li>
                     </ul>
                 </div>
                 {% else %}
                     {% if request.resolver_match.url_name == 'login' %}
                     <div class="nav-item">
-                        <a class="btn btn-outline-primary btn-sign" href="#" role="button">Sign Up</a>
+                        <a class="btn btn-outline-primary btn-sign" href="{% url 'signup' %}" role="button">Sign Up</a>
                     </div>
                     {% elif request.resolver_match.url_name == 'signup' %}
                     <div class="nav-item">
-                        <a class="btn btn-outline-primary btn-sign" href="#" role="button">Login</a>
+                        <a class="btn btn-outline-primary btn-sign" href="{% url 'login' %}" role="button">Login</a>
                     </div>
                     {% else %}
                     <div class="nav-item">
-                        <a class="btn btn-outline-primary btn-sign" href="#" role="button">Login</a>
+                        <a class="btn btn-outline-primary btn-sign" href="{% url 'login' %}" role="button">Login</a>
                     </div>
                     <div class="nav-item">
-                        <a class="btn btn-outline-primary btn-sign" href="#" role="button">Sign Up</a>
+                        <a class="btn btn-outline-primary btn-sign" href="{% url 'signup' %}" role="button">Sign Up</a>
                     </div>
                     {% endif %}
                 {% endif %}
@@ -375,7 +379,23 @@
             syncSwitch();
         });
     </script>
-    {% block extra_js %}
-    {% endblock %}
+
+<!-- ===== モーダル ===== -->
+<div id="modal-container">
+    {% include "kids_board/modals/enter_settings.html" %}
+    {% include "kids_board/modals/add_child.html" %}
+    {% include "kids_board/modals/delete_child.html" %}
+    {% include "kids_board/modals/edit_child.html" %}
+    {% include "kids_board/modals/edit_family.html" %}
+</div>
+
+{% bootstrap_javascript %}  {# JSは</body>直前が正しい #}
+{% block extra_js %}
+<script src="{% static 'js/settings.js' %}"></script>
+<script src="{% static 'js/edit_family.js' %}"></script>
+<script src="{% static 'js/add_child.js' %}"></script>
+<script src="{% static 'js/edit_child.js' %}"></script>
+<script src="{% static 'js/delete_child.js' %}"></script>
+{% endblock %}
 </body>
 </html>

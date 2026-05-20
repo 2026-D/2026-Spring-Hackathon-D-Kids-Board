@@ -8,6 +8,7 @@ from .forms import SignUpForm, LoginForm  # forms.pyからSignUpForm, LoginForm�
 from django.views.generic import TemplateView
 from django.urls import reverse_lazy
 from .models import PrepItem
+from django.contrib.auth.mixins import LoginRequiredMixin  # ログイン必須のクラスを読み込む
 
 
 def signup_view(request):  # signup/へのアクセス時に動く処理
@@ -50,13 +51,11 @@ def logout_view(request):  # logout/へのアクセス時に動く処理
     return redirect("login")  # ログアウト後にloginページへ移動する
 
 
-# todo:LoginRequiredMixinを追加
-class HomeView(TemplateView):
+class HomeView(LoginRequiredMixin, TemplateView):
     template_name = "/home.html"
 
 
-# todo:LoginRequiredMixinを追加
-class KidsBoardView(TemplateView):
+class KidsBoardView(LoginRequiredMixin, TemplateView):
     template_name = "kids_board/kids_board.html"
 
     # kids_board.htmlに渡すデータ（context)を作るメソッドを定義（花丸表示用）。
@@ -69,13 +68,11 @@ class KidsBoardView(TemplateView):
         return context
 
 
-# todo:LoginRequiredMixinを追加
-class PrepItemsMornView(TemplateView):
+class PrepItemsMornView(LoginRequiredMixin, TemplateView):
     template_name = "kids_board/prep_items_morn.html"
 
 
-# todo:LoginRequiredMixinを追加
-class PrepItemsView(TemplateView):
+class PrepItemsView(LoginRequiredMixin, TemplateView):
     template_name = "kids_board/prep_items.html"
 
     def get_context_data(self, **kwargs):
@@ -453,6 +450,9 @@ class NewItemsEditView(TemplateView):
         return context
 
 
-# todo:LoginRequiredMixinを追加
-class ScheduleView(TemplateView):
+class ScheduleView(LoginRequiredMixin, TemplateView):
     template_name = "kids_board/schedule.html"
+
+
+class SettingsView(LoginRequiredMixin, TemplateView):
+    template_name = "kids_board/settings.html"
