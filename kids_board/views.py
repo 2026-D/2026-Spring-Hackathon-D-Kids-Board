@@ -1,5 +1,8 @@
 # Create your views here.
-from django.contrib.auth import login  # 登録ユーザーをログイン状態にする
+from django.contrib.auth import (
+    login,
+    logout,
+)  # 登録ユーザーをログイン状態にする # ログアウト状態にする
 from django.shortcuts import render, redirect  # renderはHTML表示 #redirectは別ページ移動
 from .forms import SignUpForm, LoginForm  # forms.pyからSignUpForm, LoginFormを読み込む
 from django.views.generic import TemplateView
@@ -41,6 +44,11 @@ def login_view(request):  # login/へのアクセス時に動く処理
         "kids_board/login.html",
         {"form": form},
     )
+
+
+def logout_view(request):  # logout/へのアクセス時に動く処理
+    logout(request)  # ログイン状態を解除する
+    return redirect("login")  # ログアウト後にloginページへ移動する
 
 
 class HomeView(LoginRequiredMixin, TemplateView):

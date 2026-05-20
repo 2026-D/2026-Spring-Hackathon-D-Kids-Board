@@ -95,7 +95,7 @@
 
 {% block content %}
 
-<form class="logout-form" {% comment %}action="{% url 'logout' %}" method="post"{% endcomment %}>
+<form class="logout-form" action="{% url 'logout' %}" method="post">
     {% csrf_token %}
     <button class="btn btn-outline-dark" type="submit">
         <img src="{% static 'images/button_icon/box-arrow-right.png' %}" alt="ログアウト">
