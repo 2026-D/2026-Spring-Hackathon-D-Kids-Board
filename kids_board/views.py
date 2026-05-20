@@ -83,6 +83,11 @@ class KidsBoardView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         # 親クラス(TemplateView)が用意する基本のcontextを取得し、context変数に格納.
         context = super().get_context_data(**kwargs)
+        children = Child.objects.filter(parent=self.request.user, deleted_at__isnull=True)
+        child_id = self.kwargs.get("child_id")
+        selected_child = children.filter(id=child_id).first() if child_id else children.first()
+        context["children"] = children
+        context["selected_child"] = selected_child
         # 花丸を表示する場合はTrueにする。
         # 子供のタスク達成状況などに応じてTrue/Falseを切り替える想定。
         context["show_badge"] = False
