@@ -434,18 +434,6 @@
   },
   {
     "model": "kids_board.preprule",
-    "pk": 4013,
-    "fields": {
-      "prep_item": 3013,
-      "rule_type": "day_of_week",
-      "day_of_week": 1,
-      "specific_date": null,
-      "created_at": "2026-05-18T09:00:00Z",
-      "updated_at": "2026-05-18T09:00:00Z"
-    }
-  },
-  {
-    "model": "kids_board.preprule",
     "pk": 4014,
     "fields": {
       "prep_item": 3014,
@@ -463,6 +451,174 @@
       "prep_item": 3015,
       "rule_type": "day_of_week",
       "day_of_week": 5,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  }, 
+  {
+    "model": "kids_board.preprule",
+    "pk": 4016,
+    "fields": {
+      "prep_item": 3013,
+      "rule_type": "day_of_week",
+      "day_of_week": 1,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4017,
+    "fields": {
+      "prep_item": 3013,
+      "rule_type": "day_of_week",
+      "day_of_week": 2,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4018,
+    "fields": {
+      "prep_item": 3013,
+      "rule_type": "day_of_week",
+      "day_of_week": 3,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4019,
+    "fields": {
+      "prep_item": 3013,
+      "rule_type": "day_of_week",
+      "day_of_week": 4,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4020,
+    "fields": {
+      "prep_item": 3013,
+      "rule_type": "day_of_week",
+      "day_of_week": 5,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4021,
+    "fields": {
+      "prep_item": 3013,
+      "rule_type": "day_of_week",
+      "day_of_week": 6,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4022,
+    "fields": {
+      "prep_item": 3013,
+      "rule_type": "day_of_week",
+      "day_of_week": 0,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+   {
+    "model": "kids_board.preprule",
+    "pk": 4023,
+    "fields": {
+      "prep_item": 3002,
+      "rule_type": "day_of_week",
+      "day_of_week": 0,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4024,
+    "fields": {
+      "prep_item": 3002,
+      "rule_type": "day_of_week",
+      "day_of_week": 1,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4025,
+    "fields": {
+      "prep_item": 3002,
+      "rule_type": "day_of_week",
+      "day_of_week": 2,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4026,
+    "fields": {
+      "prep_item": 3002,
+      "rule_type": "day_of_week",
+      "day_of_week": 3,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4027,
+    "fields": {
+      "prep_item": 3002,
+      "rule_type": "day_of_week",
+      "day_of_week": 4,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4028,
+    "fields": {
+      "prep_item": 3002,
+      "rule_type": "day_of_week",
+      "day_of_week": 5,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4029,
+    "fields": {
+      "prep_item": 3002,
+      "rule_type": "day_of_week",
+      "day_of_week": 6,
       "specific_date": null,
       "created_at": "2026-05-18T09:00:00Z",
       "updated_at": "2026-05-18T09:00:00Z"
