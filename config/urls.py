@@ -39,7 +39,7 @@ urlpatterns = [
         name="kids_board",
     ),
     path(
-        "prep_items_morn/",
+        "prep_items_morn/<int:child_id>/",
         PrepItemsMornView.as_view(template_name="kids_board/prep_items_morn.html"),
         name="prep_items_morn",
     ),
