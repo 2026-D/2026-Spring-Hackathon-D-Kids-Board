@@ -126,6 +126,7 @@ class PrepItemsMornView(LoginRequiredMixin, ListView):
         target_date = date.today()
         weekday = target_date.weekday()
         is_holiday = jpholiday.is_holiday(target_date)
+        child_id = self.kwargs.get("child_id")
 
         # Qオブジェクトを使って、表示ルール（prep_item_show_rule(今日が特定日か又は曜日か））を定義
         prep_item_show_rule = Q(
@@ -147,6 +148,7 @@ class PrepItemsMornView(LoginRequiredMixin, ListView):
             parent=self.request.user,
             is_active=True,
             category_type=PrepItem.CategoryType.MORNING,
+            children__id=child_id,
         ).filter(prep_item_show_rule)
 
         return queryset.distinct()  # 重複するお支度アイテムがある場合は、distinct()で重複を排除
