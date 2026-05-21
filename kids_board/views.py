@@ -7,11 +7,14 @@ from django.shortcuts import render, redirect  # renderはHTML表示 #redirect�
 from .forms import SignUpForm, LoginForm, ChildForm  # forms.pyからSignUpForm, LoginFormを読み込む
 from django.views.generic import TemplateView, ListView
 from django.urls import reverse_lazy
-from .models import PrepItem, Child
+from .models import PrepItem, Child, PrepRule
 from django.contrib.auth.mixins import LoginRequiredMixin  # ログイン必須のクラスを読み込む
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
+from datetime import date
+import jpholiday
 
 
 def signup_view(request):  # signup/へのアクセス時に動く処理
@@ -130,15 +133,59 @@ class KidsBoardView(LoginRequiredMixin, TemplateView):
         return context
 
 
+# ルールタイプを取得するヘルパー関数を定義(PrepItemsMornView,PrepItemsAftView,PrepItemsNiteViewで使用)
+def get_today_rule_type(target_date):
+    # 今日が特定日か判定
+    if PrepRule.objects.filter(
+        rule_type=PrepRule.RuleType.SPECIFIC,
+        specific_date=target_date,
+    ).exists():
+        return PrepRule.RuleType.SPECIFIC
+
+    # 今日が祝日か判定
+    if jpholiday.is_holiday(target_date):
+        return PrepRule.RuleType.HOLIDAY
+    # 今日が曜日指定のルールに該当するか判定
+    if target_date.weekday() < 5:
+        return PrepRule.RuleType.WEEKDAY
+
+    return PrepRule.RuleType.DAY_OF_WEEK
+
+
 class PrepItemsMornView(LoginRequiredMixin, ListView):
     template_name = "kids_board/prep_items_morn.html"
-
     model = PrepItem
-    template_name = "kids_board/prep_items_morn.html"
     context_object_name = "prep_items"
 
+    # 今日のルールタイプを取得するヘルパー関数を定義
     def get_queryset(self):
-        return PrepItem.objects.filter(category_type__contains="あさ")
+        target_date = date.today()
+        weekday = target_date.weekday()
+        is_holiday = jpholiday.is_holiday(target_date)
+
+        # Qオブジェクトを使って、表示ルール（prep_item_show_rule(今日が特定日か又は曜日か））を定義
+        prep_item_show_rule = Q(
+            rules__rule_type=PrepRule.RuleType.SPECIFIC,
+            rules__specific_date=target_date,
+        ) | Q(
+            rules__rule_type=PrepRule.RuleType.DAY_OF_WEEK,
+            rules__day_of_week=weekday,
+        )
+        # もし今日が祝日なら、祝日に該当するか表示ルールに加える
+        if is_holiday:
+            prep_item_show_rule |= Q(rules__rule_type=PrepRule.RuleType.HOLIDAY)
+        # もし今日が月〜金で、祝日ではない（平日）なら、今日の曜日に該当するか表示ルールに加える
+        elif weekday < 5:
+            prep_item_show_rule |= Q(rules__rule_type=PrepRule.RuleType.WEEKDAY)
+
+        # ここで表示するprep_itemを絞り込む
+        queryset = PrepItem.objects.filter(
+            parent=self.request.user,
+            is_active=True,
+            category_type=PrepItem.CategoryType.MORNING,
+        ).filter(prep_item_show_rule)
+
+        return queryset.distinct()  # 重複するお支度アイテムがある場合は、distinct()で重複を排除
 
 
 class PrepItemsView(LoginRequiredMixin, ListView):
