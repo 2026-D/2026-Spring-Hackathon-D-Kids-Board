@@ -88,7 +88,7 @@
                     {% endif %}
                 </div>
                 <p class="fs-4">あさ やること</p>
-                <a class="d-flex justify-content-center align-items-center"  href="{% url 'prep_items_morn' %}">
+                <a class="d-flex justify-content-center align-items-center"  href="{% url 'prep_items_morn' selected_child.id %}">
                     <img src="{% static 'images/button_icon/btn_start.png' %}" alt="はじめる" class="mx-auto w-35 h-auto">
                 </a>
             </div>
