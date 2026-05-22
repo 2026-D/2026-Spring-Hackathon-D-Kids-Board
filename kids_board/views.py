@@ -248,7 +248,7 @@ class PrepItemsNiteView(LoginRequiredMixin, ListView):
         return context
 
 
-class PrepItemsView(LoginRequiredMixin, ListView):
+class PrepItemsView(LoginRequiredMixin, TemplateView):
     template_name = "kids_board/prep_items.html"
 
     def get_context_data(self, **kwargs):
