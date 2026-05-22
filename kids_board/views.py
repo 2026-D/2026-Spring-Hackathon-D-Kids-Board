@@ -166,6 +166,88 @@ class PrepItemsMornView(LoginRequiredMixin, ListView):
         return context
 
 
+class PrepItemsAftView(LoginRequiredMixin, ListView):
+    template_name = "kids_board/prep_items_aft.html"
+    model = PrepItem
+    context_object_name = "prep_items"
+
+    def get_queryset(self):
+        target_date = date.today()
+        rule_type = get_today_rule_type(target_date)
+        child_id = self.kwargs.get("child_id")
+
+        prep_item_show_rule = Q(
+            rules__rule_type=PrepRule.RuleType.SPECIFIC,
+            rules__specific_date=target_date,
+        ) | Q(
+            rules__rule_type=PrepRule.RuleType.DAY_OF_WEEK,
+            rules__day_of_week=target_date.weekday(),
+        )
+
+        if rule_type == PrepRule.RuleType.HOLIDAY:
+            prep_item_show_rule |= Q(rules__rule_type=PrepRule.RuleType.HOLIDAY)
+        elif rule_type == PrepRule.RuleType.WEEKDAY:
+            prep_item_show_rule |= Q(rules__rule_type=PrepRule.RuleType.WEEKDAY)
+
+        queryset = PrepItem.objects.filter(
+            parent=self.request.user,
+            is_active=True,
+            category_type=PrepItem.CategoryType.AFTERNOON,
+            children__id=child_id,
+        ).filter(prep_item_show_rule)
+
+        return queryset.distinct()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        today = date.today()
+        WEEKDAY_JP = ["げつ", "か", "すい", "もく", "きん", "ど", "にち"]
+        context["today"] = today
+        context["weekday_jp"] = WEEKDAY_JP[today.weekday()]
+        return context
+
+
+class PrepItemsNiteView(LoginRequiredMixin, ListView):
+    template_name = "kids_board/prep_items_nite.html"
+    model = PrepItem
+    context_object_name = "prep_items"
+
+    def get_queryset(self):
+        target_date = date.today()
+        rule_type = get_today_rule_type(target_date)
+        child_id = self.kwargs.get("child_id")
+
+        prep_item_show_rule = Q(
+            rules__rule_type=PrepRule.RuleType.SPECIFIC,
+            rules__specific_date=target_date,
+        ) | Q(
+            rules__rule_type=PrepRule.RuleType.DAY_OF_WEEK,
+            rules__day_of_week=target_date.weekday(),
+        )
+
+        if rule_type == PrepRule.RuleType.HOLIDAY:
+            prep_item_show_rule |= Q(rules__rule_type=PrepRule.RuleType.HOLIDAY)
+        elif rule_type == PrepRule.RuleType.WEEKDAY:
+            prep_item_show_rule |= Q(rules__rule_type=PrepRule.RuleType.WEEKDAY)
+
+        queryset = PrepItem.objects.filter(
+            parent=self.request.user,
+            is_active=True,
+            category_type=PrepItem.CategoryType.NIGHT,
+            children__id=child_id,
+        ).filter(prep_item_show_rule)
+
+        return queryset.distinct()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        today = date.today()
+        WEEKDAY_JP = ["げつ", "か", "すい", "もく", "きん", "ど", "にち"]
+        context["today"] = today
+        context["weekday_jp"] = WEEKDAY_JP[today.weekday()]
+        return context
+
+
 class PrepItemsView(LoginRequiredMixin, ListView):
     template_name = "kids_board/prep_items.html"
 

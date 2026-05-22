@@ -21,6 +21,8 @@ from kids_board.views import (
     HomeView,
     KidsBoardView,
     PrepItemsMornView,
+    PrepItemsAftView,
+    PrepItemsNiteView,
     PrepItemsView,
     PrepItemEditView,
     CustomItemsEditView,
@@ -42,6 +44,16 @@ urlpatterns = [
         "prep_items_morn/<int:child_id>/",
         PrepItemsMornView.as_view(template_name="kids_board/prep_items_morn.html"),
         name="prep_items_morn",
+    ),
+    path(
+        "prep_items_aft/<int:child_id>/",
+        PrepItemsAftView.as_view(template_name="kids_board/prep_items_aft.html"),
+        name="prep_items_aft",
+    ),
+    path(
+        "prep_items_nite/<int:child_id>/",
+        PrepItemsNiteView.as_view(template_name="kids_board/prep_items_nite.html"),
+        name="prep_items_nite",
     ),
     path(
         "prep_items/",

@@ -96,7 +96,7 @@
                     {% endif %}
                 </div>
                 <p class="fs-4">かえって やること</p>
-                <a class="d-flex justify-content-center align-items-center"  href="#">
+                <a class="d-flex justify-content-center align-items-center"  href="{% url 'prep_items_aft' selected_child.id %}">
                     <img src="{% static 'images/button_icon/btn_start.png' %}" alt="はじめる" class="mx-auto w-35 h-auto">
                 </a>
             </div>
@@ -112,7 +112,7 @@
                     {% endif %}
                 </div>
                 <p class="fs-4">よる やること</p>
-                <a class="d-flex justify-content-center align-items-center"  href="#">
+                <a class="d-flex justify-content-center align-items-center"  href="{% url 'prep_items_nite' selected_child.id %}">
                     <img src="{% static 'images/button_icon/btn_start.png' %}" alt="はじめる" class="mx-auto w-35 h-auto">
                 </a>
             </div>
