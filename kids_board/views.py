@@ -125,8 +125,12 @@ class KidsBoardView(LoginRequiredMixin, TemplateView):
         children = Child.objects.filter(parent=self.request.user, deleted_at__isnull=True)
         child_id = self.kwargs.get("child_id")
         selected_child = children.filter(id=child_id).first() if child_id else children.first()
+        today = date.today()
+        WEEKDAY_JP = ["げつ", "か", "すい", "もく", "きん", "ど", "にち"]
         context["children"] = children
         context["selected_child"] = selected_child
+        context["today"] = today
+        context["weekday_jp"] = WEEKDAY_JP[today.weekday()]
         # 花丸を表示する場合はTrueにする。
         # 子供のタスク達成状況などに応じてTrue/Falseを切り替える想定。
         context["show_badge"] = False
@@ -157,11 +161,10 @@ class PrepItemsMornView(LoginRequiredMixin, ListView):
     model = PrepItem
     context_object_name = "prep_items"
 
-    # 今日のルールタイプを取得するヘルパー関数を定義
+    # 今日のルールタイプを取得するために、get_today_rule_type関数を呼び出す。
     def get_queryset(self):
         target_date = date.today()
-        weekday = target_date.weekday()
-        is_holiday = jpholiday.is_holiday(target_date)
+        rule_type = get_today_rule_type(target_date)
         child_id = self.kwargs.get("child_id")
 
         # Qオブジェクトを使って、表示ルール（prep_item_show_rule(今日が特定日か又は曜日か））を定義
@@ -170,13 +173,13 @@ class PrepItemsMornView(LoginRequiredMixin, ListView):
             rules__specific_date=target_date,
         ) | Q(
             rules__rule_type=PrepRule.RuleType.DAY_OF_WEEK,
-            rules__day_of_week=weekday,
+            rules__day_of_week=target_date.weekday(),
         )
         # もし今日が祝日なら、祝日に該当するか表示ルールに加える
-        if is_holiday:
+        if rule_type == PrepRule.RuleType.HOLIDAY:
             prep_item_show_rule |= Q(rules__rule_type=PrepRule.RuleType.HOLIDAY)
         # もし今日が月〜金で、祝日ではない（平日）なら、今日の曜日に該当するか表示ルールに加える
-        elif weekday < 5:
+        elif rule_type == PrepRule.RuleType.WEEKDAY:
             prep_item_show_rule |= Q(rules__rule_type=PrepRule.RuleType.WEEKDAY)
 
         # ここで表示するprep_itemを絞り込む
@@ -188,6 +191,15 @@ class PrepItemsMornView(LoginRequiredMixin, ListView):
         ).filter(prep_item_show_rule)
 
         return queryset.distinct()  # 重複するお支度アイテムがある場合は、distinct()で重複を排除
+
+    # 追加のコンテキストで今日の日付をテンプレートに渡す
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        today = date.today()
+        WEEKDAY_JP = ["げつ", "か", "すい", "もく", "きん", "ど", "にち"]
+        context["today"] = today
+        context["weekday_jp"] = WEEKDAY_JP[today.weekday()]
+        return context
 
 
 class PrepItemsView(LoginRequiredMixin, ListView):
