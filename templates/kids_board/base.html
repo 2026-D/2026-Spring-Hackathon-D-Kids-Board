@@ -266,11 +266,10 @@
             <div class="col-2 d-flex align-items-center justify-content-center">
                 <!-- ログイン中のみ表示 -->
                 {% if user.is_authenticated %}
-                <div class="nav-item d-flex flex-row align-items-center justify-content-center">
-                    {% if child.name %}
-                        <img class="button-image" src="{% static 'images/avatar_icon/12_lion.png' %}" alt="こどもアイコン">
-                        <p class="fs-4 fw-bold text-white text-nowrap">こども</p>
-                        {% comment %}<p>{{ child.name }}</p>{% endcomment %}
+                <div class="nav-item d-flex align-items-center justify-content-center d-none d-md-flex">
+                    {% if selected_child.child_name %}
+                    <img class="button-image" src="{% static 'images/avatar_icon/12_lion.png' %}" alt="こどもアイコン" style="width: 100px; height: auto; margin-right: 8px;">
+                    <p class="fs-4 fw-bold text-white text-nowrap">{{ selected_child.child_name }}</p>
                     {% endif %}
                 </div>
                 {% endif %}

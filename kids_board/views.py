@@ -211,13 +211,16 @@ class PrepItemsMornView(LoginRequiredMixin, ListView):
 
         return queryset.distinct()  # 重複するお支度アイテムがある場合は、distinct()で重複を排除
 
-    # 追加のコンテキストで今日の日付をテンプレートに渡す
+    # 追加のコンテキストで今日の日付とヘッダーの子供をテンプレートに渡す
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         today = date.today()
         WEEKDAY_JP = ["げつ", "か", "すい", "もく", "きん", "ど", "にち"]
+        child_id = self.kwargs.get("child_id")
+        selected_child = Child.objects.get(id=child_id)
         context["today"] = today
         context["weekday_jp"] = WEEKDAY_JP[today.weekday()]
+        context["selected_child"] = selected_child
         return context
 
 
@@ -255,10 +258,13 @@ class PrepItemsAftView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        child_id = self.kwargs.get("child_id")
         today = date.today()
         WEEKDAY_JP = ["げつ", "か", "すい", "もく", "きん", "ど", "にち"]
+        selected_child = Child.objects.get(id=child_id)
         context["today"] = today
         context["weekday_jp"] = WEEKDAY_JP[today.weekday()]
+        context["selected_child"] = selected_child
         return context
 
 
@@ -296,10 +302,13 @@ class PrepItemsNiteView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        child_id = self.kwargs.get("child_id")
         today = date.today()
         WEEKDAY_JP = ["げつ", "か", "すい", "もく", "きん", "ど", "にち"]
+        selected_child = Child.objects.get(id=child_id)
         context["today"] = today
         context["weekday_jp"] = WEEKDAY_JP[today.weekday()]
+        context["selected_child"] = selected_child
         return context
 
 
@@ -683,3 +692,81 @@ class NewItemsEditView(TemplateView):
 
 class ScheduleView(LoginRequiredMixin, TemplateView):
     template_name = "kids_board/schedule.html"
+
+
+class ScheduleListView(LoginRequiredMixin, TemplateView):
+    template_name = "kids_board/schedule_list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # scheduleの仮データ
+        context["schedules"] = [
+            {
+                "id": 1,
+                "name": "がっこう",
+                "start_time": "8:00",
+                "end_time": "15:00",
+                "weekdays": [
+                    {"name": "げつようび", "checked": True},
+                    {"name": "かようび", "checked": True},
+                    {"name": "すいようび", "checked": True},
+                    {"name": "もくようび", "checked": True},
+                    {"name": "きんようび", "checked": True},
+                    {"name": "どようび", "checked": True},
+                    {"name": "にちようび", "checked": True},
+                ],
+                "holiday": [{"name": "しゅくじつ", "checked": False}],
+                "special_date": [{"name": "ひづけしてい", "checked": False, "value": None}],
+                "colors": [
+                    {"name": "RED", "value": "var(--red-400)", "checked": True},
+                    {"name": "YELLOW", "value": "var(--yellow-300)", "checked": False},
+                    {"name": "GREEN", "value": "var(--green-400)", "checked": False},
+                    {"name": "EMERALD_GREEN", "value": "var(--teal-300)", "checked": False},
+                    {"name": "SKY_BLUE", "value": "var(--cyan-300)", "checked": False},
+                    {"name": "BLUE", "value": "var(--blue-400)", "checked": False},
+                    {"name": "PURPLE", "value": "var(--indigo-300)", "checked": False},
+                    {"name": "PINK", "value": "var(--pink-300)", "checked": False},
+                    {"name": "ORANGE", "value": "var(--orange-300)", "checked": False},
+                    {"name": "WHITE", "value": "var(--gray-100)", "checked": False},
+                ],
+            },
+            {
+                "id": 2,
+                "name": "ルーム",
+                "start_time": "15:00",
+                "end_time": "17:00",
+                "weekdays": [
+                    {"name": "げつようび", "checked": True},
+                    {"name": "かようび", "checked": False},
+                    {"name": "すいようび", "checked": True},
+                    {"name": "もくようび", "checked": False},
+                    {"name": "きんようび", "checked": True},
+                    {"name": "どようび", "checked": False},
+                    {"name": "にちようび", "checked": False},
+                ],
+                "holiday": [{"name": "しゅくじつ", "checked": False}],
+                "special_date": [{"name": "ひづけしてい", "checked": False, "value": None}],
+                "colors": [
+                    {"name": "RED", "value": "var(--red-400)", "checked": False},
+                    {"name": "YELLOW", "value": "var(--yellow-300)", "checked": False},
+                    {"name": "GREEN", "value": "var(--green-400)", "checked": False},
+                    {"name": "EMERALD_GREEN", "value": "var(--teal-300)", "checked": False},
+                    {"name": "SKY_BLUE", "value": "var(--cyan-300)", "checked": False},
+                    {"name": "BLUE", "value": "var(--blue-400)", "checked": False},
+                    {"name": "PURPLE", "value": "var(--indigo-300)", "checked": True},
+                    {"name": "PINK", "value": "var(--pink-300)", "checked": False},
+                    {"name": "ORANGE", "value": "var(--orange-300)", "checked": False},
+                    {"name": "WHITE", "value": "var(--gray-100)", "checked": False},
+                ],
+            },
+        ]
+        return context
+
+
+class CreateScheduleView(LoginRequiredMixin, TemplateView):
+    template_name = "kids_board/create_schedule.html"
+
+
+class SettingsView(LoginRequiredMixin, TemplateView):
+    template_name = "kids_board/settings.html"
