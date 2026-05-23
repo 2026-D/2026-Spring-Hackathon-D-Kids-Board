@@ -7,13 +7,7 @@
 
 {% block extra_css %}
 <style>
-    /*やることリスト作成欄のボタン表示（PC)の位置を調整*/
-    @media (min-width: 992px) {
-    .pc-only-padding {
-        padding: 0 0 0 60rem;
-        }
-    }
-    /*やることカードのスタイル*/
+    /*よてい入力欄のスタイル*/
     .prep-card {
         width: clamp(150px, 21vw, 240px);
         height: clamp(150px, 21vw, 240px);
@@ -26,24 +20,29 @@
     }
     /* Alpine.jsの表示・非表示制御 */
     [x-cloak] { display: none !important; } 
-
+    /*閲覧モードの無効セレクトを薄くしない*/
+    .color-select-readonly:disabled {
+        opacity: 1;
+        color: var(--bs-body-color);
+        background-color: #fff;
+        border-color: var(--bs-border-color);
+    }
     /* 閲覧モードの無効ラジオを薄くしない */
     .color-radio-readonly:disabled {
         opacity: 1;
     }
-
 </style>
 {% endblock %}
 
 {% block content %}
-<!--やることリスト表示欄-->
+<!--よていリスト表示欄-->
 <div class="m-3 p-4 p-md-2 rounded shadow" style= "background-color: var(--purple-100)">
     <div class="d-flex flex-column flex-sm-row align-items-center justify-content-around">
         <div class="d-flex flex-row align-items-center justify-content-center gap-0 gap-sm-2">
             <p class="m-0 m-sm-3 p-2 fs-2 nowrap">よてい いちらん</p>
             <img src="{% static 'images/button_icon/calendar4-week.png' %}" alt="カレンダーアイコン" class="" style="width: 45px; height: auto;">
         </div>
-        <a href="{% url 'create_schedule' %}" class="btn btn-link p-0 m-0 ms-auto pc-only-padding" aria-label="やることリストを追加" style="background-color: transparent;">
+        <a href="{% url 'create_schedule' %}" class="btn btn-link p-0 m-0 ms-auto" aria-label="やることリストを追加" style="background-color: transparent;">
             <img src="{% static 'images/button_icon/btn_add_calendar.png' %}" alt="あたらしくつくる" class="mx-md-4 mx-0 my-4" style="width: 300px; height: auto;">
         </a>
     </div>
@@ -58,14 +57,12 @@
                 <input type="text" class="form-control" id="floatingInput" value="{{ schedule.name }}" readonly>
                 <label for="floatingInput">なまえ</label>
             </div>
-            <div class="form-floating mb-3" style="width: 95%;">
-                <input type="text" class="form-control" id="floatingInput" value="{{ schedule.start_time }}" readonly>
-                <label for="floatingInput">はじまり</label>
-            </div>
-            <div class="form-floating mb-3" style="width: 95%;">
-                <input type="text" class="form-control" id="floatingInput" value="{{ schedule.end_time }}" readonly>
-                <label for="floatingInput">おわり</label>
-            </div>
+            <select class="form-select mb-3 color-select-readonly" style="width: 95%;" aria-label="はじまり" disabled>
+                <option selected>{{ schedule.start_time|default:"はじまり" }}</option>
+            </select>
+            <select class="form-select mb-3 color-select-readonly" style="width: 95%;" aria-label="おわり" disabled>
+                <option selected>{{ schedule.end_time|default:"おわり" }}</option>
+            </select>
         </div>
         <!--入力欄（閲覧専用）-->
         <div class="d-flex flex-column justify-content-center align-items-start gap-2 text" x-show.important="!editMode" x-cloak>
@@ -100,7 +97,7 @@
                 {% for color in schedule.colors %}
                 <div class="form-check" style="pointer-events: none;">
                     <input class="form-check-input color-radio-readonly" type="radio" name="color{{ schedule.id }}" id="checkColor{{ schedule.id }}_{{ forloop.counter }}" {% if color.checked %}checked{% endif %} disabled>
-                    <div class="rounded-circle" style="width: 24px; height: 24px; background-color: {{ color.value }}; border: {% if color.checked %}1px solid var(--bs-primary){% else %}1px solid #ccc{% endif %};"></div>
+                    <div class="rounded-circle" style="width: 24px; height: 24px; background-color: {{ color.value }}; border: {% if color.checked %}1.5px solid var(--bs-primary){% else %}1px solid #ccc{% endif %};"></div>
                 </div>
                 {% endfor %}
             </div>
@@ -109,17 +106,39 @@
         <!-- カード -->
         <div class="prep-card rounded shadow border-0 m-3 p-2" style="background-color: #fff;" type="button" x-show.important="editMode" x-cloak>
             <div class="form-floating mb-3" style="width: 95%;">
-                <input type="text" class="form-control" id="floatingInput" value="{{ schedule.name }}" readonly>
+                <input type="text" class="form-control" id="floatingInput" value="{{ schedule.name }}">
                 <label for="floatingInput">なまえ</label>
             </div>
-            <div class="form-floating mb-3" style="width: 95%;">
-                <input type="text" class="form-control" id="floatingInput" value="{{ schedule.start_time }}" readonly>
-                <label for="floatingInput">はじまり</label>
-            </div>
-            <div class="form-floating mb-3" style="width: 95%;">
-                <input type="text" class="form-control" id="floatingInput" value="{{ schedule.end_time }}" readonly>
-                <label for="floatingInput">おわり</label>
-            </div>
+            <select class="form-select mb-3" style="width: 95%;" aria-label="はじまり">
+                <option selected>{{ schedule.start_time|default:"はじまり" }}</option>
+                <option value="1">7:00</option>
+                <option value="2">8:00</option>
+                <option value="3">9:00</option>
+                <option value="4">10:00</option>
+                <option value="5">11:00</option>
+                <option value="6">12:00</option>
+                <option value="7">13:00</option>
+                <option value="8">14:00</option>
+                <option value="9">15:00</option>
+                <option value="10">16:00</option>
+                <option value="11">17:00</option>
+                <option value="12">18:00</option>
+            </select>
+            <select class="form-select mb-3" style="width: 95%;" aria-label="おわり">
+                <option selected>{{ schedule.end_time|default:"おわり" }}</option>
+                <option value="1">7:00</option>
+                <option value="2">8:00</option>
+                <option value="3">9:00</option>
+                <option value="4">10:00</option>
+                <option value="5">11:00</option>
+                <option value="6">12:00</option>
+                <option value="7">13:00</option>
+                <option value="8">14:00</option>
+                <option value="9">15:00</option>
+                <option value="10">16:00</option>
+                <option value="11">17:00</option>
+                <option value="12">18:00</option>
+            </select>
         </div>
         <!--入力欄-->
         <div class="d-flex flex-column justify-content-center align-items-start gap-2" x-show.important="editMode" x-cloak>
@@ -163,29 +182,28 @@
         <!--ボタン(表示モード時)-->
         <div class="d-flex flex-row justify-content-center align-items-end gap-4 align-self-end" x-show.important="!editMode" x-cloak>
             <button type="button" class="btn btn-link p-0 m-0" @click="editMode = !editMode">
-                <img src="{% static 'images/button_icon/btn_pen_edit.png' %}" alt="やることリスト編集" class="mx-1 my-4" style="width: 100px; height: auto;">
+                <img src="{% static 'images/button_icon/btn_pen_edit.png' %}" alt="よていリスト編集" class="mx-1 my-4" style="width: 100px; height: auto;">
             </button>
             <button type="button" class="btn btn-link p-0 m-0" href="#" x-show.important="!editMode" x-cloak>
-                <img src="{% static 'images/button_icon/btn_trash.png' %}" alt="やることリスト削除" class="mx-1 my-4" style="width: 100px; height: auto;">
+                <img src="{% static 'images/button_icon/btn_trash.png' %}" alt="よていリスト削除" class="mx-1 my-4" style="width: 100px; height: auto;">
             </button>
         </div>
         <!--ボタン(編集モード時)-->
         <!--保存ボタンは、POST成功後に表示モードへ切り替える形へ後日修正-->
         <div class="d-flex flex-row justify-content-center align-items-end gap-4 align-self-end" x-show.important="editMode" x-cloak>
             <button type="button" class="btn btn-link p-0 m-0" @click="editMode = false">
-                <img src="{% static 'images/button_icon/btn_save.png' %}" alt="やることリスト保存" class="mx-1 my-4" style="width: 100px; height: auto;">
+                <img src="{% static 'images/button_icon/btn_save.png' %}" alt="よていリスト保存" class="mx-1 my-4" style="width: 100px; height: auto;">
             </button>
             <button type="button" class="btn btn-link p-0 m-0" href="#" x-show.important="editMode" x-cloak @click="editMode = false">
-                <img src="{% static 'images/button_icon/btn_cancel.png' %}" alt="やることリストキャンセル" class="mx-1 my-4" style="width: 100px; height: auto;">
+                <img src="{% static 'images/button_icon/btn_cancel.png' %}" alt="よていリストキャンセル" class="mx-1 my-4" style="width: 100px; height: auto;">
             </button>
         </div>
     </div>
     {% empty %}
     <div class="rounded shadow m-2 m-lg-4 p-4 pe-lg-5 text-center" style="background-color: #fff;">
-        <p class="m-0">やることが ありません。<br>あたらしく つくってみましょう！</p>
+        <p class="m-0">よていが ありません。<br>あたらしく つくってみましょう！</p>
     </div>
     {% endfor %}
-    <!-- prep_items(表示用) -->
 </div>
 {% endblock %}
 {% block extra_js %}
