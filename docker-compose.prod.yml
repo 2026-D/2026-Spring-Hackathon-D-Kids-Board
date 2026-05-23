@@ -6,7 +6,7 @@ services: #コンテナに関する定義をする宣言
       dockerfile: Dockerfile.prod #本番用のDockerファイルを使用する
 
     env_file:
-      - .env
+      - .env.prod
     
     container_name: kids_board_web_prod # 本番用コンテナの名前
 
