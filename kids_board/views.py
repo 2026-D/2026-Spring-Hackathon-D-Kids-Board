@@ -767,6 +767,38 @@ class ScheduleListView(LoginRequiredMixin, TemplateView):
 class CreateScheduleView(LoginRequiredMixin, TemplateView):
     template_name = "kids_board/create_schedule.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # 新規作成画面用の単一フォームデータ
+        context["schedule"] = {
+            "id": 1,
+            "name": "",
+            "weekdays": [
+                {"name": "げつようび", "checked": False},
+                {"name": "かようび", "checked": False},
+                {"name": "すいようび", "checked": False},
+                {"name": "もくようび", "checked": False},
+                {"name": "きんようび", "checked": False},
+                {"name": "どようび", "checked": False},
+                {"name": "にちようび", "checked": False},
+            ],
+            "holiday": [{"name": "しゅくじつ", "checked": False}],
+            "special_date": [{"name": "ひづけしてい", "checked": False, "value": None}],
+            "colors": [
+                {"name": "RED", "value": "var(--red-400)", "checked": False},
+                {"name": "YELLOW", "value": "var(--yellow-300)", "checked": False},
+                {"name": "GREEN", "value": "var(--green-400)", "checked": False},
+                {"name": "EMERALD_GREEN", "value": "var(--teal-300)", "checked": False},
+                {"name": "SKY_BLUE", "value": "var(--cyan-300)", "checked": False},
+                {"name": "BLUE", "value": "var(--blue-400)", "checked": False},
+                {"name": "PURPLE", "value": "var(--indigo-300)", "checked": False},
+                {"name": "PINK", "value": "var(--pink-300)", "checked": False},
+                {"name": "ORANGE", "value": "var(--orange-300)", "checked": False},
+                {"name": "WHITE", "value": "var(--gray-100)", "checked": False},
+            ],
+        }
+        return context
+
 
 class SettingsView(LoginRequiredMixin, TemplateView):
     template_name = "kids_board/settings.html"
