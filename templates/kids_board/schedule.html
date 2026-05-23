@@ -62,7 +62,7 @@
     .calendar-row-7 > * {
         flex: 0 0 auto;
         width: calc(100% / 7);
-        min-height: 40px;
+        min-height: 55px;
     }
     /*月カレンダーのボーダーの色指定*/
     .calendar-row-7 > * {
@@ -74,6 +74,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    }
+    /**/
+    .btn:hover {
+    background-color: transparent;
     }
 </style>
 {% endblock %}
@@ -251,64 +255,69 @@
                 </div>
             </div>
         </div>
-        <!--カレンダー(右)-->
         <div class="col-12 col-xl-auto d-flex justify-content-center">
-            <div class="d-flex flex-column justify-content-center align-items-start month-pane">
-                <!--月ごと-->
-                <div class="rounded shadow" style="background-color: var(--purple-100);">
-                    <div class="m-2 p-3">
-                        <!-- ヘッダー：月切り替え部分 -->
-                        <div class="d-flex justify-content-between align-items-center rounded mb-3 " style="background-color: #fff">
-                            <button class="border-0 fw-bold" style="color: var(--secondary); background-color: #fff;">〈</button>
-                            <p class="current-month fs-5 m-2">4がつ</p>
-                            <button class="border-0 fw-bold" style="color: var(--secondary); background-color: #fff;">〉</button>
-                        </div>
-                        <!--曜日-->
-                        <div class="row calendar-row-7 justify-content-center align-items-center text-center">
-                            <div class="col text-nowrap" style="background-color: #fff;">にち</div>
-                            <div class="col text-nowrap" style="background-color: #fff;">げつ</div>
-                            <div class="col text-nowrap" style="background-color: #fff;">か</div>
-                            <div class="col text-nowrap" style="background-color: #fff;">すい</div>
-                            <div class="col text-nowrap" style="background-color: #fff;">もく</div>
-                            <div class="col text-nowrap" style="background-color: #fff;">きん</div>
-                            <div class="col text-nowrap" style="background-color: #fff;">ど</div>
-                        </div>
+            <!--カレンダー(右)-->
+            <div class="col-12 col-xl-auto d-flex flex-column justify-content-center align-items-center">
+                <div class="d-flex flex-column justify-content-center align-items-start month-pane">
+                    <!--月ごと-->
+                    <div class="rounded shadow" style="background-color: var(--purple-100);">
+                        <div class="m-2 p-3">
+                            <!-- ヘッダー：月切り替え部分 -->
+                            <div class="d-flex justify-content-between align-items-center rounded mb-3 " style="background-color: #fff">
+                                <button class="border-0 fw-bold" style="color: var(--secondary); background-color: #fff;">〈</button>
+                                <p class="current-month fs-5 m-2">4がつ</p>
+                                <button class="border-0 fw-bold" style="color: var(--secondary); background-color: #fff;">〉</button>
+                            </div>
+                            <!--曜日-->
+                            <div class="row calendar-row-7 justify-content-center align-items-center text-center">
+                                <div class="col text-nowrap" style="background-color: #fff;">にち</div>
+                                <div class="col text-nowrap" style="background-color: #fff;">げつ</div>
+                                <div class="col text-nowrap" style="background-color: #fff;">か</div>
+                                <div class="col text-nowrap" style="background-color: #fff;">すい</div>
+                                <div class="col text-nowrap" style="background-color: #fff;">もく</div>
+                                <div class="col text-nowrap" style="background-color: #fff;">きん</div>
+                                <div class="col text-nowrap" style="background-color: #fff;">ど</div>
+                            </div>
 
-                        <!--日付-->
-                        <div class="row calendar-row-7 justify-content-start align-items-center text-center">
-                            <div class="col" style="background-color: #fff;">1</div>
-                            <div class="col" style="background-color: #fff;">2</div>
-                            <div class="col" style="background-color: #fff;">3</div>
-                            <div class="col" style="background-color: #fff;">4</div>
-                            <div class="col" style="background-color: #fff;">5</div>
-                            <div class="col" style="background-color: #fff;">6</div>
-                            <div class="col" style="background-color: #fff;">7</div>
-                            <div class="col" style="background-color: #fff;">8</div>
-                            <div class="col" style="background-color: #fff;">9</div>
-                            <div class="col" style="background-color: #fff;">10</div>
-                            <div class="col" style="background-color: #fff;">11</div>
-                            <div class="col" style="background-color: #fff;">12</div>
-                            <div class="col" style="background-color: #fff;">13</div>
-                            <div class="col" style="background-color: #fff;">14</div>
-                            <div class="col" style="background-color: #fff;">15</div>
-                            <div class="col" style="background-color: #fff;">16</div>
-                            <div class="col" style="background-color: #fff;">17</div>
-                            <div class="col" style="background-color: #fff;">18</div>
-                            <div class="col" style="background-color: #fff;">19</div>
-                            <div class="col" style="background-color: #fff;">20</div>
-                            <div class="col" style="background-color: #fff;">21</div>
-                            <div class="col" style="background-color: #fff;">22</div>
-                            <div class="col" style="background-color: #fff;">23</div>
-                            <div class="col" style="background-color: #fff;">24</div>
-                            <div class="col" style="background-color: #fff;">25</div>
-                            <div class="col" style="background-color: #fff;">26</div>
-                            <div class="col" style="background-color: #fff;">27</div>
-                            <div class="col" style="background-color: #fff;">28</div>
-                            <div class="col" style="background-color: #fff;">29</div>
-                            <div class="col" style="background-color: #fff;">30</div>
+                            <!--日付-->
+                            <div class="row calendar-row-7 justify-content-start align-items-center text-center">
+                                <div class="col" style="background-color: #fff;">1</div>
+                                <div class="col" style="background-color: #fff;">2</div>
+                                <div class="col" style="background-color: #fff;">3</div>
+                                <div class="col" style="background-color: #fff;">4</div>
+                                <div class="col" style="background-color: #fff;">5</div>
+                                <div class="col" style="background-color: #fff;">6</div>
+                                <div class="col" style="background-color: #fff;">7</div>
+                                <div class="col" style="background-color: #fff;">8</div>
+                                <div class="col" style="background-color: #fff;">9</div>
+                                <div class="col" style="background-color: #fff;">10</div>
+                                <div class="col" style="background-color: #fff;">11</div>
+                                <div class="col" style="background-color: #fff;">12</div>
+                                <div class="col" style="background-color: #fff;">13</div>
+                                <div class="col" style="background-color: #fff;">14</div>
+                                <div class="col" style="background-color: #fff;">15</div>
+                                <div class="col" style="background-color: #fff;">16</div>
+                                <div class="col" style="background-color: #fff;">17</div>
+                                <div class="col" style="background-color: #fff;">18</div>
+                                <div class="col" style="background-color: #fff;">19</div>
+                                <div class="col" style="background-color: #fff;">20</div>
+                                <div class="col" style="background-color: #fff;">21</div>
+                                <div class="col" style="background-color: #fff;">22</div>
+                                <div class="col" style="background-color: #fff;">23</div>
+                                <div class="col" style="background-color: #fff;">24</div>
+                                <div class="col" style="background-color: #fff;">25</div>
+                                <div class="col" style="background-color: #fff;">26</div>
+                                <div class="col" style="background-color: #fff;">27</div>
+                                <div class="col" style="background-color: #fff;">28</div>
+                                <div class="col" style="background-color: #fff;">29</div>
+                                <div class="col" style="background-color: #fff;">30</div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <button type="button" class="btn btn-link p-0 m-0" href="#">
+                    <img src="{% static 'images/button_icon/btn_list_schedule.png' %}" alt="よていリスト" class="mt-5" style="width: 300px; height: auto;">
+                </button>
             </div>
         </div>
     </div>
