@@ -7,9 +7,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Kids Board Base{% endblock %}</title>
-    <link rel="icon" href="{% static ' kids_board/favicon.ico' %}" type="image/x-icon">
+    <!-- jQuery UI CSS (カレンダーの日付選択)-->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/flick/jquery-ui.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@eonasdan/tempus-dominus@6.9.4/dist/css/tempus-dominus.min.css" rel="stylesheet">
+
     {% bootstrap_css %}
-    <link rel="stylesheet" href="{% static ' kids_board/css/style.css' %}">  {# bootstrapの後に読み込む #}
     <style>
         /* 全体の背景色 */
         body {
@@ -19,7 +22,7 @@
         img {
             display: block;
         }
-        /* カラーパレット 後に使った色のみにする */
+        /* カラーパレット todo:後に使った色のみにする */
         :root {
             /* Blue */
             --blue-100: #cfe2ff;
@@ -217,6 +220,34 @@
             text-align: center;
             padding: 20px;
         }
+        /*日付指定のカレンダーの見た目*/
+        .js-datepicker{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /* こども削除の赤いボタンのホバー */
+        .btn-danger-red-hover:hover {
+            color: #dc3545;
+        }
+        /*やることカードの名前が長い場合(３行）に省略表示する*/
+        .prep-item-name {
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            word-break: break-word;
+        }
+        /* スマホ（〜767px）の時、やることカードの名前が長い場合に省略表示する（２行）*/
+        @media (max-width: 767px) {
+        .prep-item-name {
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            word-break: break-word;
+        }
+        }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
@@ -266,7 +297,7 @@
                         <a class="nav-link" href="#"><img src="{% static 'images/button_icon/volume-up.png' %}" alt="volume" width="60" height="60"></a>
                     </div>
                     <div class="nav-item">
-                        <a class="nav-link" href="#"><img src="{% static 'images/button_icon/gear.png' %}" alt="settings" width="60" height="60"></a>
+                        <button class="nav-link bg-transparent border-0" type="button" data-bs-toggle="modal" data-bs-target="#enterSettingsModal"><img src="{% static 'images/button_icon/gear.png' %}" alt="settings" width="60" height="60"></button>
                     </div>
                 </div>
 
@@ -283,25 +314,25 @@
                             <a class="nav-link" href="#"><img src="{% static 'images/button_icon/volume-up.png' %}" alt="volume"></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#"><img src="{% static 'images/button_icon/gear.png' %}" alt="settings"></a>
+                            <button class="nav-link bg-transparent border-0" type="button" data-bs-toggle="modal" data-bs-target="#enterSettingsModal"><img src="{% static 'images/button_icon/gear.png' %}" alt="settings"></button>
                         </li>
                     </ul>
                 </div>
                 {% else %}
                     {% if request.resolver_match.url_name == 'login' %}
                     <div class="nav-item">
-                        <a class="btn btn-outline-primary btn-sign" href="#" role="button">Sign Up</a>
+                        <a class="btn btn-outline-primary btn-sign" href="{% url 'signup' %}" role="button">Sign Up</a>
                     </div>
                     {% elif request.resolver_match.url_name == 'signup' %}
                     <div class="nav-item">
-                        <a class="btn btn-outline-primary btn-sign" href="#" role="button">Login</a>
+                        <a class="btn btn-outline-primary btn-sign" href="{% url 'login' %}" role="button">Login</a>
                     </div>
                     {% else %}
                     <div class="nav-item">
-                        <a class="btn btn-outline-primary btn-sign" href="#" role="button">Login</a>
+                        <a class="btn btn-outline-primary btn-sign" href="{% url 'login' %}" role="button">Login</a>
                     </div>
                     <div class="nav-item">
-                        <a class="btn btn-outline-primary btn-sign" href="#" role="button">Sign Up</a>
+                        <a class="btn btn-outline-primary btn-sign" href="{% url 'signup' %}" role="button">Sign Up</a>
                     </div>
                     {% endif %}
                 {% endif %}
@@ -320,5 +351,71 @@
         <p>&copy; 2026 Kids-Board App</p>
     </footer>
     {% bootstrap_javascript %}  {# JSは</body>直前が正しい #}
+    <!--日付選択カレンダー -->
+    <!-- jQuery本体 -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- jQuery UI本体 -->
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
+    <!-- 日本語化 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1/i18n/jquery.ui.datepicker-ja.min.js"></script>
+    <!-- Alpine.jsの読み込み -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+
+    <script>
+        // jQuery UI Datepickerの初期化設定
+        $(function () {
+            $(".js-datepicker").datepicker({
+                dateFormat: "yyねんmがつdにち",
+                firstDay: 0,
+                dayNamesMin: ["にち","げつ"," か ","すい","もく","きん"," ど "],
+                monthNames: ["1がつ","2がつ","3がつ","4がつ","5がつ","6がつ","7がつ","8がつ","9がつ","10がつ","11がつ","12がつ"],
+                prevText: "まえ へ",
+                nextText: "つぎ へ",
+                showOtherMonths: true,
+                selectOtherMonths: true,
+                onSelect: function () {
+                    // 対応するswitchを探してchecked(=true)にする
+                    const switchEl = document.getElementById("switchCheckDate");
+                    if (switchEl) switchEl.checked = true;
+                }
+            });
+        });
+
+        // ページ読み込み時に、日付入力の内容に応じて、ひづけをしていするswitchの状態を初期化
+        document.addEventListener("DOMContentLoaded", function () {
+            const switchEl = document.getElementById("switchCheckDate");
+            const dateEl = document.getElementById("datePickerInput");
+            if (!switchEl || !dateEl) return; // どちらかの要素がない場合は何もしない
+
+            // 日付欄に値があれば、true、なければfalseにする
+            const syncSwitch = () => {
+                switchEl.checked = dateEl.value.trim() !== "";
+            };
+            // 日付欄に手入力があった時に、switchの状態を更新する
+            dateEl.addEventListener("input", syncSwitch);
+            syncSwitch();
+        });
+    </script>
+
+<!-- ===== モーダル ===== -->
+<div id="modal-container">
+    {% include "kids_board/modals/enter_settings.html" %}
+    {% include "kids_board/modals/add_child.html" %}
+    {% include "kids_board/modals/delete_child.html" %}
+    {% include "kids_board/modals/edit_child.html" %}
+    {% include "kids_board/modals/edit_family.html" %}
+    {% include "kids_board/modals/choice_prep_item_icons.html" %}
+</div>
+
+{% bootstrap_javascript %}  {# JSは</body>直前が正しい #}
+{% block extra_js %}
+<script src="{% static 'js/settings.js' %}"></script>
+<script src="{% static 'js/edit_family.js' %}"></script>
+<script src="{% static 'js/add_child.js' %}"></script>
+<script src="{% static 'js/edit_child.js' %}"></script>
+<script src="{% static 'js/delete_child.js' %}"></script>
+<script src="{% static 'js/choice_prep_item_icons.js' %}"></script>
+{% endblock %}
 </body>
 </html>
