@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
+from .models import Child
 
 
 class SignUpForm(UserCreationForm):  # UserCreationFormを継承
@@ -76,3 +77,19 @@ class LoginForm(AuthenticationForm):
                 "class": "form-control",
             }
         )
+
+
+class ChildForm(forms.ModelForm):  # Childモデルと連動するフォーム
+    class Meta:  # フォームの設定を書く場所
+        model = Child  # Childテーブル用
+        fields = ("child_name", "child_icon")  # フォームの入力項目
+        labels = {
+            "child_name": "子どもの名前",  # 画面に表示するラベル名
+            "child_icon": "アイコン",
+        }
+        widgets = {
+            "child_name": forms.TextInput(
+                attrs={"class": "form-control"}
+            ),  # HTMLの入力欄の見た目を指定
+            "child_icon": forms.TextInput(attrs={"class": "form-control"}),
+        }
