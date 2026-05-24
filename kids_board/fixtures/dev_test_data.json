@@ -686,5 +686,146 @@
   {"model": "kids_board.preprule", "pk": 4038, "fields": {"prep_item": 3018, "rule_type": "weekday", "day_of_week": null, "specific_date": null, "created_at": "2026-05-18T09:00:00Z", "updated_at": "2026-05-18T09:00:00Z"}},
   {"model": "kids_board.preprule", "pk": 4039, "fields": {"prep_item": 3018, "rule_type": "holiday", "day_of_week": null, "specific_date": null, "created_at": "2026-05-18T09:00:00Z", "updated_at": "2026-05-18T09:00:00Z"}},
   {"model": "kids_board.preprule", "pk": 4040, "fields": {"prep_item": 3018, "rule_type": "day_of_week", "day_of_week": 5, "specific_date": null, "created_at": "2026-05-18T09:00:00Z", "updated_at": "2026-05-18T09:00:00Z"}},
-  {"model": "kids_board.preprule", "pk": 4041, "fields": {"prep_item": 3018, "rule_type": "day_of_week", "day_of_week": 6, "specific_date": null, "created_at": "2026-05-18T09:00:00Z", "updated_at": "2026-05-18T09:00:00Z"}}
+  {"model": "kids_board.preprule", "pk": 4041, "fields": {"prep_item": 3018, "rule_type": "day_of_week", "day_of_week": 6, "specific_date": null, "created_at": "2026-05-18T09:00:00Z", "updated_at": "2026-05-18T09:00:00Z"}},
+
+  {
+    "model": "kids_board.schedule",
+    "pk": 5001,
+    "fields": {
+      "child": 2001,
+      "schedule_date": "2026-05-24",
+      "title": "サッカー",
+      "color": 6,
+      "start_time": "09:00:00",
+      "end_time": "10:00:00",
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.schedule",
+    "pk": 5002,
+    "fields": {
+      "child": 2001,
+      "schedule_date": "2026-05-26",
+      "title": "がっこう",
+      "color": 1,
+      "start_time": "08:00:00",
+      "end_time": "15:00:00",
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.schedule",
+    "pk": 5003,
+    "fields": {
+      "child": 2001,
+      "schedule_date": "2026-05-27",
+      "title": "ルーム",
+      "color": 7,
+      "start_time": "15:00:00",
+      "end_time": "17:00:00",
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.schedule",
+    "pk": 5004,
+    "fields": {
+      "child": 2001,
+      "schedule_date": "2026-05-30",
+      "title": "えいご",
+      "color": 5,
+      "start_time": "10:00:00",
+      "end_time": "11:00:00",
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.schedule",
+    "pk": 5005,
+    "fields": {
+      "child": 2002,
+      "schedule_date": "2026-05-25",
+      "title": "がっこう",
+      "color": 2,
+      "start_time": "08:00:00",
+      "end_time": "14:00:00",
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.schedule",
+    "pk": 5006,
+    "fields": {
+      "child": 2002,
+      "schedule_date": "2026-05-28",
+      "title": "ピアノ",
+      "color": 8,
+      "start_time": "16:00:00",
+      "end_time": "17:00:00",
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.schedule",
+    "pk": 5007,
+    "fields": {
+      "child": 2002,
+      "schedule_date": "2026-05-31",
+      "title": "おでかけ",
+      "color": 9,
+      "start_time": null,
+      "end_time": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.schedule",
+    "pk": 5008,
+    "fields": {
+      "child": 2003,
+      "schedule_date": "2026-05-24",
+      "title": "すいえい",
+      "color": 4,
+      "start_time": "13:00:00",
+      "end_time": "14:00:00",
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.schedule",
+    "pk": 5009,
+    "fields": {
+      "child": 2003,
+      "schedule_date": "2026-05-29",
+      "title": "がっこう",
+      "color": 3,
+      "start_time": "08:00:00",
+      "end_time": "15:00:00",
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.schedule",
+    "pk": 5010,
+    "fields": {
+      "child": 2003,
+      "schedule_date": "2026-05-30",
+      "title": "かぞくじかん",
+      "color": 10,
+      "start_time": "18:00:00",
+      "end_time": "19:00:00",
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  }
 ]
