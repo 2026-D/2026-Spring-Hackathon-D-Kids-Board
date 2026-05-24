@@ -4,11 +4,13 @@ from django.contrib.auth import (
     logout,
 )  # 登録ユーザーをログイン状態にする # ログアウト状態にする
 from django.shortcuts import render, redirect  # renderはHTML表示 #redirectは別ページ移動
-from .forms import SignUpForm, LoginForm  # forms.pyからSignUpForm, LoginFormを読み込む
+from .forms import SignUpForm, LoginForm, ChildForm  # forms.pyからSignUpForm, LoginFormを読み込む
 from django.views.generic import TemplateView
 from django.urls import reverse_lazy
 from .models import PrepItem
 from django.contrib.auth.mixins import LoginRequiredMixin  # ログイン必須のクラスを読み込む
+from django.contrib.auth.decorators import login_required
+from .models import Child
 
 
 def signup_view(request):  # signup/へのアクセス時に動く処理
@@ -51,8 +53,58 @@ def logout_view(request):  # logout/へのアクセス時に動く処理
     return redirect("login")  # ログアウト後にloginページへ移動する
 
 
-class HomeView(LoginRequiredMixin, TemplateView):
-    template_name = "/home.html"
+@login_required
+def child_create_view(request):  # 子ども追加処理
+    if request.method == "POST":  # フォームの追加ボタンを押した時の処理
+        form = ChildForm(request.POST)  # HTMLから送られた入力値を、forms.pyのChildFormに渡す
+
+        if form.is_valid():  # 入力内容が正しいか確認
+            child = form.save(commit=False)  # Childデータを作る、しかしDBには保存はしない
+            child.parent = request.user  # ログインしているユーザーを、子どもの親として設定
+            child.save()  # childrenテーブルに保存
+            return redirect("home")  # home画面へ遷移
+
+
+@login_required
+def home_view(request):  # DBから子ども情報の一覧を取得、home画面表示
+
+    children = Child.objects.filter(  # childrenテーブルから、表示する子どもの情報を取得
+        parent=request.user,  # ログインしているユーザーの子どもを取得
+        deleted_at__isnull=True,  # 削除されていない子どもだけを取得
+    )
+
+    return render(  # home.htmlを表示
+        request,
+        "kids_board/home.html",
+        {
+            "children": children,  # コンテキスト Python(view) → HTML(template)へ渡すデータ
+        },
+    )
+
+
+# @login_required
+# def kids_board_view(request): # kids_board.htmlを表示する
+
+#     return render(
+#         request,
+#         "kids_board/kids_board.html",
+#     )
+
+# class HomeView(LoginRequiredMixin, TemplateView):
+#     template_name = "/home.html"
+
+# class HomeView(LoginRequiredMixin, TemplateView):
+#     template_name = "kids_board/home.html"
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+
+#         context["children"] = Child.objects.filter(
+#             parent=self.request.user,
+#             deleted_at__isnull=True,
+#         )
+
+#         return context
 
 
 class KidsBoardView(LoginRequiredMixin, TemplateView):
