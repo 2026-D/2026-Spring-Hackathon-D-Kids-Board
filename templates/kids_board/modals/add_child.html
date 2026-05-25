@@ -1,208 +1,6 @@
 {% load static %}
 
-{% comment %} <!-- ================= こども新規追加モーダル ================= -->
-<div class="modal fade" id="addChildModal" tabindex="-1" aria-labelledby="addChildModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="addChildModalLabel">こども1 の追加</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <!-- 名前入力 -->
-                <form>
-                    <div class="mb-3">
-                        <label for="addChildNameInput" class="form-label">名前</label>
-                        <input type="text" class="form-control" id="addChildNameInput" value="">
-                    </div>
-                </form>
-                <!-- アイコン選択 -->
-                <div class="mb-3">
-                    <label for="addChildAvatarInput" class="form-label">アイコン選択</label>
-                </div>
-                <div style="max-height: 300px; overflow-y: auto;">
-                    <div class="container text-center">
-                        <div class="row row-cols-auto justify-content-center">
-                            <div class="col">
-                                <button class="border-0" type="submit" name="" value="" style="background-color: #fff;">
-                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px; ">
-                                        <img class="rounded-circle" src="{% static 'images/avatar_icon/1_cat.png' %}" alt="こどもアイコン" style="width: 64px; height: auto; ">
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col">
-                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
-                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px; ">
-                                        <img class="rounded-circle" src="{% static 'images/avatar_icon/2_chicken.png' %}" alt="こどもアイコン" style="width: 64px; height: auto; ">
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col">
-                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
-                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px; ">
-                                        <img class="rounded-circle" src="{% static 'images/avatar_icon/3_crab.png' %}" alt="こどもアイコン" style="width: 64px; height: auto; ">
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col">
-                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
-                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px; ">
-                                        <img class="rounded-circle" src="{% static 'images/avatar_icon/4_crocodile.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;">
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col">
-                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
-                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px; ">
-                                        <img class="rounded-circle" src="{% static 'images/avatar_icon/5_deer.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;">
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col">
-                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
-                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px; ">
-                                        <img class="rounded-circle" src="{% static 'images/avatar_icon/6_duck.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;">
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col">
-                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
-                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px; ">
-                                        <img class="rounded-circle" src="{% static 'images/avatar_icon/7_elephant.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;">
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col">
-                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
-                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px; ">
-                                        <img class="rounded-circle" src="{% static 'images/avatar_icon/8_fox.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;">
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col">
-                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
-                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px; ">
-                                        <img class="rounded-circle" src="{% static 'images/avatar_icon/9_frog.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;">
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col">
-                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
-                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px; ">
-                                        <img class="rounded-circle" src="{% static 'images/avatar_icon/10_giraffe.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;">
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col">
-                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
-                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px; ">
-                                        <img class="rounded-circle" src="{% static 'images/avatar_icon/11_jellyfish.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;">
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col">
-                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
-                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px; ">
-                                        <img class="rounded-circle" src="{% static 'images/avatar_icon/12_lion.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;">
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col">
-                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
-                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px; ">
-                                        <img class="rounded-circle" src="{% static 'images/avatar_icon/13_monkey.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;">
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col">
-                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
-                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px; ">
-                                        <img class="rounded-circle" src="{% static 'images/avatar_icon/14_panda.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;">
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col">
-                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
-                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px; ">
-                                        <img class="rounded-circle" src="{% static 'images/avatar_icon/15_parrot.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;">
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col">
-                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
-                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px; ">
-                                        <img class="rounded-circle" src="{% static 'images/avatar_icon/16_penguin.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;">
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col">
-                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
-                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px; ">
-                                        <img class="rounded-circle" src="{% static 'images/avatar_icon/17_polar-bear.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;">
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col">
-                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
-                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px; ">
-                                        <img class="rounded-circle" src="{% static 'images/avatar_icon/18_rabbit.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;">
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col">
-                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
-                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px; ">
-                                        <img class="rounded-circle" src="{% static 'images/avatar_icon/19_redpanda.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;">
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col">
-                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
-                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px; ">
-                                        <img class="rounded-circle" src="{% static 'images/avatar_icon/20_rhino.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;">
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col">
-                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
-                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px; ">
-                                        <img class="rounded-circle" src="{% static 'images/avatar_icon/21_shark.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;">
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col">
-                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
-                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px; ">
-                                        <img class="rounded-circle" src="{% static 'images/avatar_icon/22_sheep.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;">
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col">
-                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
-                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px; ">
-                                        <img class="rounded-circle" src="{% static 'images/avatar_icon/23_tiger.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;">
-                                    </div>
-                                </button>
-                            </div>
-                            <div class="col">
-                                <button class="rounded-circle border-0" type="submit" name="" value="" style="background-color: #fff;">
-                                    <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px; ">
-                                        <img class="rounded-circle" src="{% static 'images/avatar_icon/24_turtle.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;">
-                                    </div>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        <div class="modal-footer d-flex justify-content-between">
-            <button type="button" class="btn btn-outline-primary border-0 fw-normal" data-bs-dismiss="modal">キャンセル</button>
-            <button type="button" class="btn btn-primary">追加</button>
-        </div>
-    </div>
-  </div>
-</div>    {% endcomment %}
-
+<!-- ================= こども新規追加モーダル ================= -->
 <div class="modal fade" id="addChildModal" tabindex="-1" aria-labelledby="addChildModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -268,7 +66,66 @@
                                         </div>
                                     </button>
                                 </div>
-
+                                <div class="col">
+                                    <button
+                                        class="border-0 bg-white"
+                                        type="button"
+                                        onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/3_crab.png'"
+                                    >
+                                        <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;">
+                                            <img class="rounded-circle" src="{% static 'images/avatar_icon/3_crab.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;">
+                                        </div>
+                                    </button>
+                                </div>
+                                <div class="col">
+                                    <button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/4_crocodile.png'">
+                                        <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/4_crocodile.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div>
+                                    </button>
+                                </div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/5_deer.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/5_deer.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/6_duck.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/6_duck.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/7_elephant.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/7_elephant.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/8_fox.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/8_fox.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/9_frog.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/9_frog.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/10_giraffe.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/10_giraffe.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/11_jellyfish.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/11_jellyfish.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/12_lion.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/12_lion.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/13_monkey.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/13_monkey.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/14_panda.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/14_panda.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/15_parrot.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/15_parrot.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/16_penguin.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/16_penguin.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/17_polar-bear.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/17_polar-bear.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/18_rabbit.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/18_rabbit.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/19_redpanda.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/19_redpanda.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/20_rhino.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/20_rhino.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/21_shark.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/21_shark.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/22_sheep.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/22_sheep.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/23_tiger.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/23_tiger.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/24_turtle.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/24_turtle.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/1_cat.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/1_cat.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/2_chicken.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/2_chicken.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/3_crab.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/3_crab.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/4_crocodile.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/4_crocodile.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/5_deer.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/5_deer.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/6_duck.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/6_duck.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/7_elephant.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/7_elephant.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/8_fox.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/8_fox.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/9_frog.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/9_frog.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/10_giraffe.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/10_giraffe.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/11_jellyfish.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/11_jellyfish.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/12_lion.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/12_lion.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/13_monkey.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/13_monkey.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/14_panda.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/14_panda.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/15_parrot.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/15_parrot.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/16_penguin.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/16_penguin.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/17_polar-bear.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/17_polar-bear.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/18_rabbit.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/18_rabbit.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/19_redpanda.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/19_redpanda.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/20_rhino.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/20_rhino.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/21_shark.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/21_shark.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/22_sheep.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/22_sheep.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/23_tiger.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/23_tiger.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
+                                <div class="col"><button class="border-0 bg-white" type="button" onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/24_turtle.png'"><div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;"><img class="rounded-circle" src="{% static 'images/avatar_icon/24_turtle.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;"></div></button></div>
                             </div>
                         </div>
                     </div>
