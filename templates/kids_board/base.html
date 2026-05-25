@@ -289,9 +289,11 @@
                     <div class="nav-item">
                         <a class="nav-link" href="{% url 'prep_items' %}"><img src="{% static 'images/button_icon/check-circle.png' %}" alt="prep-items" width="60" height="60"></a>
                     </div>
+                    {% if request.resolver_match.url_name != 'home' and request.resolver_match.url_name != 'prep_items' and request.resolver_match.url_name != 'new_items' and request.resolver_match.url_name != 'custom_items'%}
                     <div class="nav-item">
                         <a class="nav-link" href="{% url 'schedule' %}"><img src="{% static 'images/button_icon/calendar4-week.png' %}" alt="schedule" width="60" height="60"></a>
                     </div>
+                    {% endif %}
                     <div class="nav-item">
                         <button class="nav-link bg-transparent border-0 mute_btn" type="button" onclick="mute()"><img src="{% static 'images/button_icon/volume-up.png' %}" alt="volume" width="60" height="60"></button>
                     </div>
@@ -306,9 +308,11 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'prep_items' %}"><img src="{% static 'images/button_icon/check-circle.png' %}" alt="prep-items"></a>
                         </li>
+                        {% if request.resolver_match.url_name != 'home' and request.resolver_match.url_name != 'prep_items' and request.resolver_match.url_name != 'new_items' and request.resolver_match.url_name != 'custom_items'%}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'schedule' %}"><img src="{% static 'images/button_icon/calendar4-week.png' %}" alt="schedule"></a>
                         </li>
+                        {% endif %}
                         <li class="nav-item">
                             <button class="nav-link bg-transparent border-0 mute_btn" type="button" onclick="mute()"><img src="{% static 'images/button_icon/volume-up.png' %}" alt="volume"></button>
                         </li>
