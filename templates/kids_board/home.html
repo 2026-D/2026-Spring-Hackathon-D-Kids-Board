@@ -102,83 +102,33 @@
         <p>ログアウト</p>
     </button>
 </form>
-{% comment "こども追加前" %}
+{% if children %}
+{% comment "こども追加後" %}{% endcomment %}
+<!--こども4人以上は折り返して表示-->
+<h2>{{ user.username }}</h2>
+    <div class="row row-cols-1 row-cols-md-4 g-4 {% if children|length <= 4 %}justify-content-center{% else %}justify-content-start{% endif %} px-custom">
+    {% comment "こども変数受け取り" %}{% endcomment %}
+    {% for child in children %}
+    <a class="col d-flex justify-content-center link-underline link-underline-opacity-0 link-dark" href="{% url 'kids_board' child.id %}">  <!-- スマホ:1列、PC:4列 -->
+        <div class="circle-home-child circle-outline d-flex justify-content-center align-items-center">
+            <div class="circle-inline d-flex flex-column justify-content-center align-items-center">
+                <div class="circle-text d-flex flex-column justify-content-start align-items-center">
+                    <img class="button-image" src="{% static child.child_icon %}" alt="こどもアイコン">
+                    <p>{{ child.child_name }}</p>
+                </div>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+    
+</div>
+{% else %}
+{% comment "こども追加前" %}{% endcomment %}
 <div class="home-container">
     <h2>{{ user.username }}さん、ようこそ！</h2>
     <div class="circle-home shadow d-flex justify-content-center align-items-center">
         <p>右上の設定ボタンから、<br>こどもを追加してください。</p>
     </div>
 </div>
-{% endcomment %}
-
-{% comment "こども追加後" %}{% endcomment %}
-<!--こども4人以上は折り返して表示-->
-
-<h2>{{ user.username }}</h2>
-<div class="row g-2 justify-content-start px-custom">
-    {% comment "こども変数受け取り" %}
-    {% for child in children %}
-    <a class="col-12 col-md-3 d-flex justify-content-center link-underline link-underline-opacity-0 link-dark" href="{% url 'kids_board' %}">  <!-- スマホ:1列、PC:4列 -->
-        <div class="circle-home-child circle-outline d-flex justify-content-center align-items-center">
-            <div class="circle-inline d-flex flex-column justify-content-center align-items-center">
-                <div class="circle-text d-flex flex-column justify-content-start align-items-center">
-                    <img class="button-image" src="{% static 'images/avatar_icon/12_lion.png' %}" alt="こどもアイコン">
-                    <p>{{ child.name }}</p>
-                </div>
-            </div>
-        </div>
-    </a>
-    {% endfor %}
-    {% endcomment %}
-    <a class="col-12 col-md-3 d-flex justify-content-center link-underline link-underline-opacity-0 link-dark" href="{% url 'kids_board' %}">  <!-- スマホ:1列、PC:4列 -->
-        <div class="circle-home-child circle-outline d-flex justify-content-center align-items-center">
-            <div class="circle-inline d-flex flex-column justify-content-center align-items-center">
-                <div class="circle-text d-flex flex-column justify-content-start align-items-center">
-                    <img class="button-image" src="{% static 'images/avatar_icon/12_lion.png' %}" alt="こどもアイコン">
-                    <p>こども１</p>
-                </div>
-            </div>
-        </div>  
-    </a>
-    <a class="col-12 col-md-3 d-flex justify-content-center link-underline link-underline-opacity-0 link-dark" href="{% url 'kids_board' %}">  <!-- スマホ:1列、PC:4列 -->
-        <div class="circle-home-child circle-outline d-flex justify-content-center align-items-center">
-            <div class="circle-inline d-flex flex-column justify-content-center align-items-center">
-                <div class="circle-text d-flex flex-column justify-content-start align-items-center">
-                    <img class="button-image" src="{% static 'images/avatar_icon/12_lion.png' %}" alt="こどもアイコン">
-                    <p>こども２</p>
-                </div>
-            </div>
-        </div>
-    </a>
-    <a class="col-12 col-md-3 d-flex justify-content-center link-underline link-underline-opacity-0 link-dark" href="{% url 'kids_board' %}">  <!-- スマホ:1列、PC:4列 -->
-        <div class="circle-home-child circle-outline d-flex justify-content-center align-items-center">
-            <div class="circle-inline d-flex flex-column justify-content-center align-items-center">
-                <div class="circle-text d-flex flex-column justify-content-start align-items-center">
-                    <img class="button-image" src="{% static 'images/avatar_icon/12_lion.png' %}" alt="こどもアイコン">
-                    <p>こども３</p>
-                </div>
-            </div>
-        </div>
-    </a>
-    <a class="col-12 col-md-3 d-flex justify-content-center link-underline link-underline-opacity-0 link-dark" href="{% url 'kids_board' %}">  <!-- スマホ:1列、PC:4列 -->
-        <div class="circle-home-child circle-outline d-flex justify-content-center align-items-center">
-            <div class="circle-inline d-flex flex-column justify-content-center align-items-center">
-                <div class="circle-text d-flex flex-column justify-content-start align-items-center">
-                    <img class="button-image" src="{% static 'images/avatar_icon/12_lion.png' %}" alt="こどもアイコン">
-                    <p>こども4</p>
-                </div>
-            </div>
-        </div>
-    </a>
-    <a class="col-12 col-md-3 d-flex justify-content-center link-underline link-underline-opacity-0 link-dark" href="{% url 'kids_board' %}">  <!-- スマホ:1列、PC:4列 -->
-        <div class="circle-home-child circle-outline d-flex justify-content-center align-items-center">
-            <div class="circle-inline d-flex flex-column justify-content-center align-items-center">
-                <div class="circle-text d-flex flex-column justify-content-start align-items-center">
-                    <img class="button-image" src="{% static 'images/avatar_icon/12_lion.png' %}" alt="こどもアイコン">
-                    <p>こども５</p>
-                </div>
-            </div>
-        </div>
-    </a>
-</div>
+{% endif %}
 {% endblock %}

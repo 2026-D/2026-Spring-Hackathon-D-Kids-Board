@@ -1,0 +1,690 @@
+[
+  {
+    "model": "auth.user",
+    "pk": 1001,
+    "fields": {
+      "password": "pbkdf2_sha256$720000$uvgLTp8pd1efc55E3EFM5O$GDF+vUAY4S+1GXoEua1NDdv9guoz9KwVVzmCYstT9bY=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "demo_family",
+      "first_name": "",
+      "last_name": "",
+      "email": "demo_family@example.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-05-18T09:00:00Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+
+  {
+    "model": "kids_board.prepitem",
+    "pk": 3001,
+    "fields": {
+      "parent": 1001,
+      "category_type": "morning",
+      "prep_icon": "images/prep_item/12_cutlery.png",
+      "item_name": "あさごはん",
+      "is_custom": false,
+      "is_active": true,
+      "display_order": 1,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.prepitem",
+    "pk": 3002,
+    "fields": {
+      "parent": 1001,
+      "category_type": "morning",
+      "prep_icon": "images/prep_item/4_toothbrush.png",
+      "item_name": "はみがき",
+      "is_custom": false,
+      "is_active": true,
+      "display_order": 2,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.prepitem",
+    "pk": 3003,
+    "fields": {
+      "parent": 1001,
+      "category_type": "morning",
+      "prep_icon": "images/prep_item/10_faucet.png",
+      "item_name": "かおをあらう",
+      "is_custom": false,
+      "is_active": true,
+      "display_order": 3,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.prepitem",
+    "pk": 3004,
+    "fields": {
+      "parent": 1001,
+      "category_type": "morning",
+      "prep_icon": "images/prep_item/18_clothes.png",
+      "item_name": "ふくをきる",
+      "is_custom": false,
+      "is_active": true,
+      "display_order": 4,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.prepitem",
+    "pk": 3005,
+    "fields": {
+      "parent": 1001,
+      "category_type": "morning",
+      "prep_icon": "images/prep_item/20_school.png",
+      "item_name": "ランドセル",
+      "is_custom": true,
+      "is_active": true,
+      "display_order": 5,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+
+  {
+    "model": "kids_board.prepitem",
+    "pk": 3016,
+    "fields": {
+      "parent": 1001,
+      "category_type": "morning",
+      "prep_icon": "images/prep_item/5_toilet.png",
+      "item_name": "トイレ",
+      "is_custom": false,
+      "is_active": true,
+      "display_order": 6,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+
+  {
+    "model": "kids_board.prepitem",
+    "pk": 3006,
+    "fields": {
+      "parent": 1001,
+      "category_type": "afternoon",
+      "prep_icon": "images/prep_item/22_paper_and_pen.png",
+      "item_name": "しゅくだい",
+      "is_custom": false,
+      "is_active": true,
+      "display_order": 1,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.prepitem",
+    "pk": 3007,
+    "fields": {
+      "parent": 1001,
+      "category_type": "afternoon",
+      "prep_icon": "images/prep_item/23_study.png",
+      "item_name": "べんきょう",
+      "is_custom": false,
+      "is_active": true,
+      "display_order": 2,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.prepitem",
+    "pk": 3008,
+    "fields": {
+      "parent": 1001,
+      "category_type": "afternoon",
+      "prep_icon": "images/prep_item/24_stationery.png",
+      "item_name": "れんらくちょう",
+      "is_custom": false,
+      "is_active": true,
+      "display_order": 3,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.prepitem",
+    "pk": 3009,
+    "fields": {
+      "parent": 1001,
+      "category_type": "afternoon",
+      "prep_icon": "images/prep_item/2_backpack.png",
+      "item_name": "おたよりチェック",
+      "is_custom": true,
+      "is_active": true,
+      "display_order": 4,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.prepitem",
+    "pk": 3010,
+    "fields": {
+      "parent": 1001,
+      "category_type": "afternoon",
+      "prep_icon": "images/prep_item/17_cleaning.png",
+      "item_name": "へやのかたづけ",
+      "is_custom": true,
+      "is_active": true,
+      "display_order": 5,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+
+  {
+    "model": "kids_board.prepitem",
+    "pk": 3017,
+    "fields": {
+      "parent": 1001,
+      "category_type": "afternoon",
+      "prep_icon": "images/prep_item/12_cutlery.png",
+      "item_name": "おやつ",
+      "is_custom": false,
+      "is_active": true,
+      "display_order": 6,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+
+  {
+    "model": "kids_board.prepitem",
+    "pk": 3011,
+    "fields": {
+      "parent": 1001,
+      "category_type": "night",
+      "prep_icon": "images/prep_item/13_soap.png",
+      "item_name": "おふろ",
+      "is_custom": false,
+      "is_active": true,
+      "display_order": 1,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.prepitem",
+    "pk": 3012,
+    "fields": {
+      "parent": 1001,
+      "category_type": "night",
+      "prep_icon": "images/prep_item/6_sunscreen.png",
+      "item_name": "スキンケア",
+      "is_custom": true,
+      "is_active": true,
+      "display_order": 2,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.prepitem",
+    "pk": 3013,
+    "fields": {
+      "parent": 1001,
+      "category_type": "night",
+      "prep_icon": "images/prep_item/4_toothbrush.png",
+      "item_name": "はみがき(よる)",
+      "is_custom": false,
+      "is_active": true,
+      "display_order": 3,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.prepitem",
+    "pk": 3014,
+    "fields": {
+      "parent": 1001,
+      "category_type": "night",
+      "prep_icon": "images/prep_item/15_medicine2.png",
+      "item_name": "くすり",
+      "is_custom": true,
+      "is_active": true,
+      "display_order": 4,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.prepitem",
+    "pk": 3015,
+    "fields": {
+      "parent": 1001,
+      "category_type": "night",
+      "prep_icon": "images/prep_item/3_bag.png",
+      "item_name": "あしたのじゅんび",
+      "is_custom": true,
+      "is_active": true,
+      "display_order": 5,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+
+  {
+    "model": "kids_board.prepitem",
+    "pk": 3018,
+    "fields": {
+      "parent": 1001,
+      "category_type": "night",
+      "prep_icon": "images/prep_item/9_hair.png",
+      "item_name": "ねるじかん",
+      "is_custom": false,
+      "is_active": true,
+      "display_order": 6,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+
+  {
+    "model": "kids_board.child",
+    "pk": 2001,
+    "fields": {
+      "parent": 1001,
+      "child_icon": "images/avatar_icon/1_cat.png",
+      "child_name": "たろう",
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z",
+      "deleted_at": null,
+      "prep_items": [3001, 3002, 3003, 3004, 3006, 3007, 3008, 3011, 3013, 3016, 3017, 3018]
+    }
+  },
+  {
+    "model": "kids_board.child",
+    "pk": 2002,
+    "fields": {
+      "parent": 1001,
+      "child_icon": "images/avatar_icon/2_chicken.png",
+      "child_name": "はな",
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z",
+      "deleted_at": null,
+      "prep_items": [3001, 3003, 3005, 3006, 3009, 3010, 3012, 3014, 3015, 3016, 3017, 3018]
+    }
+  },
+  {
+    "model": "kids_board.child",
+    "pk": 2003,
+    "fields": {
+      "parent": 1001,
+      "child_icon": "images/avatar_icon/3_crab.png",
+      "child_name": "ゆい",
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z",
+      "deleted_at": null,
+      "prep_items": [3002, 3004, 3005, 3007, 3008, 3011, 3012, 3013, 3015, 3016, 3017, 3018]
+    }
+  },
+
+  {
+    "model": "kids_board.preprule",
+    "pk": 4001,
+    "fields": {
+      "prep_item": 3001,
+      "rule_type": "weekday",
+      "day_of_week": null,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4002,
+    "fields": {
+      "prep_item": 3002,
+      "rule_type": "holiday",
+      "day_of_week": null,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4003,
+    "fields": {
+      "prep_item": 3003,
+      "rule_type": "day_of_week",
+      "day_of_week": 0,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4004,
+    "fields": {
+      "prep_item": 3004,
+      "rule_type": "specific",
+      "day_of_week": null,
+      "specific_date": "2026-05-25",
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4005,
+    "fields": {
+      "prep_item": 3005,
+      "rule_type": "day_of_week",
+      "day_of_week": 2,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+
+  {
+    "model": "kids_board.preprule",
+    "pk": 4006,
+    "fields": {
+      "prep_item": 3006,
+      "rule_type": "weekday",
+      "day_of_week": null,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4007,
+    "fields": {
+      "prep_item": 3007,
+      "rule_type": "holiday",
+      "day_of_week": null,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4008,
+    "fields": {
+      "prep_item": 3008,
+      "rule_type": "day_of_week",
+      "day_of_week": 4,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4009,
+    "fields": {
+      "prep_item": 3009,
+      "rule_type": "specific",
+      "day_of_week": null,
+      "specific_date": "2026-06-01",
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4010,
+    "fields": {
+      "prep_item": 3010,
+      "rule_type": "day_of_week",
+      "day_of_week": 6,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+
+  {
+    "model": "kids_board.preprule",
+    "pk": 4011,
+    "fields": {
+      "prep_item": 3011,
+      "rule_type": "weekday",
+      "day_of_week": null,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4012,
+    "fields": {
+      "prep_item": 3012,
+      "rule_type": "holiday",
+      "day_of_week": null,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4014,
+    "fields": {
+      "prep_item": 3014,
+      "rule_type": "specific",
+      "day_of_week": null,
+      "specific_date": "2026-06-15",
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4015,
+    "fields": {
+      "prep_item": 3015,
+      "rule_type": "day_of_week",
+      "day_of_week": 5,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  }, 
+  {
+    "model": "kids_board.preprule",
+    "pk": 4016,
+    "fields": {
+      "prep_item": 3013,
+      "rule_type": "day_of_week",
+      "day_of_week": 1,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4017,
+    "fields": {
+      "prep_item": 3013,
+      "rule_type": "day_of_week",
+      "day_of_week": 2,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4018,
+    "fields": {
+      "prep_item": 3013,
+      "rule_type": "day_of_week",
+      "day_of_week": 3,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4019,
+    "fields": {
+      "prep_item": 3013,
+      "rule_type": "day_of_week",
+      "day_of_week": 4,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4020,
+    "fields": {
+      "prep_item": 3013,
+      "rule_type": "day_of_week",
+      "day_of_week": 5,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4021,
+    "fields": {
+      "prep_item": 3013,
+      "rule_type": "day_of_week",
+      "day_of_week": 6,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4022,
+    "fields": {
+      "prep_item": 3013,
+      "rule_type": "day_of_week",
+      "day_of_week": 0,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+   {
+    "model": "kids_board.preprule",
+    "pk": 4023,
+    "fields": {
+      "prep_item": 3002,
+      "rule_type": "day_of_week",
+      "day_of_week": 0,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4024,
+    "fields": {
+      "prep_item": 3002,
+      "rule_type": "day_of_week",
+      "day_of_week": 1,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4025,
+    "fields": {
+      "prep_item": 3002,
+      "rule_type": "day_of_week",
+      "day_of_week": 2,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4026,
+    "fields": {
+      "prep_item": 3002,
+      "rule_type": "day_of_week",
+      "day_of_week": 3,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4027,
+    "fields": {
+      "prep_item": 3002,
+      "rule_type": "day_of_week",
+      "day_of_week": 4,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4028,
+    "fields": {
+      "prep_item": 3002,
+      "rule_type": "day_of_week",
+      "day_of_week": 5,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+  {
+    "model": "kids_board.preprule",
+    "pk": 4029,
+    "fields": {
+      "prep_item": 3002,
+      "rule_type": "day_of_week",
+      "day_of_week": 6,
+      "specific_date": null,
+      "created_at": "2026-05-18T09:00:00Z",
+      "updated_at": "2026-05-18T09:00:00Z"
+    }
+  },
+
+  {"model": "kids_board.preprule", "pk": 4030, "fields": {"prep_item": 3016, "rule_type": "weekday", "day_of_week": null, "specific_date": null, "created_at": "2026-05-18T09:00:00Z", "updated_at": "2026-05-18T09:00:00Z"}},
+  {"model": "kids_board.preprule", "pk": 4031, "fields": {"prep_item": 3016, "rule_type": "holiday", "day_of_week": null, "specific_date": null, "created_at": "2026-05-18T09:00:00Z", "updated_at": "2026-05-18T09:00:00Z"}},
+  {"model": "kids_board.preprule", "pk": 4032, "fields": {"prep_item": 3016, "rule_type": "day_of_week", "day_of_week": 5, "specific_date": null, "created_at": "2026-05-18T09:00:00Z", "updated_at": "2026-05-18T09:00:00Z"}},
+  {"model": "kids_board.preprule", "pk": 4033, "fields": {"prep_item": 3016, "rule_type": "day_of_week", "day_of_week": 6, "specific_date": null, "created_at": "2026-05-18T09:00:00Z", "updated_at": "2026-05-18T09:00:00Z"}},
+
+  {"model": "kids_board.preprule", "pk": 4034, "fields": {"prep_item": 3017, "rule_type": "weekday", "day_of_week": null, "specific_date": null, "created_at": "2026-05-18T09:00:00Z", "updated_at": "2026-05-18T09:00:00Z"}},
+  {"model": "kids_board.preprule", "pk": 4035, "fields": {"prep_item": 3017, "rule_type": "holiday", "day_of_week": null, "specific_date": null, "created_at": "2026-05-18T09:00:00Z", "updated_at": "2026-05-18T09:00:00Z"}},
+  {"model": "kids_board.preprule", "pk": 4036, "fields": {"prep_item": 3017, "rule_type": "day_of_week", "day_of_week": 5, "specific_date": null, "created_at": "2026-05-18T09:00:00Z", "updated_at": "2026-05-18T09:00:00Z"}},
+  {"model": "kids_board.preprule", "pk": 4037, "fields": {"prep_item": 3017, "rule_type": "day_of_week", "day_of_week": 6, "specific_date": null, "created_at": "2026-05-18T09:00:00Z", "updated_at": "2026-05-18T09:00:00Z"}},
+
+  {"model": "kids_board.preprule", "pk": 4038, "fields": {"prep_item": 3018, "rule_type": "weekday", "day_of_week": null, "specific_date": null, "created_at": "2026-05-18T09:00:00Z", "updated_at": "2026-05-18T09:00:00Z"}},
+  {"model": "kids_board.preprule", "pk": 4039, "fields": {"prep_item": 3018, "rule_type": "holiday", "day_of_week": null, "specific_date": null, "created_at": "2026-05-18T09:00:00Z", "updated_at": "2026-05-18T09:00:00Z"}},
+  {"model": "kids_board.preprule", "pk": 4040, "fields": {"prep_item": 3018, "rule_type": "day_of_week", "day_of_week": 5, "specific_date": null, "created_at": "2026-05-18T09:00:00Z", "updated_at": "2026-05-18T09:00:00Z"}},
+  {"model": "kids_board.preprule", "pk": 4041, "fields": {"prep_item": 3018, "rule_type": "day_of_week", "day_of_week": 6, "specific_date": null, "created_at": "2026-05-18T09:00:00Z", "updated_at": "2026-05-18T09:00:00Z"}}
+]

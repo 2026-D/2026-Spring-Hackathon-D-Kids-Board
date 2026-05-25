@@ -5,12 +5,16 @@ from django.contrib.auth import (
 )  # 登録ユーザーをログイン状態にする # ログアウト状態にする
 from django.shortcuts import render, redirect  # renderはHTML表示 #redirectは別ページ移動
 from .forms import SignUpForm, LoginForm, ChildForm  # forms.pyからSignUpForm, LoginFormを読み込む
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, ListView
 from django.urls import reverse_lazy
-from .models import PrepItem
+from .models import PrepItem, Child, PrepRule
 from django.contrib.auth.mixins import LoginRequiredMixin  # ログイン必須のクラスを読み込む
 from django.contrib.auth.decorators import login_required
-from .models import Child
+from django.utils import timezone
+from django.shortcuts import get_object_or_404
+from django.db.models import Q
+from datetime import date
+import jpholiday
 
 
 def signup_view(request):  # signup/へのアクセス時に動く処理
@@ -57,6 +61,7 @@ def logout_view(request):  # logout/へのアクセス時に動く処理
 def child_create_view(request):  # 子ども追加処理
     if request.method == "POST":  # フォームの追加ボタンを押した時の処理
         form = ChildForm(request.POST)  # HTMLから送られた入力値を、forms.pyのChildFormに渡す
+        form.instance.parent = request.user  # clean() で parent を参照するため先にセット
 
         if form.is_valid():  # 入力内容が正しいか確認
             child = form.save(commit=False)  # Childデータを作る、しかしDBには保存はしない
@@ -64,47 +69,69 @@ def child_create_view(request):  # 子ども追加処理
             child.save()  # childrenテーブルに保存
             return redirect("home")  # home画面へ遷移
 
+        # こども追加に失敗した時は、再度子ども情報とフォームを渡してsettings.htmlを表示する
+        children = Child.objects.filter(
+            parent=request.user,
+            deleted_at__isnull=True,
+        )
+        return render(
+            request,
+            "kids_board/settings.html",
+            {
+                "children": children,  # 子ども情報も渡す（子ども追加に失敗しても、子ども情報は表示するため）
+                "form": form,  # エラーの内容が入ったフォームを渡す
+                "open_add_child_modal": True,  # 子ども追加モーダルを開いた状態にするためのフラグ
+            },
+            status=400,
+        )
+
+    return redirect("settings")
+
+
+class HomeView(LoginRequiredMixin, ListView):
+    model = Child
+    template_name = "kids_board/home.html"
+    context_object_name = "children"
+    ordering = ["created_at"]  # 子供の表示順を作成日時順にするための指定
+
+    def get_queryset(self):
+        # ログインしているユーザー（ファミリー）の子供だけを表示するためのクエリセットを返す
+        return Child.objects.filter(parent=self.request.user, deleted_at__isnull=True)
+
 
 @login_required
-def home_view(request):  # DBから子ども情報の一覧を取得、home画面表示
+def child_delete_view(request, child_id):  # ログインしている人だけが使える削除処理
 
-    children = Child.objects.filter(  # childrenテーブルから、表示する子どもの情報を取得
-        parent=request.user,  # ログインしているユーザーの子どもを取得
-        deleted_at__isnull=True,  # 削除されていない子どもだけを取得
+    if request.method == "POST":  # 削除ボタンから、POST送信されたときだけ削除処理をする
+        child = get_object_or_404(  # DBから1件取得、無ければ404エラーを出す
+            Child,  # childrenテーブル
+            id=child_id,  # URLで指定された子ども
+            parent=request.user,  # ログイン中ユーザーの子どもだけ
+            deleted_at__isnull=True,  # まだ削除されていない子どもだけ
+        )
+
+        child.deleted_at = timezone.now()  # 現在時刻をdeleted_atに入れ、削除済み扱いとする
+
+        child.save()  # 変更をDBに保存
+
+    return redirect("home")  # 削除後にhome画面へ戻る
+
+
+@login_required
+def settings_view(request):  # settings画面を表示
+
+    children = Child.objects.filter(  # Childテーブルから、子供の情報を複数取得
+        parent=request.user,  # ログイン中ユーザーの子どもだけ
+        deleted_at__isnull=True,  # まだ削除されていない子どもだけ
     )
 
-    return render(  # home.htmlを表示
+    return render(
         request,
-        "kids_board/home.html",
+        "kids_board/settings.html",  # 表示するHTML
         {
-            "children": children,  # コンテキスト Python(view) → HTML(template)へ渡すデータ
+            "children": children,  # コンテキスト
         },
     )
-
-
-# @login_required
-# def kids_board_view(request): # kids_board.htmlを表示する
-
-#     return render(
-#         request,
-#         "kids_board/kids_board.html",
-#     )
-
-# class HomeView(LoginRequiredMixin, TemplateView):
-#     template_name = "/home.html"
-
-# class HomeView(LoginRequiredMixin, TemplateView):
-#     template_name = "kids_board/home.html"
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-
-#         context["children"] = Child.objects.filter(
-#             parent=self.request.user,
-#             deleted_at__isnull=True,
-#         )
-
-#         return context
 
 
 class KidsBoardView(LoginRequiredMixin, TemplateView):
@@ -114,14 +141,166 @@ class KidsBoardView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         # 親クラス(TemplateView)が用意する基本のcontextを取得し、context変数に格納.
         context = super().get_context_data(**kwargs)
+        children = Child.objects.filter(parent=self.request.user, deleted_at__isnull=True)
+        child_id = self.kwargs.get("child_id")
+        selected_child = children.filter(id=child_id).first() if child_id else children.first()
+        today = date.today()
+        WEEKDAY_JP = ["げつ", "か", "すい", "もく", "きん", "ど", "にち"]
+        context["children"] = children
+        context["selected_child"] = selected_child
+        context["today"] = today
+        context["weekday_jp"] = WEEKDAY_JP[today.weekday()]
         # 花丸を表示する場合はTrueにする。
         # 子供のタスク達成状況などに応じてTrue/Falseを切り替える想定。
         context["show_badge"] = False
         return context
 
 
-class PrepItemsMornView(LoginRequiredMixin, TemplateView):
+# ルールタイプを取得するヘルパー関数を定義(PrepItemsMornView,PrepItemsAftView,PrepItemsNiteViewで使用)
+def get_today_rule_type(target_date):
+    # 今日が特定日か判定
+    if PrepRule.objects.filter(
+        rule_type=PrepRule.RuleType.SPECIFIC,
+        specific_date=target_date,
+    ).exists():
+        return PrepRule.RuleType.SPECIFIC
+
+    # 今日が祝日か判定
+    if jpholiday.is_holiday(target_date):
+        return PrepRule.RuleType.HOLIDAY
+    # 今日が曜日指定のルールに該当するか判定
+    if target_date.weekday() < 5:
+        return PrepRule.RuleType.WEEKDAY
+
+    return PrepRule.RuleType.DAY_OF_WEEK
+
+
+class PrepItemsMornView(LoginRequiredMixin, ListView):
     template_name = "kids_board/prep_items_morn.html"
+    model = PrepItem
+    context_object_name = "prep_items"
+
+    # 今日のルールタイプを取得するために、get_today_rule_type関数を呼び出す。
+    def get_queryset(self):
+        target_date = date.today()
+        rule_type = get_today_rule_type(target_date)
+        child_id = self.kwargs.get("child_id")
+
+        # Qオブジェクトを使って、表示ルール（prep_item_show_rule(今日が特定日か又は曜日か））を定義
+        prep_item_show_rule = Q(
+            rules__rule_type=PrepRule.RuleType.SPECIFIC,
+            rules__specific_date=target_date,
+        ) | Q(
+            rules__rule_type=PrepRule.RuleType.DAY_OF_WEEK,
+            rules__day_of_week=target_date.weekday(),
+        )
+        # もし今日が祝日なら、祝日に該当するか表示ルールに加える
+        if rule_type == PrepRule.RuleType.HOLIDAY:
+            prep_item_show_rule |= Q(rules__rule_type=PrepRule.RuleType.HOLIDAY)
+        # もし今日が月〜金で、祝日ではない（平日）なら、今日の曜日に該当するか表示ルールに加える
+        elif rule_type == PrepRule.RuleType.WEEKDAY:
+            prep_item_show_rule |= Q(rules__rule_type=PrepRule.RuleType.WEEKDAY)
+
+        # ここで表示するprep_itemを絞り込む
+        queryset = PrepItem.objects.filter(
+            parent=self.request.user,
+            is_active=True,
+            category_type=PrepItem.CategoryType.MORNING,
+            children__id=child_id,
+        ).filter(prep_item_show_rule)
+
+        return queryset.distinct()  # 重複するお支度アイテムがある場合は、distinct()で重複を排除
+
+    # 追加のコンテキストで今日の日付をテンプレートに渡す
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        today = date.today()
+        WEEKDAY_JP = ["げつ", "か", "すい", "もく", "きん", "ど", "にち"]
+        context["today"] = today
+        context["weekday_jp"] = WEEKDAY_JP[today.weekday()]
+        return context
+
+
+class PrepItemsAftView(LoginRequiredMixin, ListView):
+    template_name = "kids_board/prep_items_aft.html"
+    model = PrepItem
+    context_object_name = "prep_items"
+
+    def get_queryset(self):
+        target_date = date.today()
+        rule_type = get_today_rule_type(target_date)
+        child_id = self.kwargs.get("child_id")
+
+        prep_item_show_rule = Q(
+            rules__rule_type=PrepRule.RuleType.SPECIFIC,
+            rules__specific_date=target_date,
+        ) | Q(
+            rules__rule_type=PrepRule.RuleType.DAY_OF_WEEK,
+            rules__day_of_week=target_date.weekday(),
+        )
+
+        if rule_type == PrepRule.RuleType.HOLIDAY:
+            prep_item_show_rule |= Q(rules__rule_type=PrepRule.RuleType.HOLIDAY)
+        elif rule_type == PrepRule.RuleType.WEEKDAY:
+            prep_item_show_rule |= Q(rules__rule_type=PrepRule.RuleType.WEEKDAY)
+
+        queryset = PrepItem.objects.filter(
+            parent=self.request.user,
+            is_active=True,
+            category_type=PrepItem.CategoryType.AFTERNOON,
+            children__id=child_id,
+        ).filter(prep_item_show_rule)
+
+        return queryset.distinct()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        today = date.today()
+        WEEKDAY_JP = ["げつ", "か", "すい", "もく", "きん", "ど", "にち"]
+        context["today"] = today
+        context["weekday_jp"] = WEEKDAY_JP[today.weekday()]
+        return context
+
+
+class PrepItemsNiteView(LoginRequiredMixin, ListView):
+    template_name = "kids_board/prep_items_nite.html"
+    model = PrepItem
+    context_object_name = "prep_items"
+
+    def get_queryset(self):
+        target_date = date.today()
+        rule_type = get_today_rule_type(target_date)
+        child_id = self.kwargs.get("child_id")
+
+        prep_item_show_rule = Q(
+            rules__rule_type=PrepRule.RuleType.SPECIFIC,
+            rules__specific_date=target_date,
+        ) | Q(
+            rules__rule_type=PrepRule.RuleType.DAY_OF_WEEK,
+            rules__day_of_week=target_date.weekday(),
+        )
+
+        if rule_type == PrepRule.RuleType.HOLIDAY:
+            prep_item_show_rule |= Q(rules__rule_type=PrepRule.RuleType.HOLIDAY)
+        elif rule_type == PrepRule.RuleType.WEEKDAY:
+            prep_item_show_rule |= Q(rules__rule_type=PrepRule.RuleType.WEEKDAY)
+
+        queryset = PrepItem.objects.filter(
+            parent=self.request.user,
+            is_active=True,
+            category_type=PrepItem.CategoryType.NIGHT,
+            children__id=child_id,
+        ).filter(prep_item_show_rule)
+
+        return queryset.distinct()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        today = date.today()
+        WEEKDAY_JP = ["げつ", "か", "すい", "もく", "きん", "ど", "にち"]
+        context["today"] = today
+        context["weekday_jp"] = WEEKDAY_JP[today.weekday()]
+        return context
 
 
 class PrepItemsView(LoginRequiredMixin, TemplateView):
@@ -504,7 +683,3 @@ class NewItemsEditView(TemplateView):
 
 class ScheduleView(LoginRequiredMixin, TemplateView):
     template_name = "kids_board/schedule.html"
-
-
-class SettingsView(LoginRequiredMixin, TemplateView):
-    template_name = "kids_board/settings.html"

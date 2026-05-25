@@ -59,19 +59,11 @@
 <div class="text-center py-5">
     <div class="d-flex flex-wrap justify-content-center align-items-baseline gap-1">
         <p class="fs-4">きょうは </p>
-        {% comment "日付表示" %}
-        <p class="fs-1 fw-bold ">{% now "month" %}</p>
+        <p class="fs-1 fw-bold ">{{ today.month }}</p>
         <p class="fs-4">がつ</p>
-        <p class="fs-1 fw-bold ">{% now "day" %}</p>
+        <p class="fs-1 fw-bold ">{{ today.day }}</p>
         <p class="fs-4">にち</p>
-        <p class="fs-1 fw-bold ">{% now "weekday" %}</p>
-        <p class="fs-4">ようび</p>
-        {% endcomment %}
-        <p class="fs-1 fw-bold ">4</p>
-        <p class="fs-4">がつ</p>
-        <p class="fs-1 fw-bold ">12</p>
-        <p class="fs-4">にち</p>
-        <p class="fs-1 fw-bold ">ど</p>
+        <p class="fs-1 fw-bold ">{{ weekday_jp }}</p>
         <p class="fs-4">ようび</p>
     </div>
 </div>
@@ -88,7 +80,7 @@
                     {% endif %}
                 </div>
                 <p class="fs-4">あさ やること</p>
-                <a class="d-flex justify-content-center align-items-center"  href="{% url 'prep_items_morn' %}">
+                <a class="d-flex justify-content-center align-items-center"  href="{% url 'prep_items_morn' selected_child.id %}">
                     <img src="{% static 'images/button_icon/btn_start.png' %}" alt="はじめる" class="mx-auto w-35 h-auto">
                 </a>
             </div>
@@ -104,7 +96,7 @@
                     {% endif %}
                 </div>
                 <p class="fs-4">かえって やること</p>
-                <a class="d-flex justify-content-center align-items-center"  href="#">
+                <a class="d-flex justify-content-center align-items-center"  href="{% url 'prep_items_aft' selected_child.id %}">
                     <img src="{% static 'images/button_icon/btn_start.png' %}" alt="はじめる" class="mx-auto w-35 h-auto">
                 </a>
             </div>
@@ -120,7 +112,7 @@
                     {% endif %}
                 </div>
                 <p class="fs-4">よる やること</p>
-                <a class="d-flex justify-content-center align-items-center"  href="#">
+                <a class="d-flex justify-content-center align-items-center"  href="{% url 'prep_items_nite' selected_child.id %}">
                     <img src="{% static 'images/button_icon/btn_start.png' %}" alt="はじめる" class="mx-auto w-35 h-auto">
                 </a>
             </div>
@@ -129,10 +121,7 @@
     <div class="py-5 g-4 d-flex flex-row justify-content-center align-items-center">
         <img class="w-15" src="{% static 'images/avatar_icon/12_lion.png' %}" alt="こどもアイコン">
         <div class="d-flex flex-column justify-content-center align-items-center">
-            {% comment "こども変数受け取り" %}
-            <p class="fs-3 m-3">{% child.name %} さん の きょうの よてい</p>
-            {% endcomment %}
-            <p class="fs-3 m-3">こども さん の きょうの よてい</p>
+            <p class="fs-3 m-3">{{ selected_child.child_name }} さん の きょうの よてい</p>
             <div class="d-flex flex-row justify-content-center align-items-center gap-4">
                 {% comment "こどもの予定表示" %}
                 {% for schedule in schedules %}
