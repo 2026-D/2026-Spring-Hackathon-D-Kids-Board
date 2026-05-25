@@ -105,6 +105,7 @@ class ChildForm(forms.ModelForm):  # Childモデルと連動するフォーム
                 Child.objects.filter(
                     parent=self.instance.parent,
                     child_name=child_name,
+                    deleted_at__isnull=True,
                 )
                 .exclude(id=self.instance.id)
                 .exists()
