@@ -186,4 +186,14 @@
 {% endblock %}
 
 {% block extra_js %}
+{% if open_add_child_modal %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const modalElement = document.getElementById('addChildModal');
+    if (!modalElement) return;
+    const modal = new bootstrap.Modal(modalElement);
+    modal.show();
+});
+</script>
+{% endif %}
 {% endblock %}

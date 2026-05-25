@@ -61,12 +61,31 @@ def logout_view(request):  # logout/へのアクセス時に動く処理
 def child_create_view(request):  # 子ども追加処理
     if request.method == "POST":  # フォームの追加ボタンを押した時の処理
         form = ChildForm(request.POST)  # HTMLから送られた入力値を、forms.pyのChildFormに渡す
+        form.instance.parent = request.user  # clean() で parent を参照するため先にセット
 
         if form.is_valid():  # 入力内容が正しいか確認
             child = form.save(commit=False)  # Childデータを作る、しかしDBには保存はしない
             child.parent = request.user  # ログインしているユーザーを、子どもの親として設定
             child.save()  # childrenテーブルに保存
             return redirect("home")  # home画面へ遷移
+
+        # こども追加に失敗した時は、再度子ども情報とフォームを渡してsettings.htmlを表示する
+        children = Child.objects.filter(
+            parent=request.user,
+            deleted_at__isnull=True,
+        )
+        return render(
+            request,
+            "kids_board/settings.html",
+            {
+                "children": children,  # 子ども情報も渡す（子ども追加に失敗しても、子ども情報は表示するため）
+                "form": form,  # エラーの内容が入ったフォームを渡す
+                "open_add_child_modal": True,  # 子ども追加モーダルを開いた状態にするためのフラグ
+            },
+            status=400,
+        )
+
+    return redirect("settings")
 
 
 class HomeView(LoginRequiredMixin, ListView):

@@ -93,3 +93,22 @@ class ChildForm(forms.ModelForm):  # Childモデルと連動するフォーム
             ),  # HTMLの入力欄の見た目を指定
             "child_icon": forms.TextInput(attrs={"class": "form-control"}),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()  # フォームの基本的なバリデーションを実行
+
+        child_name = cleaned_data.get("child_name")  # 入力された子どもの名前を取得
+
+        if child_name:
+            # 同じユーザーが同名の子どもを登録していないか確認
+            if (
+                Child.objects.filter(
+                    parent=self.instance.parent,
+                    child_name=child_name,
+                )
+                .exclude(id=self.instance.id)
+                .exists()
+            ):
+                self.add_error("child_name", "同じ名前の子どもは既に登録されています。")
+
+        return cleaned_data
