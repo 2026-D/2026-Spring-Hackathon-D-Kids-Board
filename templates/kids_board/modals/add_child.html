@@ -1,6 +1,6 @@
 {% load static %}
 
-<!-- ================= こども新規追加モーダル ================= -->
+{% comment %} <!-- ================= こども新規追加モーダル ================= -->
 <div class="modal fade" id="addChildModal" tabindex="-1" aria-labelledby="addChildModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -201,4 +201,92 @@
         </div>
     </div>
   </div>
-</div>
+</div>    {% endcomment %}
+
+<div class="modal fade" id="addChildModal" tabindex="-1" aria-labelledby="addChildModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <form method="post" action="{% url 'child_create' %}">
+                {% csrf_token %}
+
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="addChildModalLabel">こどもの追加</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <!-- 名前入力 -->
+                    <div class="mb-3">
+                        <label for="addChildNameInput" class="form-label">名前</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="addChildNameInput"
+                            name="child_name"
+                            required
+                        >
+                    </div>
+
+                    <!-- アイコン選択 -->
+                    <div class="mb-3">
+                        <label class="form-label">アイコン選択</label>
+                    </div>
+
+                    <!-- 選択されたアイコンを送信するhidden input -->
+                    <input
+                        type="hidden"
+                        name="child_icon"
+                        id="selectedChildIcon"
+                        value="images/avatar_icon/99_default_avater.png"
+                    >
+
+                    <div style="max-height: 300px; overflow-y: auto;">
+                        <div class="container text-center">
+                            <div class="row row-cols-auto justify-content-center">
+
+                                <div class="col">
+                                    <button
+                                        class="border-0 bg-white"
+                                        type="button"
+                                        onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/1_cat.png'"
+                                    >
+                                        <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;">
+                                            <img class="rounded-circle" src="{% static 'images/avatar_icon/1_cat.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;">
+                                        </div>
+                                    </button>
+                                </div>
+
+                                <div class="col">
+                                    <button
+                                        class="border-0 bg-white"
+                                        type="button"
+                                        onclick="document.getElementById('selectedChildIcon').value='images/avatar_icon/2_chicken.png'"
+                                    >
+                                        <div class="rounded-circle shadow-sm d-flex align-items-center justify-content-center" style="width: 66px; height: 66px;">
+                                            <img class="rounded-circle" src="{% static 'images/avatar_icon/2_chicken.png' %}" alt="こどもアイコン" style="width: 64px; height: auto;">
+                                        </div>
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer d-flex justify-content-between">
+                    <button type="button" class="btn btn-outline-primary border-0 fw-normal" data-bs-dismiss="modal">
+                        キャンセル
+                    </button>
+
+                    <button type="submit" class="btn btn-primary">
+                        追加
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>  
+
