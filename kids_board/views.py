@@ -11,6 +11,8 @@ from .models import PrepItem
 from django.contrib.auth.mixins import LoginRequiredMixin  # ログイン必須のクラスを読み込む
 from django.contrib.auth.decorators import login_required
 from .models import Child
+from django.utils import timezone
+from django.shortcuts import get_object_or_404
 
 
 def signup_view(request):  # signup/へのアクセス時に動く処理
@@ -78,6 +80,41 @@ def home_view(request):  # DBから子ども情報の一覧を取得、home画�
         "kids_board/home.html",
         {
             "children": children,  # コンテキスト Python(view) → HTML(template)へ渡すデータ
+        },
+    )
+
+
+@login_required
+def child_delete_view(request, child_id):  # ログインしている人だけが使える削除処理
+
+    if request.method == "POST":  # 削除ボタンから、POST送信されたときだけ削除処理をする
+        child = get_object_or_404(  # DBから1件取得、無ければ404エラーを出す
+            Child,  # childrenテーブル
+            id=child_id,  # URLで指定された子ども
+            parent=request.user,  # ログイン中ユーザーの子どもだけ
+            deleted_at__isnull=True,  # まだ削除されていない子どもだけ
+        )
+
+        child.deleted_at = timezone.now()  # 現在時刻をdeleted_atに入れ、削除済み扱いとする
+
+        child.save()  # 変更をDBに保存
+
+    return redirect("home")  # 削除後にhome画面へ戻る
+
+
+@login_required
+def settings_view(request):  # settings画面を表示
+
+    children = Child.objects.filter(  # Childテーブルから、子供の情報を複数取得
+        parent=request.user,  # ログイン中ユーザーの子どもだけ
+        deleted_at__isnull=True,  # まだ削除されていない子どもだけ
+    )
+
+    return render(
+        request,
+        "kids_board/settings.html",  # 表示するHTML
+        {
+            "children": children,  # コンテキスト
         },
     )
 
@@ -506,5 +543,5 @@ class ScheduleView(LoginRequiredMixin, TemplateView):
     template_name = "kids_board/schedule.html"
 
 
-class SettingsView(LoginRequiredMixin, TemplateView):
-    template_name = "kids_board/settings.html"
+# class SettingsView(LoginRequiredMixin, TemplateView):
+#     template_name = "kids_board/settings.html"

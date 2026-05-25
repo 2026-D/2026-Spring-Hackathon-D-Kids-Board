@@ -1,7 +1,9 @@
 from django.urls import path  # URLを書くためのpathを使う
 from .views import signup_view, login_view, logout_view
 from .views import home_view  # 関数ベース
-from .views import child_create_view
+from .views import child_create_view  # 関数ベース
+from .views import child_delete_view  # 関数ベース
+from .views import settings_view  # 関数ベース
 
 from .views import (
     # kids_board_view,
@@ -12,7 +14,7 @@ from .views import (
     CustomItemsEditView,
     NewItemsEditView,
     ScheduleView,
-    SettingsView,
+    # SettingsView,
 )
 
 
@@ -23,6 +25,8 @@ urlpatterns = [
     path("home/", home_view, name="home"),  # home/
     # path("kids_board/",kids_board_view,name="kids_board"), # kids_board/
     path("settings/child/add/", child_create_view, name="child_create"),
+    path("settings/child/<int:child_id>/delete/", child_delete_view, name="child_delete"),
+    path("settings/", settings_view, name="settings"),
     path(
         "kids_board/",
         KidsBoardView.as_view(template_name="kids_board/kids_board.html"),
@@ -56,7 +60,7 @@ urlpatterns = [
     path(
         "schedule/", ScheduleView.as_view(template_name="kids_board/schedule.html"), name="schedule"
     ),
-    path(
-        "settings/", SettingsView.as_view(template_name="kids_board/settings.html"), name="settings"
-    ),
+    # path(
+    #     "settings/", SettingsView.as_view(template_name="kids_board/settings.html"), name="settings"
+    # ),
 ]
