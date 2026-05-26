@@ -18,7 +18,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
-from datetime import date
+from datetime import date, timedelta
 import jpholiday
 
 
@@ -698,13 +698,87 @@ class NewItemsEditView(TemplateView):
 class ScheduleView(LoginRequiredMixin, TemplateView):
     template_name = "kids_board/schedule.html"
 
+    COLOR_CSS_MAP = {
+        Schedule.ColorType.RED: "var(--red-400)",
+        Schedule.ColorType.YELLOW: "var(--yellow-200)",
+        Schedule.ColorType.GREEN: "var(--green-300)",
+        Schedule.ColorType.EMERALD_GREEN: "var(--teal-400)",
+        Schedule.ColorType.SKY_BLUE: "var(--cyan-300)",
+        Schedule.ColorType.BLUE: "var(--blue-400)",
+        Schedule.ColorType.PURPLE: "var(--indigo-300)",
+        Schedule.ColorType.PINK: "var(--pink-300)",
+        Schedule.ColorType.ORANGE: "var(--orange-300)",
+        Schedule.ColorType.WHITE: "var(--gray-100)",
+    }
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         children = Child.objects.filter(parent=self.request.user, deleted_at__isnull=True)
         child_id = self.kwargs.get("child_id")
         selected_child = get_object_or_404(children, id=child_id) if child_id else children.first()
+
+        today = date.today()
+        # 日曜始まりに固定: 月曜=0..日曜=6 のため +1 して 7 で剰余
+        days_since_sunday = (today.weekday() + 1) % 7
+        week_start = today - timedelta(days=days_since_sunday)
+        week_dates = [week_start + timedelta(days=i) for i in range(7)]
+        week_end = week_start + timedelta(days=6)
+        week_weekdays = ["にち", "げつ", "か", "すい", "もく", "きん", "ど"]
+        hours = list(range(7, 19))  # 7じ〜18じ
+        weekly_grid = {hour: [None] * 7 for hour in hours}
+
+        # 予定を取得して、weekly_gridに配置
+        if selected_child:
+            schedules = Schedule.objects.filter(
+                child=selected_child,
+                schedule_date__range=(week_start, week_end),
+            )
+
+            for schedule in schedules:
+                day_index = (schedule.schedule_date - week_start).days
+                # 予定の日付が週の範囲外の場合はスキップ
+                if not (0 <= day_index < 7):
+                    continue
+
+                # 時刻のない予定は7じ枠に表示する想定
+                if schedule.start_time:
+                    start_hour = schedule.start_time.hour
+                    if schedule.end_time and schedule.end_time > schedule.start_time:
+                        end_hour = schedule.end_time.hour
+                    else:
+                        end_hour = start_hour + 1
+                else:
+                    # 時刻未設定の場合は7じ枠に表示
+                    start_hour = 7
+                    end_hour = 8
+
+                start_hour = max(start_hour, hours[0])  # 開始時間は表示する時間帯の最初の時間まで
+                end_hour = min(end_hour, hours[-1] + 1)  # 終了時間は表示する時間帯の次の時間まで
+                title_hour = start_hour + (
+                    (end_hour - start_hour) // 2
+                )  # タイトルを表示する時間帯の計算（予定の中央の時間帯に表示する想定）
+
+                for hour in range(start_hour, end_hour):
+                    # 予定が重なった場合、現状は先に入った1件を優先表示。
+                    if weekly_grid[hour][day_index] is None:
+                        weekly_grid[hour][day_index] = {
+                            "title": schedule.title
+                            if hour == title_hour
+                            else "",  # 中央の枠にだけタイトルを表示する
+                            "color_css": self.COLOR_CSS_MAP.get(
+                                schedule.color, "var(--gray-100)"
+                            ),  # 色のCSSを取得。デフォルトはグレー
+                        }
+
+        weekly_rows = [{"hour": hour, "cells": weekly_grid[hour]} for hour in hours]
+
         context["children"] = children
         context["selected_child"] = selected_child
+        context["week_start"] = week_start
+        context["week_end"] = week_end
+        context["week_dates"] = week_dates
+        context["week_weekdays"] = week_weekdays
+        context["weekly_rows"] = weekly_rows
         return context
 
 
