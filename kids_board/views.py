@@ -4,8 +4,13 @@ from django.contrib.auth import (
     logout,
 )  # 登録ユーザーをログイン状態にする # ログアウト状態にする
 from django.shortcuts import render, redirect  # renderはHTML表示 #redirectは別ページ移動
-from .forms import SignUpForm, LoginForm, ChildForm  # forms.pyからSignUpForm, LoginFormを読み込む
-from django.views.generic import TemplateView, ListView
+from .forms import (
+    SignUpForm,
+    LoginForm,
+    ChildForm,
+    ScheduleForm,
+)  # forms.pyからSignUpForm, LoginFormを読み込む
+from django.views.generic import TemplateView, ListView, CreateView
 from django.urls import reverse_lazy
 from .models import PrepItem, Child, PrepRule, Schedule
 from django.contrib.auth.mixins import LoginRequiredMixin  # ログイン必須のクラスを読み込む
@@ -757,7 +762,7 @@ class ScheduleListView(LoginRequiredMixin, ListView):
         return context
 
 
-class CreateScheduleView(LoginRequiredMixin, TemplateView):
+class CreateScheduleView(LoginRequiredMixin, CreateView):
     template_name = "kids_board/create_schedule.html"
 
     COLOR_CSS_MAP = {
@@ -772,6 +777,13 @@ class CreateScheduleView(LoginRequiredMixin, TemplateView):
         Schedule.ColorType.ORANGE: "var(--orange-300)",
         Schedule.ColorType.WHITE: "var(--gray-100)",
     }
+
+    form_class = ScheduleForm
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial["color"] = Schedule.ColorType.RED
+        return initial
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -803,6 +815,26 @@ class CreateScheduleView(LoginRequiredMixin, TemplateView):
             ],
         }
         return context
+
+    def form_valid(self, form):
+        child = get_object_or_404(
+            Child,
+            id=self.kwargs.get("child_id"),
+            parent=self.request.user,
+            deleted_at__isnull=True,
+        )
+        form.instance.child = child
+        return super().form_valid(form)
+
+    # フォームの入力が無効な場合にエラーメッセージ。スケジュール作成画面を再表示。
+    def form_invalid(self, form):
+        context = self.get_context_data(form=form)
+        context["error_message"] = "入力内容を確認してください。"
+        return render(self.request, self.template_name, context, status=400)
+
+    # CreateViewのform_validが成功した後、スケジュールの保存後にスケジュール一覧画面にリダイレクトするようにする。
+    def get_success_url(self):
+        return reverse_lazy("schedule_list", kwargs={"child_id": self.kwargs.get("child_id")})
 
 
 class SettingsView(LoginRequiredMixin, TemplateView):
