@@ -291,7 +291,11 @@
                     </div>
                     {% if request.resolver_match.url_name != 'home' and request.resolver_match.url_name != 'prep_items' and request.resolver_match.url_name != 'new_items' and request.resolver_match.url_name != 'custom_items'%}
                     <div class="nav-item">
+                        {% if selected_child %}
                         <a class="nav-link" href="{% url 'schedule' selected_child.id %}"><img src="{% static 'images/button_icon/calendar4-week.png' %}" alt="schedule" width="60" height="60"></a>
+                        {% else %}
+                        <a class="nav-link" href="{% url 'schedule' %}"><img src="{% static 'images/button_icon/calendar4-week.png' %}" alt="schedule" width="60" height="60"></a>
+                        {% endif %}
                     </div>
                     {% endif %}
                     <div class="nav-item">
@@ -310,7 +314,11 @@
                         </li>
                         {% if request.resolver_match.url_name != 'home' and request.resolver_match.url_name != 'prep_items' and request.resolver_match.url_name != 'new_items' and request.resolver_match.url_name != 'custom_items'%}
                         <li class="nav-item">
+                            {% if selected_child %}
                             <a class="nav-link" href="{% url 'schedule' selected_child.id %}"><img src="{% static 'images/button_icon/calendar4-week.png' %}" alt="schedule"></a>
+                            {% else %}
+                            <a class="nav-link" href="{% url 'schedule' %}"><img src="{% static 'images/button_icon/calendar4-week.png' %}" alt="schedule"></a>
+                            {% endif %}
                         </li>
                         {% endif %}
                         <li class="nav-item">
