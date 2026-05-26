@@ -1,19 +1,34 @@
-<!-- こども削除モーダル -->
-<div class="modal fade" id="deleteChildModal" tabindex="-1" aria-labelledby="deleteChildModalLabel" aria-hidden="true">
+{% for child in children %}
+<div class="modal fade" id="deleteChildModal{{ child.id }}" tabindex="-1" aria-labelledby="deleteChildModalLabel{{ child.id }}" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-        <div class="modal-header">
-            <h1 class="modal-title fs-5" id="deleteChildModalLabel">こども1 さんを本当に削除しますか？</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <p>今まで作成したデータが全て削除されます。</p>
-            <p class="text-danger">この操作は取り消せません。</p>
-        </div>
-        <div class="modal-footer d-flex justify-content-between">
-            <button type="button" class="btn btn-outline-primary border-0 fw-normal" data-bs-dismiss="modal">キャンセル</button>
-            <button type="button" class="btn btn-danger btn-danger-red-hover">削除する</button>
-        </div>
+
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteChildModalLabel{{ child.id }}">
+                    {{ child.child_name }} さんを本当に削除しますか？
+                </h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <p>今まで作成したデータが全て削除されます。</p>
+                <p class="text-danger">この操作は取り消せません。</p>
+            </div>
+
+            <div class="modal-footer d-flex justify-content-between">
+                <button type="button" class="btn btn-outline-primary border-0 fw-normal" data-bs-dismiss="modal">
+                    キャンセル
+                </button>
+
+                <form method="post" action="{% url 'child_delete' child.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-danger-red-hover">
+                        削除する
+                    </button>
+                </form>
+            </div>
+
         </div>
     </div>
 </div>
+{% endfor %}

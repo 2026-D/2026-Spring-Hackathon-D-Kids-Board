@@ -14,47 +14,77 @@
 
 <div class="d-flex flex-column align-items-center justify-content-center">
     <p class="text-center p-3 pt-4">こどもの編集・追加・削除</p>
+
+    {% for child in children %}
     <div class="d-flex flex-row align-items-center justify-content-center gap-3">
-        <img src="{% static 'images/avatar_icon/99_default_avater.png' %}" alt="デフォルトアバター" class="my-2" style="width: 45px; height: auto;">
+        <img
+            src="{% static child.child_icon %}"
+            alt="こどもアイコン"
+            class="my-2"
+            style="width: 45px; height: auto;"
+        >
+
         <div class="my-2" style="width: 150px; max-width: 150px;">
-            <p class="m-0">こども1</p>
+            <p class="m-0" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                {{ child.child_name }}
+            </p>
         </div>
-        <button type="button" class="p-0 border-0 bg-transparent my-2" data-bs-toggle="modal" data-bs-target="#editChildModal" aria-label="こども情報を編集">
+
+        <button
+            type="button"
+            class="p-0 border-0 bg-transparent my-2"
+            data-bs-toggle="modal"
+            data-bs-target="#editChildModal"
+            aria-label="こども情報を編集"
+        >
             <img src="{% static 'images/button_icon/pencil-square.png' %}" alt="編集" style="width: 20px; height: auto;">
         </button>
-        <button type="button" class="p-0 border-0 bg-transparent my-2" data-bs-toggle="modal" data-bs-target="#deleteChildModal" aria-label="こどもを削除">
+
+        <button
+            type="button"
+            class="p-0 border-0 bg-transparent my-2"
+            data-bs-toggle="modal"
+            data-bs-target="#deleteChildModal{{ child.id }}"
+            aria-label="こどもを削除"
+        >
             <img src="{% static 'images/button_icon/trash.png' %}" alt="削除" style="width: 20px; height: auto;">
         </button>
     </div>
-    <div class="d-flex flex-row align-items-center justify-content-center gap-3">
-        <img src="{% static 'images/avatar_icon/99_default_avater.png' %}"  class="my-2" alt="デフォルトアバター" style="width: 45px; height: auto;">
-        <div class="my-2" style="width: 150px; max-width: 150px;">
-            <p class="m-0" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">こどもの長い名前の場合の表示</p>
-        </div>
-        <button type="button" class="p-0 border-0 bg-transparent my-2" data-bs-toggle="modal" data-bs-target="#editChildModal" aria-label="こども情報を編集">
-            <img src="{% static 'images/button_icon/pencil-square.png' %}" alt="編集" style="width: 20px; height: auto;">
-        </button>
-        <button type="button" class="p-0 border-0 bg-transparent my-2" data-bs-toggle="modal" data-bs-target="#deleteChildModal" aria-label="こどもを削除">
-            <img src="{% static 'images/button_icon/trash.png' %}" alt="削除" style="width: 20px; height: auto;">
-        </button>
-    </div>
-    <button type="button" class="d-flex flex-row align-items-center justify-content-center text-start gap-3 link-dark link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover border-0 bg-transparent" data-bs-toggle="modal" data-bs-target="#addChildModal" aria-label="こどもを追加">
-        <img src="{% static 'images/avatar_icon/add_child.png' %}" alt="こども追加" class="my-2" style="width: 45px; height: auto; hover: opacity(0.8);">
+    {% empty %}
+    <p class="text-center my-2">まだこどもが登録されていません。</p>
+    {% endfor %}
+
+    <button
+        type="button"
+        class="d-flex flex-row align-items-center justify-content-center text-start gap-3 link-dark link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover border-0 bg-transparent"
+        data-bs-toggle="modal"
+        data-bs-target="#addChildModal"
+        aria-label="こどもを追加"
+    >
+        <img src="{% static 'images/avatar_icon/add_child.png' %}" alt="こども追加" class="my-2" style="width: 45px; height: auto;">
         <div class="my-2" style="width: 150px; max-width: 150px;">
             <p class="m-0">こどもを追加</p>
         </div>
         <div style="width: 46px; height: auto;"></div>
     </button>
+
     <div class="d-flex flex-row align-items-center justify-content-center">
         <p class="text-center p-3 pt-4 my-2">ファミリーアカウント</p>
-        <button type="button" class="p-0 border-0 bg-transparent my-2" data-bs-toggle="modal" data-bs-target="#editFamilyModal" aria-label="ファミリー情報を編集">
+        <button
+            type="button"
+            class="p-0 border-0 bg-transparent my-2"
+            data-bs-toggle="modal"
+            data-bs-target="#editFamilyModal"
+            aria-label="ファミリー情報を編集"
+        >
             <img src="{% static 'images/button_icon/pencil-square.png' %}" alt="編集" style="width: 20px; height: auto;">
         </button>
     </div>
+
     <div class="d-flex flex-row align-items-center justify-content-center">
         <div class="d-flex flex-column align-items-start justify-content-center" style="width: 150px; max-width: 150px;">
             <p>名前</p>
-            <p>{{ user.username}}</p>
+            <p>{{ user.username }}</p>
             <p>メールアドレス</p>
             <p>{{ user.email }}</p>
             <p>パスワード</p>
@@ -63,7 +93,56 @@
     </div>
 </div>
 
+{% for child in children %}
+<div
+    class="modal fade"
+    id="deleteChildModal{{ child.id }}"
+    tabindex="-1"
+    aria-hidden="true"
+>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="{% url 'child_delete' child.id %}">
+                {% csrf_token %}
+
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5">
+                        {{ child.child_name }} さんを本当に削除しますか？
+                    </h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p>今まで作成したデータが全て削除されます。</p>
+                    <p class="text-danger">この操作は取り消せません。</p>
+                </div>
+
+                <div class="modal-footer d-flex justify-content-between">
+                    <button type="button" class="btn btn-outline-primary border-0 fw-normal" data-bs-dismiss="modal">
+                        キャンセル
+                    </button>
+
+                    <button type="submit" class="btn btn-danger btn-danger-red-hover">
+                        削除する
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
 {% endblock %}
 
 {% block extra_js %}
+{% if open_add_child_modal %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const modalElement = document.getElementById('addChildModal');
+    if (!modalElement) return;
+    const modal = new bootstrap.Modal(modalElement);
+    modal.show();
+});
+</script>
+{% endif %}
 {% endblock %}
