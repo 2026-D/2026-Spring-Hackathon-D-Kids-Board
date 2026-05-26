@@ -760,6 +760,19 @@ class ScheduleListView(LoginRequiredMixin, ListView):
 class CreateScheduleView(LoginRequiredMixin, TemplateView):
     template_name = "kids_board/create_schedule.html"
 
+    COLOR_CSS_MAP = {
+        Schedule.ColorType.RED: "var(--red-400)",
+        Schedule.ColorType.YELLOW: "var(--yellow-200)",
+        Schedule.ColorType.GREEN: "var(--green-300)",
+        Schedule.ColorType.EMERALD_GREEN: "var(--teal-400)",
+        Schedule.ColorType.SKY_BLUE: "var(--cyan-300)",
+        Schedule.ColorType.BLUE: "var(--blue-400)",
+        Schedule.ColorType.PURPLE: "var(--indigo-300)",
+        Schedule.ColorType.PINK: "var(--pink-300)",
+        Schedule.ColorType.ORANGE: "var(--orange-300)",
+        Schedule.ColorType.WHITE: "var(--gray-100)",
+    }
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         child_id = self.kwargs.get("child_id")
@@ -770,33 +783,23 @@ class CreateScheduleView(LoginRequiredMixin, TemplateView):
             deleted_at__isnull=True,
         )
         context["selected_child"] = selected_child
-
-        # 新規作成画面用の単一フォームデータ
+        context["schedule_color_choices"] = [
+            {
+                "value": color.value,
+                "label": color.label,
+                "css": self.COLOR_CSS_MAP[color],
+            }
+            for color in Schedule.ColorType
+        ]
         context["schedule"] = {
-            "id": 1,
-            "name": "",
-            "weekdays": [
-                {"name": "げつようび", "checked": False},
-                {"name": "かようび", "checked": False},
-                {"name": "すいようび", "checked": False},
-                {"name": "もくようび", "checked": False},
-                {"name": "きんようび", "checked": False},
-                {"name": "どようび", "checked": False},
-                {"name": "にちようび", "checked": False},
-            ],
-            "holiday": [{"name": "しゅくじつ", "checked": False}],
-            "special_date": [{"name": "ひづけしてい", "checked": False, "value": None}],
             "colors": [
-                {"name": "RED", "value": "var(--red-400)", "checked": False},
-                {"name": "YELLOW", "value": "var(--yellow-300)", "checked": False},
-                {"name": "GREEN", "value": "var(--green-400)", "checked": False},
-                {"name": "EMERALD_GREEN", "value": "var(--teal-300)", "checked": False},
-                {"name": "SKY_BLUE", "value": "var(--cyan-300)", "checked": False},
-                {"name": "BLUE", "value": "var(--blue-400)", "checked": False},
-                {"name": "PURPLE", "value": "var(--indigo-300)", "checked": False},
-                {"name": "PINK", "value": "var(--pink-300)", "checked": False},
-                {"name": "ORANGE", "value": "var(--orange-300)", "checked": False},
-                {"name": "WHITE", "value": "var(--gray-100)", "checked": False},
+                {
+                    "value": color.value,
+                    "label": color.label,
+                    "css": self.COLOR_CSS_MAP[color],
+                    "checked": False,
+                }
+                for color in Schedule.ColorType
             ],
         }
         return context

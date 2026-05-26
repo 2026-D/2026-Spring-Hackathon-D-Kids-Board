@@ -27,93 +27,97 @@
         <p class="m-0 m-sm-3 p-2 fs-2 nowrap">あたらしい よていを つくる</p>
         <img src="{% static 'images/button_icon/calendar-plus.png' %}" alt="カレンダーアイコン" class="" style="width: 45px; height: auto;">
     </div>
-    <div class="rounded shadow m-2 m-lg-4 p-2 pe-lg-3 d-flex flex-column flex-lg-row align-items-center justify-content-around"
-         style="background-color:#fff; border: 3px solid var(--cyan-400);">
+    <form class="rounded shadow m-2 m-lg-4 p-2 pe-lg-3 d-flex flex-column flex-lg-row align-items-center justify-content-around"
+          style="background-color:#fff; border: 3px solid var(--cyan-400);"
+          method="post">
+        {% csrf_token %}
+        <input type="hidden" name="child_id" value="{{ selected_child.id }}">
+
         <div class="prep-card rounded shadow border-0 m-3 p-2" style="background-color: #fff;" type="button">
             <div class="form-floating mb-3" style="width: 95%;">
-                <input type="text" class="form-control" id="floatingInput" value="{{ schedule.name|default:'' }}">
-                <label for="floatingInput">なまえ</label>
+                <input type="text" class="form-control" id="scheduleTitle" name="title" value="{{ schedule.name|default:'' }}">
+                <label for="scheduleTitle">なまえ</label>
             </div>
-            <select class="form-select mb-3" style="width: 95%;" aria-label="はじまり">
-                <option selected>はじまり</option>
-                <option value="1">7:00</option>
-                <option value="2">8:00</option>
-                <option value="3">9:00</option>
-                <option value="4">10:00</option>
-                <option value="5">11:00</option>
-                <option value="6">12:00</option>
-                <option value="7">13:00</option>
-                <option value="8">14:00</option>
-                <option value="9">15:00</option>
-                <option value="10">16:00</option>
-                <option value="11">17:00</option>
-                <option value="12">18:00</option>
+            <select class="form-select mb-3" style="width: 95%;" aria-label="はじまり" name="start_time">
+                <option value="" selected>はじまり</option>
+                <option value="07:00">7:00</option>
+                <option value="08:00">8:00</option>
+                <option value="09:00">9:00</option>
+                <option value="10:00">10:00</option>
+                <option value="11:00">11:00</option>
+                <option value="12:00">12:00</option>
+                <option value="13:00">13:00</option>
+                <option value="14:00">14:00</option>
+                <option value="15:00">15:00</option>
+                <option value="16:00">16:00</option>
+                <option value="17:00">17:00</option>
+                <option value="18:00">18:00</option>
             </select>
-            <select class="form-select mb-3" style="width: 95%;" aria-label="おわり">
-                <option selected>おわり</option>
-                <option value="1">7:00</option>
-                <option value="2">8:00</option>
-                <option value="3">9:00</option>
-                <option value="4">10:00</option>
-                <option value="5">11:00</option>
-                <option value="6">12:00</option>
-                <option value="7">13:00</option>
-                <option value="8">14:00</option>
-                <option value="9">15:00</option>
-                <option value="10">16:00</option>
-                <option value="11">17:00</option>
-                <option value="12">18:00</option>
+            <select class="form-select mb-3" style="width: 95%;" aria-label="おわり" name="end_time">
+                <option value="" selected>おわり</option>
+                <option value="07:00">7:00</option>
+                <option value="08:00">8:00</option>
+                <option value="09:00">9:00</option>
+                <option value="10:00">10:00</option>
+                <option value="11:00">11:00</option>
+                <option value="12:00">12:00</option>
+                <option value="13:00">13:00</option>
+                <option value="14:00">14:00</option>
+                <option value="15:00">15:00</option>
+                <option value="16:00">16:00</option>
+                <option value="17:00">17:00</option>
+                <option value="18:00">18:00</option>
             </select>
         </div>
-        <!--入力欄-->
+
         <div class="d-flex flex-column justify-content-center align-items-start gap-2">
+            <div class="d-flex flex-row flex-wrap flex-md-nowrap gap-4 align-items-center justify-content-start form-check">
+                <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDateNewSchedule" name="has_schedule_date" {% if schedule.schedule_date %}checked{% endif %}>
+                <label class="form-check-label text-nowrap" for="switchCheckDateNewSchedule">ひづけを していする</label>
+                <input type="text" class="form-control js-datepicker p-0 text-center" name="schedule_date" value="{% if schedule.schedule_date %}{{ schedule.schedule_date|date:'Y年n月j日' }}{% endif %}" placeholder="クリックで せんたく">
+            </div>
+
             <p class="m-0">ようびを していする</p>
             <div class="d-flex flex-wrap flex-row gap-1 align-items-start">
                 {% for day in schedule.weekdays %}
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="checkDay{{ schedule.id }}_{{ forloop.counter }}">
-                    <label class="form-check-label" for="checkDay{{ schedule.id }}_{{ forloop.counter }}">{{ day.name }}</label>
+                <div class="form-check form-check-inline mb-0">
+                    <input class="form-check-input" type="checkbox" value="" id="newCheckDay{{ forloop.counter }}" name="weekdays" {% if day.checked %}checked{% endif %}>
+                    <label class="form-check-label" for="newCheckDay{{ forloop.counter }}">{{ day.name }}</label>
                 </div>
                 {% endfor %}
             </div>
-            {% for is_not_holiday in schedule.holiday %}
-            <div class="form-check form-switch ">
-                <input class="form-check-input" type="checkbox" role="switch" id="switchCheckHoliday{{ schedule.id }}_{{ forloop.counter }}">
-                <label class="form-check-label" for="switchCheckHoliday{{ schedule.id }}_{{ forloop.counter }}">へいじつだけに する（しゅくじつは ふくまない）</label>
+
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="newHolidaySwitch" name="exclude_holiday" {% if schedule.holiday.0.checked %}checked{% endif %}>
+                <label class="form-check-label" for="newHolidaySwitch">へいじつだけに する（しゅくじつは ふくまない）</label>
             </div>
-            {% endfor %}
-                {% for date in schedule.special_date %}
-                <div class="d-flex flex-row flex-wrap flex-md-nowrap gap-4 align-items-center justify-content-start form-check">
-                <input class="form-check-input" type="checkbox" role="switch"
-                       id="switchCheckDate{{ schedule.id }}_{{ forloop.counter }}">
-                <label class="form-check-label text-nowrap"
-                       for="switchCheckDate{{ schedule.id }}_{{ forloop.counter }}">ひづけを していする</label>
-                <input type="text" class="form-control js-datepicker p-0 text-center"
-                       value="{{ date.value|default:'' }}"
-                       placeholder="クリックで せんたく">
-                </div>
-                {% endfor %}
+
+            <div class="d-flex flex-row flex-wrap flex-md-nowrap gap-4 align-items-center justify-content-start form-check">
+                <input class="form-check-input" type="checkbox" role="switch" id="newSpecialDateSwitch" name="use_special_date" {% if schedule.special_date.0.value %}checked{% endif %}>
+                <label class="form-check-label text-nowrap" for="newSpecialDateSwitch">ひづけを していする</label>
+                <input type="text" class="form-control js-datepicker p-0 text-center" name="special_date" value="{% if schedule.special_date.0.value %}{{ schedule.special_date.0.value }}{% endif %}" placeholder="クリックで せんたく">
+            </div>
+
             <p class="m-0">らべるの いろを えらぶ</p>
-            <div class="d-flex flex-wrap flex-row gap-4 align-items-start">
-                {% for color in schedule.colors %}
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="color{{ schedule.id }}" id="checkColor{{ schedule.id }}_{{ forloop.counter }}">
-                    <div class="rounded-circle" style="width: 24px; height: 24px; background-color: {{ color.value }};"></div>
+            <div class="d-flex flex-wrap flex-row gap-2 align-items-center">
+                {% for color_choice in schedule_color_choices %}
+                <div class="form-check form-check-inline mb-0">
+                    <input class="form-check-input" type="radio" name="color" id="newCheckColor{{ color_choice.value }}" value="{{ color_choice.value }}" {% if forloop.first %}checked{% endif %}>
+                    <div class="rounded-circle" style="width: 24px; height: 24px; background-color: {{ color_choice.css }}; border: 1px solid #ccc;" title="{{ color_choice.label }}"></div>
                 </div>
                 {% endfor %}
             </div>
         </div>
-        <!--ボタン(編集モード時)-->
-        <!--保存ボタンは、POST成功後に表示モードへ切り替える形へ後日修正-->
+
         <div class="d-flex flex-row justify-content-center align-items-end gap-4 align-self-end">
-            <button type="button" class="btn btn-link p-0 m-0">
+            <button type="submit" class="btn btn-link p-0 m-0">
                 <img src="{% static 'images/button_icon/btn_save.png' %}" alt="よていリスト保存" class="mx-1 my-4" style="width: 100px; height: auto;">
             </button>
             <button type="button" class="btn btn-link p-0 m-0" onclick="location.href='{% url 'schedule_list' selected_child.id %}'">
                 <img src="{% static 'images/button_icon/btn_cancel.png' %}" alt="よていリストキャンセル" class="mx-1 my-4" style="width: 100px; height: auto;">
             </button>
         </div>
-    </div>
+    </form>
 </div>
 
 {% endblock %}
