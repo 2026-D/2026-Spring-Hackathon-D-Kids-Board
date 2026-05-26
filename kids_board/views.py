@@ -19,6 +19,7 @@ from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from datetime import date, timedelta
+import calendar
 import jpholiday
 
 
@@ -711,21 +712,90 @@ class ScheduleView(LoginRequiredMixin, TemplateView):
         Schedule.ColorType.WHITE: "var(--gray-100)",
     }
 
+    MONTH_WEEKDAYS = ["にち", "げつ", "か", "すい", "もく", "きん", "ど"]
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         children = Child.objects.filter(parent=self.request.user, deleted_at__isnull=True)
         child_id = self.kwargs.get("child_id")
         selected_child = get_object_or_404(children, id=child_id) if child_id else children.first()
-
         today = date.today()
+        month_param = self.request.GET.get(
+            "month"
+        )  # クエリパラメータから月を取得（例: "2026-05"）.
+        date_param = self.request.GET.get(
+            "date"
+        )  # クエリパラメータから日付を取得（例: "2026-05-15"）。
+        selected_date = today
+
+        # クエリパラメータから日付が指定されている場合は、selected_dateを更新
+        if date_param:
+            try:
+                selected_date = date.fromisoformat(date_param)
+            except ValueError:
+                pass
+
+        # selected_dateをもとに、表示する月の初日を計算。クエリパラメータで月が指定されている場合は、その月の初日にする。
+        display_month = selected_date.replace(day=1)
+
+        # クエリパラメータから月が指定されている場合は、その月の初日にする
+        if month_param:
+            try:
+                display_month = date.fromisoformat(f"{month_param}-01")
+            except ValueError:
+                pass
+
         # 日曜始まりに固定: 月曜=0..日曜=6 のため +1 して 7 で剰余
-        days_since_sunday = (today.weekday() + 1) % 7
-        week_start = today - timedelta(days=days_since_sunday)
+        days_since_sunday = (selected_date.weekday() + 1) % 7
+        week_start = selected_date - timedelta(days=days_since_sunday)
         week_dates = [week_start + timedelta(days=i) for i in range(7)]
         week_end = week_start + timedelta(days=6)
         week_weekdays = ["にち", "げつ", "か", "すい", "もく", "きん", "ど"]
         hours = list(range(7, 19))  # 7じ〜18じ
         weekly_grid = {hour: [None] * 7 for hour in hours}
+        first_weekday, days_in_month = calendar.monthrange(display_month.year, display_month.month)
+        leading_blank_days = (first_weekday + 1) % 7
+        month_cells = [None] * leading_blank_days + [
+            {
+                "day": day,
+                "date": date(display_month.year, display_month.month, day),
+                "is_today": (
+                    display_month.year == today.year
+                    and display_month.month == today.month
+                    and day == today.day
+                ),
+                "is_selected": (
+                    display_month.year == selected_date.year
+                    and display_month.month == selected_date.month
+                    and day == selected_date.day
+                ),
+            }
+            for day in range(1, days_in_month + 1)
+        ]
+        trailing_blank_days = (
+            7 - (len(month_cells) % 7)
+        ) % 7  # 月のセル数が7の倍数になるように、末尾に空セルを追加
+        month_cells.extend([None] * trailing_blank_days)  # 末尾に空セルを追加
+        month_weeks = [
+            month_cells[index : index + 7] for index in range(0, len(month_cells), 7)
+        ]  # 月のセルを7日ごとに分割して週ごとのリストを作成
+        if (
+            display_month.month == 1
+        ):  # 1月のときは、前年の12月を前月として表示するため、年を1つ減らし、月を12にする
+            prev_month_year = display_month.year - 1
+            prev_month_month = 12
+        else:
+            prev_month_year = display_month.year
+            prev_month_month = display_month.month - 1
+
+        if (
+            display_month.month == 12
+        ):  # 12月のときは、翌年の1月を次月として表示するため、年を1つ増やし、月を1にする
+            next_month_year = display_month.year + 1
+            next_month_month = 1
+        else:
+            next_month_year = display_month.year
+            next_month_month = display_month.month + 1
 
         # 予定を取得して、weekly_gridに配置
         if selected_child:
@@ -733,7 +803,7 @@ class ScheduleView(LoginRequiredMixin, TemplateView):
                 child=selected_child,
                 schedule_date__range=(week_start, week_end),
             )
-
+            # 予定を週のグリッドに配置するためのループ
             for schedule in schedules:
                 day_index = (schedule.schedule_date - week_start).days
                 # 予定の日付が週の範囲外の場合はスキップ
@@ -770,7 +840,9 @@ class ScheduleView(LoginRequiredMixin, TemplateView):
                             ),  # 色のCSSを取得。デフォルトはグレー
                         }
 
-        weekly_rows = [{"hour": hour, "cells": weekly_grid[hour]} for hour in hours]
+        weekly_rows = [
+            {"hour": hour, "cells": weekly_grid[hour]} for hour in hours
+        ]  # 時間帯ごとの行データを作成
 
         context["children"] = children
         context["selected_child"] = selected_child
@@ -779,6 +851,19 @@ class ScheduleView(LoginRequiredMixin, TemplateView):
         context["week_dates"] = week_dates
         context["week_weekdays"] = week_weekdays
         context["weekly_rows"] = weekly_rows
+        context["month_label"] = f"{display_month.month}がつ"  # 月の表示ラベル（例: "5がつ"）
+        context["display_month_query"] = (
+            f"{display_month.year}-{display_month.month:02d}"  # クエリパラメータ用の月の文字列（例: "2026-05"）
+        )
+        context["month_weekdays"] = self.MONTH_WEEKDAYS
+        context["month_weeks"] = month_weeks
+        context["prev_month_query"] = (
+            f"month={prev_month_year}-{prev_month_month:02d}"  # クエリパラメータ用の前月の文字列（例: "2026-04"）
+        )
+        context["next_month_query"] = (
+            f"month={next_month_year}-{next_month_month:02d}"  # クエリパラメータ用の次月の文字列（例: "2026-06"）
+        )
+        context["selected_date"] = selected_date
         return context
 
 
