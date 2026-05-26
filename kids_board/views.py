@@ -758,6 +758,7 @@ class ScheduleListView(LoginRequiredMixin, ListView):
             }
             for color in Schedule.ColorType
         ]
+        context["schedule_form"] = ScheduleForm()
         context["selected_child"] = selected_child
         return context
 

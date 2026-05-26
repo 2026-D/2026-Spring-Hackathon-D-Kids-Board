@@ -89,49 +89,31 @@
         <!-- カード -->
         <div class="prep-card rounded shadow border-0 m-3 p-2" style="background-color: #fff;" type="button" x-show.important="editMode" x-cloak>
             <div class="form-floating mb-3" style="width: 95%;">
-                <input type="text" class="form-control" id="floatingInput" value="{{ schedule.title|default:'' }}">
-                <label for="floatingInput">なまえ</label>
+                <input type="text" class="form-control" id="editScheduleTitle{{ schedule.id }}" name="title_{{ schedule.id }}" value="{{ schedule.title|default:'' }}">
+                <label for="editScheduleTitle{{ schedule.id }}">なまえ</label>
             </div>
-            <select class="form-select mb-3" style="width: 95%;" aria-label="はじまり">
-                <option selected>{{ schedule.start_time|default:"はじまり" }}</option>
-                <option value="1">7:00</option>
-                <option value="2">8:00</option>
-                <option value="3">9:00</option>
-                <option value="4">10:00</option>
-                <option value="5">11:00</option>
-                <option value="6">12:00</option>
-                <option value="7">13:00</option>
-                <option value="8">14:00</option>
-                <option value="9">15:00</option>
-                <option value="10">16:00</option>
-                <option value="11">17:00</option>
-                <option value="12">18:00</option>
+            <select class="form-select mb-3" style="width: 95%;" aria-label="はじまり" name="start_time_{{ schedule.id }}">
+                {% for value, label in schedule_form.fields.start_time.choices %}
+                <option value="{{ value }}" {% if schedule.start_time and schedule.start_time|time:'H:i' == value %}selected{% elif not schedule.start_time and value == '' %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
             </select>
-            <select class="form-select mb-3" style="width: 95%;" aria-label="おわり">
-                <option selected>{{ schedule.end_time|default:"おわり" }}</option>
-                <option value="1">7:00</option>
-                <option value="2">8:00</option>
-                <option value="3">9:00</option>
-                <option value="4">10:00</option>
-                <option value="5">11:00</option>
-                <option value="6">12:00</option>
-                <option value="7">13:00</option>
-                <option value="8">14:00</option>
-                <option value="9">15:00</option>
-                <option value="10">16:00</option>
-                <option value="11">17:00</option>
-                <option value="12">18:00</option>
+            <select class="form-select mb-3" style="width: 95%;" aria-label="おわり" name="end_time_{{ schedule.id }}">
+                {% for value, label in schedule_form.fields.end_time.choices %}
+                <option value="{{ value }}" {% if schedule.end_time and schedule.end_time|time:'H:i' == value %}selected{% elif not schedule.end_time and value == '' %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
             </select>
         </div>
         <!--入力欄-->
         <div class="d-flex flex-column justify-content-center align-items-start gap-2" x-show.important="editMode" x-cloak>
             <div class="d-flex flex-row flex-wrap flex-md-nowrap gap-4 align-items-center justify-content-start form-check">
                 <input class="form-check-input" type="checkbox" role="switch"
-                       id="switchCheckDate{{ schedule.id }}_{{ forloop.counter }}"
-                       {% if date.checked %}checked{% endif %}>
+                       id="editSwitchCheckDate{{ schedule.id }}"
+                       name="has_schedule_date_{{ schedule.id }}"
+                       {% if schedule.schedule_date %}checked{% endif %}>
                 <label class="form-check-label text-nowrap"
-                       for="switchCheckDate{{ schedule.id }}_{{ forloop.counter }}">ひづけを していする</label>
+                       for="editSwitchCheckDate{{ schedule.id }}">ひづけを していする</label>
                 <input type="text" class="form-control js-datepicker p-0 text-center"
+                       name="schedule_date_{{ schedule.id }}"
                        value="{% if schedule.schedule_date %}{{ schedule.schedule_date|date:'Y年n月j日' }}{% endif %}"
                        placeholder="クリックで せんたく">
             </div>
