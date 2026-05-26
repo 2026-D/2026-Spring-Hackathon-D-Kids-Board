@@ -22,9 +22,12 @@ services: #コンテナに関する定義をする宣言
     
     # ここから Djangoがdbにアクセスするための設定
     environment:
-      - DATABASE_NAME=${MYSQL_DATABASE}  # MySQLのデータベース領域名
-      - DATABASE_USER=${MYSQL_USER} # MySQLのユーザー名
-      - DATABASE_PASSWORD=${MYSQL_PASSWORD} # MySQLのパスワード名
+      - SECRET_KEY=${SECRET_KEY} # Djangoのシークレットキー
+      - DEBUG=${DEBUG} # 開発モード切り替え
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS} # アクセス許可するホスト
+      - DATABASE_NAME=${DATABASE_NAME}  # MySQLのデータベース領域名
+      - DATABASE_USER=${DATABASE_USER} # MySQLのユーザー名
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD} # MySQLのパスワード名
       - DATABASE_HOST=${DATABASE_HOST} #　RDSのエンドポイントを.envから取得
       # DATABASE_⚪︎⚪︎⚪︎: DjangoがOSに聞きに行く時の名前(自身で任意の名前を決める)
       # ${⚪︎⚪︎⚪︎}: .envファイルに書いた値を取得する
