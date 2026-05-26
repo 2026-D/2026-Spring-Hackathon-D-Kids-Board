@@ -21,12 +21,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-=$ye%u^0o$cnbqgn-mmp&w)=znq-x_=2hl@1$1a19a(my)t7mq"
+# ⚠️ シークレットキー作り変えて.env/.env.prodに移動したので不要
+# ⚠️ SECRET_KEY = "django-insecure-=$ye%u^0o$cnbqgn-mmp&w)=znq-x_=2hl@1$1a19a(my)t7mq"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True → .env/.env.prodに記載
 
-ALLOWED_HOSTS = []
+# 🔽.envに書かれてる　SECRET_KEYを取得する
+SECRET_KEY = os.getenv("SECRET_KEY")
+
+# 🔽.env/.env.prodのDEBUGの値を取得する
+# envの中身は文字列として扱われるため真偽値(bool)に変換する設定
+DEBUG = os.getenv("DEBUG") == "True"
+
+# 🔽.env/.env.prodのALLOWED_HOSTSを取得する
+# カンマ区切りの文字列をリストへ変換する
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
 
 
 # Application definition
@@ -83,7 +93,7 @@ DATABASES = {
         "NAME": os.environ.get("DATABASE_NAME"),
         "USER": os.environ.get("DATABASE_USER"),
         "PASSWORD": os.environ.get("DATABASE_PASSWORD"),
-        "HOST": os.environ.get("DATABASE_HOST"),
+        "HOST": os.environ.get("DATABASE_HOST", "db"),
         "PORT": 3306,
     }
 }
@@ -123,9 +133,15 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
+# 🔽ブラウザがstaticファイルを取りにくる時のURL
 STATIC_URL = "static/"
-# プロジェクト直下のstaticフォルダを指定する。
+
+# 🔽プロジェクト直下のstaticフォルダを指定する。
 STATICFILES_DIRS = [BASE_DIR / "static"]
+
+# 🔽本番環境ではにNginxはstaticfilesを参照して
+# staticファイルを配信するための設定
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

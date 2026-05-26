@@ -1,0 +1,77 @@
+FROM python:3.11
+#FROM イメージ　　で書いていく
+#Python3.11が入ったLinux環境
+
+RUN apt-get update && apt-get install -y \
+    default-libmysqlclient-dev \
+    build-essential \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
+
+# RUN apt-get update && apt-get install -y \
+#  RUN...Dockerイメージを作るとき(ビルド時)に実行される命令
+#  apt-get update → OSのアプリ一覧を最新にする
+#  apt-get install → 必要なソフトをインストール
+#  -y → 全部yesでいいから聞かずに入れて
+#  default-libmysqlclient-dev \ ← MySQLと話すための部品 
+#  build-essential \ ←  C言語の開発セット(mysqlclient は Cで書かれてる)
+#  pkg-config \ ← ライブラリ案内係　(libmysqlclientどこにあるか教える)
+#  ↑これがないとビルド失敗する
+#  && rm -rf /var/lib/apt/lists/*
+#  && → どれか一つでも失敗したら、その時点で止まる
+#  apt-getが作ったキャッシュを削除
+#  イメージを軽くしてくれる
+
+
+# 作業ディレクトリを作成
+WORKDIR /app
+# WORKDIR:以降の命令を実行する場所を指定する
+#コンテナ内の/appを作業場所にする
+
+
+
+# poetryをインストール
+RUN pip install --no-cache-dir poetry
+# RUN:イメージをビルドするときにコマンドを実行する
+# pip install　→ poetryをインストール
+# --no-cache-dir →　pipのダウンロードキャッシュを保存しない(poetry本体だけ残る)
+# イメージを軽くするためにキャッシュを保存しない
+
+
+
+# 依存関係ファイルだけを先にコピー
+COPY pyproject.toml poetry.lock /app/
+# /app/→  ファイルを/appにコピーする
+
+
+
+# 仮想環境をつくらず、コンテナのPython環境に直接依存関係をインストールする
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-root --only main
+# &&　→　A && B : Aが成功したらBを実行する
+# poetry config virtualenvs.create false　→　
+# poetryが仮想環境(.venv)を作らないようにする設定
+# poetry　install→ pyproject.tomlとpoetry.lockをもとに依存関係をインストールする
+# --no-root→ このプロジェクト自体はインストールせず、Djangoなどのライブラリのみインストールするオプション
+# --only main → 本番に不要な開発ツールを入れない(ruffなど)
+
+
+
+
+# アプリのソースコードをコピー
+COPY . /app
+# アプリのコードをコンテナ内にコピーする
+
+
+# Dockerはレイヤー単位でキャッシュを利用するため、
+# 依存関係ファイルを先にコピーすることで不要な再インストールを防ぎ、
+# ビルド時間の最適化を行っている
+
+
+# CMD:コンテナを起動するときに実行する規定のコマンドを指定する
+# gunicorn(Webサーバー)としてリクエストを受けて
+# config/wsgi.py内のapplication(Djangoアプリケーション)を起動する
+# --bind:どこ(IP:ポート)に結びつけて待ち受けるか
+# 0.0.0.0 ← 全てのIPアドレスからアクセス許可
+# 8000 ← 待ち受けポート番号
+CMD [ "gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000" ]

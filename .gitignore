@@ -1,4 +1,5 @@
 .env
+.env.prod
 
 # Pythonが自動で作るキャッシュフォルダ
 

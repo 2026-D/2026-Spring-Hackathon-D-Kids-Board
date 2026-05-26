@@ -1,0 +1,63 @@
+services: #コンテナに関する定義をする宣言
+
+  web: #サービス名
+    build:
+      context: . #　build対象として現在のディレクトリを指定
+      dockerfile: Dockerfile.prod #本番用のDockerファイルを使用する
+
+    env_file:
+      - .env.prod
+    
+    container_name: kids_board_web_prod # 本番用コンテナの名前
+
+    expose: #Dockerコンテナ同士だけで通信可能
+      - "8000"
+    # nginx → web:8000 → Django の通信で使用する
+
+  
+    
+    volumes: #ボリュームに関する定義をする
+      - .:/app # Dockerfileの WORKDIR /app を指定している
+      # Docker Engineの管理外(ローカルPC)のボリュームをマウントしている(バインドマウント)
+    
+    # ここから Djangoがdbにアクセスするための設定
+    environment:
+      - SECRET_KEY=${SECRET_KEY} # Djangoのシークレットキー
+      - DEBUG=${DEBUG} # 開発モード切り替え
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS} # アクセス許可するホスト
+      - DATABASE_NAME=${DATABASE_NAME}  # MySQLのデータベース領域名
+      - DATABASE_USER=${DATABASE_USER} # MySQLのユーザー名
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD} # MySQLのパスワード名
+      - DATABASE_HOST=${DATABASE_HOST} #　RDSのエンドポイントを.envから取得
+      # DATABASE_⚪︎⚪︎⚪︎: DjangoがOSに聞きに行く時の名前(自身で任意の名前を決める)
+      # ${⚪︎⚪︎⚪︎}: .envファイルに書いた値を取得する
+
+    
+
+# 本番環境ではRDSを利用するためdbコンテナは作成しない
+
+  nginx:
+  # サービス名
+    image: nginx:1.25
+    # nginx の Docker Hubの公式イメージ
+
+    ports:
+      - "80:80"
+      # ローカルPCの80番：nginxコンテナ80番
+
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      # nginxコンテナ内で設定ファイルとして読み込まれる
+      # /etc/nginx/conf.d/default.confに
+      # ローカルの./nginx/default.confをバインドマウントしている
+
+      - ./staticfiles:/app/staticfiles:ro
+      # ローカルPCの./staticfilesをnginxコンテナ内のapp/staticfilesに
+      # バインドマウントしている
+      # :ro　→ 読み取り専用(nginx新たにstaticは作らず、配信のみを行うため)
+
+    depends_on:
+      - web
+    # Gunicorn(web)起動後にnginxを起動するため
+
+    

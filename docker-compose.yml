@@ -15,6 +15,9 @@ services: #コンテナに関する定義をする宣言
     
     # ここから Djangoがdbにアクセスするための設定
     environment:
+      - SECRET_KEY=${SECRET_KEY} # Djangoのシークレットキー
+      - DEBUG=${DEBUG} # 開発モード切り替え
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS} # アクセス許可するホスト
       - DATABASE_NAME=${MYSQL_DATABASE}  # MySQLのデータベース領域名
       - DATABASE_USER=${MYSQL_USER} # MySQLのユーザー名
       - DATABASE_PASSWORD=${MYSQL_PASSWORD} # MySQLのパスワード名
@@ -23,7 +26,9 @@ services: #コンテナに関する定義をする宣言
       # ${MYSQL_⚪︎⚪︎⚪︎}: .envファイルに書いた値をここに持って来るという指定
 
     depends_on: #依存関係
-      - db #DBが立ち上がってからDjangoを動かす命令
+      db:
+        condition: service_healthy
+        #DBコンテナがhealthy(正常起動)になってからwebを起動する
     command: poetry run python manage.py runserver 0.0.0.0:8000
     # Django起動コマンド
     # 0.0.0.0にすることでコンテナ外(ローカルPC)からアクセスできるようになる
@@ -33,6 +38,23 @@ services: #コンテナに関する定義をする宣言
     image: mysql:8.0
     # MySQL8.0の公式Dockerイメージを指定
     container_name: mysql_db
+
+    # このコンテナが正常かチェックする設定を書く宣言
+    healthcheck:
+      # 実際にやる確認内容
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-prootpass"]
+      # mysqladmin:MySQL管理用コマンド, ping:「MySQL生きてる？」確認, 
+      # -h localhost:localhostに接続, -uroot:rootユーザーで, -prootpass:パスワードrootpassで接続
+      interval: 5s
+      # 5秒ごとにDB生きてる？確認
+      timeout: 5s
+      # 5秒待って返事がなかったら失敗扱い
+      retries: 20
+      # 20回失敗したらunhealthy判定
+      start_period: 30s
+      # 起動直後30秒は失敗してもノーカン
+
+
     volumes:
     - mysql_data:/var/lib/mysql
     # マウント先
