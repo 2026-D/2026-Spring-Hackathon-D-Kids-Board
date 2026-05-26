@@ -15,6 +15,8 @@ from .views import (
     CustomItemsEditView,
     NewItemsEditView,
     ScheduleView,
+    ScheduleListView,
+    CreateScheduleView,
 )
 
 
@@ -73,5 +75,20 @@ urlpatterns = [
     ),
     path(
         "schedule/", ScheduleView.as_view(template_name="kids_board/schedule.html"), name="schedule"
+    ),
+    path(
+        "schedule/<int:child_id>/",
+        ScheduleView.as_view(template_name="kids_board/schedule.html"),
+        name="schedule",
+    ),
+    path(
+        "schedule_list/<int:child_id>/",
+        ScheduleListView.as_view(template_name="kids_board/schedule_list.html"),
+        name="schedule_list",
+    ),
+    path(
+        "schedule/create/<int:child_id>/",
+        CreateScheduleView.as_view(template_name="kids_board/create_schedule.html"),
+        name="create_schedule",
     ),
 ]

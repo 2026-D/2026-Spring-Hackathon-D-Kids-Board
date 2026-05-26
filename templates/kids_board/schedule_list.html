@@ -9,8 +9,8 @@
 <style>
     /*よてい入力欄のスタイル*/
     .prep-card {
-        width: clamp(150px, 21vw, 240px);
-        height: clamp(150px, 21vw, 240px);
+        width: clamp(200px, 28vw, 200px);
+        height: clamp(200px, 28vw, 200px);
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
@@ -42,7 +42,7 @@
             <p class="m-0 m-sm-3 p-2 fs-2 nowrap">よてい いちらん</p>
             <img src="{% static 'images/button_icon/calendar4-week.png' %}" alt="カレンダーアイコン" class="" style="width: 45px; height: auto;">
         </div>
-        <a href="{% url 'create_schedule' %}" class="btn btn-link p-0 m-0 ms-auto" aria-label="やることリストを追加" style="background-color: transparent;">
+        <a href="{% url 'create_schedule' selected_child.id %}" class="btn btn-link p-0 m-0 ms-auto" aria-label="やることリストを追加" style="background-color: transparent;">
             <img src="{% static 'images/button_icon/btn_add_calendar.png' %}" alt="あたらしくつくる" class="mx-md-4 mx-0 my-4" style="width: 300px; height: auto;">
         </a>
     </div>
@@ -54,7 +54,7 @@
         <!--カード-->
         <div class="prep-card rounded shadow border-0 m-3 p-2" style="background-color: #fff;" type="button" x-show.important="!editMode" x-cloak>
             <div class="form-floating mb-3" style="width: 95%;">
-                <input type="text" class="form-control" id="floatingInput" value="{{ schedule.name }}" readonly>
+                <input type="text" class="form-control" id="floatingInput" value="{{ schedule.title }}" readonly>
                 <label for="floatingInput">なまえ</label>
             </div>
             <select class="form-select mb-3 color-select-readonly" style="width: 95%;" aria-label="はじまり" disabled>
@@ -66,38 +66,21 @@
         </div>
         <!--入力欄（閲覧専用）-->
         <div class="d-flex flex-column justify-content-center align-items-start gap-2 text" x-show.important="!editMode" x-cloak>
-            <p class="m-0">ようびを していする</p>
-            <div class="d-flex flex-wrap flex-row gap-1 align-items-start">
-                {% for day in schedule.weekdays %}
-                <div class="form-check" style="pointer-events: none;">
-                    <input class="form-check-input" type="checkbox" tabindex="-1" value="" id="checkDay{{ schedule.id }}_{{ forloop.counter }}" {% if day.checked %}checked{% endif %}>
-                    <label class="form-check-label" for="checkDay{{ schedule.id }}_{{ forloop.counter }}">{{ day.name }}</label>
-                </div>
-                {% endfor %}
-            </div>
-            {% for is_not_holiday in schedule.holiday %}
-            <div class="form-check form-switch " style="pointer-events: none;">
-                <input class="form-check-input" type="checkbox" role="switch" id="switchCheckHoliday{{ schedule.id }}_{{ forloop.counter }}" {% if is_not_holiday.checked %}checked{% endif %}>
-                <label class="form-check-label" for="switchCheckHoliday{{ schedule.id }}_{{ forloop.counter }}">へいじつだけに する（しゅくじつは ふくまない）</label>
-            </div>
-            {% endfor %}
-            {% for date in schedule.special_date %}
             <div class="d-flex flex-row flex-wrap flex-md-nowrap gap-4 align-items-center justify-content-start form-check" style="pointer-events: none;">
                 <input class="form-check-input" type="checkbox" role="switch" tabindex="-1"
-                        id="switchCheckDate{{ schedule.id }}_{{ forloop.counter }}" 
-                        {% if date.checked %}checked{% endif %}>
+                id="switchCheckDate{{ schedule.id }}" 
+                {% if schedule.schedule_date %}checked{% endif %}>
                 <label class="form-check-label text-nowrap" 
-                        for="switchCheckDate{{ schedule.id }}_{{ forloop.counter }}">ひづけを していする</label>
+                for="switchCheckDate{{ schedule.id }}">ひづけを していする</label>
                 <input type="text" readonly tabindex="-1" class="form-control p-0 text-center"
-                        value="{{ date.value|default:'' }}">
+                value="{% if schedule.schedule_date %}{{ schedule.schedule_date|date:'Y年n月j日' }}{% endif %}">
             </div>
-            {% endfor %}
             <p class="m-0">らべるの いろを えらぶ</p>
-            <div class="d-flex flex-wrap flex-row gap-4 align-items-start">
-                {% for color in schedule.colors %}
-                <div class="form-check" style="pointer-events: none;">
-                    <input class="form-check-input color-radio-readonly" type="radio" name="color{{ schedule.id }}" id="checkColor{{ schedule.id }}_{{ forloop.counter }}" {% if color.checked %}checked{% endif %} disabled>
-                    <div class="rounded-circle" style="width: 24px; height: 24px; background-color: {{ color.value }}; border: {% if color.checked %}1.5px solid var(--bs-primary){% else %}1px solid #ccc{% endif %};"></div>
+            <div class="d-flex flex-wrap flex-row gap-2 align-items-center">
+                {% for color_choice in schedule_color_choices %}
+                <div class="form-check form-check-inline mb-0" style="pointer-events: none;">
+                    <input class="form-check-input color-radio-readonly" type="radio" name="readonly_color_{{ schedule.id }}" id="checkColor{{ schedule.id }}_{{ color_choice.value }}" value="{{ color_choice.value }}" {% if schedule.color == color_choice.value %}checked{% endif %} disabled>
+                    <div class="rounded-circle" style="width: 24px; height: 24px; background-color: {{ color_choice.css }}; border: {% if schedule.color == color_choice.value %}1.5px solid var(--bs-primary){% else %}1px solid #ccc{% endif %};" title="{{ color_choice.label }}"></div>
                 </div>
                 {% endfor %}
             </div>
@@ -106,7 +89,7 @@
         <!-- カード -->
         <div class="prep-card rounded shadow border-0 m-3 p-2" style="background-color: #fff;" type="button" x-show.important="editMode" x-cloak>
             <div class="form-floating mb-3" style="width: 95%;">
-                <input type="text" class="form-control" id="floatingInput" value="{{ schedule.name }}">
+                <input type="text" class="form-control" id="floatingInput" value="{{ schedule.title|default:'' }}">
                 <label for="floatingInput">なまえ</label>
             </div>
             <select class="form-select mb-3" style="width: 95%;" aria-label="はじまり">
@@ -142,39 +125,22 @@
         </div>
         <!--入力欄-->
         <div class="d-flex flex-column justify-content-center align-items-start gap-2" x-show.important="editMode" x-cloak>
-            <p class="m-0">ようびを していする</p>
-            <div class="d-flex flex-wrap flex-row gap-1 align-items-start">
-                {% for day in schedule.weekdays %}
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="checkDay{{ schedule.id }}_{{ forloop.counter }}" {% if day.checked %}checked{% endif %}>
-                    <label class="form-check-label" for="checkDay{{ schedule.id }}_{{ forloop.counter }}">{{ day.name }}</label>
-                </div>
-                {% endfor %}
-            </div>
-            {% for is_not_holiday in schedule.holiday %}
-            <div class="form-check form-switch ">
-                <input class="form-check-input" type="checkbox" role="switch" id="switchCheckHoliday{{ schedule.id }}_{{ forloop.counter }}" {% if is_not_holiday.checked %}checked{% endif %}>
-                <label class="form-check-label" for="switchCheckHoliday{{ schedule.id }}_{{ forloop.counter }}">へいじつだけに する（しゅくじつは ふくまない）</label>
-            </div>
-            {% endfor %}
-                {% for date in schedule.special_date %}
-                <div class="d-flex flex-row flex-wrap flex-md-nowrap gap-4 align-items-center justify-content-start form-check">
+            <div class="d-flex flex-row flex-wrap flex-md-nowrap gap-4 align-items-center justify-content-start form-check">
                 <input class="form-check-input" type="checkbox" role="switch"
                        id="switchCheckDate{{ schedule.id }}_{{ forloop.counter }}"
                        {% if date.checked %}checked{% endif %}>
                 <label class="form-check-label text-nowrap"
                        for="switchCheckDate{{ schedule.id }}_{{ forloop.counter }}">ひづけを していする</label>
                 <input type="text" class="form-control js-datepicker p-0 text-center"
-                       value="{{ date.value|default:'' }}"
+                       value="{% if schedule.schedule_date %}{{ schedule.schedule_date|date:'Y年n月j日' }}{% endif %}"
                        placeholder="クリックで せんたく">
-                </div>
-                {% endfor %}
+            </div>
             <p class="m-0">らべるの いろを えらぶ</p>
-            <div class="d-flex flex-wrap flex-row gap-4 align-items-start">
-                {% for color in schedule.colors %}
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="color{{ schedule.id }}" id="checkColor{{ schedule.id }}_{{ forloop.counter }}" {% if color.checked %}checked{% endif %}>
-                    <div class="rounded-circle" style="width: 24px; height: 24px; background-color: {{ color.value }}; background-color: {{ color.value }}; border: 1px solid #ccc;"></div>
+            <div class="d-flex flex-wrap flex-row gap-2 align-items-center">
+                {% for color_choice in schedule_color_choices %}
+                <div class="form-check form-check-inline mb-0">
+                    <input class="form-check-input" type="radio" name="color_{{ schedule.id }}" id="editCheckColor{{ schedule.id }}_{{ color_choice.value }}" value="{{ color_choice.value }}" {% if schedule.color == color_choice.value %}checked{% endif %}>
+                    <div class="rounded-circle" style="width: 24px; height: 24px; background-color: {{ color_choice.css }}; border: {% if schedule.color == color_choice.value %}1.5px solid var(--bs-primary){% else %}1px solid #ccc{% endif %};" title="{{ color_choice.label }}"></div>
                 </div>
                 {% endfor %}
             </div>

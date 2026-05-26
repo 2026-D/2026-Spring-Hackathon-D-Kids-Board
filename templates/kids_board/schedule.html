@@ -311,9 +311,11 @@
                         </div>
                     </div>
                 </div>
-                <a href="{% url 'schedule_list' %}" type="button" class="btn btn-link p-0 m-0" style="background-color: transparent;">
+                {% if selected_child %}
+                <a href="{% url 'schedule_list' selected_child.id %}" type="button" class="btn btn-link p-0 m-0" style="background-color: transparent;">
                     <img src="{% static 'images/button_icon/btn_list_schedule.png' %}" alt="よていリスト" class="mt-5" style="width: 300px; height: auto;">
                 </a>
+                {% endif %}
             </div>
         </div>
     </div>

@@ -43,8 +43,8 @@
     width: clamp(84px, 11vw, 140px);
 }
 /*幅に連動して高さを揃える*/
-.w-15{
-    width: 15%;
+.w-10{
+    width: 10%;
 }
 .w-35{
     width: 35%;
@@ -119,7 +119,7 @@
         </div>
     </div>
     <div class="py-5 g-4 d-flex flex-row justify-content-center align-items-center">
-        <img class="w-15" src="{% static 'images/avatar_icon/12_lion.png' %}" alt="こどもアイコン">
+        <img class="w-10" src="{% static selected_child.child_icon %}" alt="こどもアイコン">
         <div class="d-flex flex-column justify-content-center align-items-center">
             <p class="fs-3 m-3">{{ selected_child.child_name }} さん の きょうの よてい</p>
             <div class="d-flex flex-row justify-content-center align-items-center gap-4">

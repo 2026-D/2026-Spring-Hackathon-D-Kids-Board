@@ -268,7 +268,7 @@
                 {% if user.is_authenticated %}
                 <div class="nav-item d-flex align-items-center justify-content-center d-none d-md-flex">
                     {% if selected_child.child_name %}
-                    <img class="button-image" src="{% static 'images/avatar_icon/12_lion.png' %}" alt="こどもアイコン" style="width: 100px; height: auto; margin-right: 8px;">
+                    <img class="button-image" src="{% static selected_child.child_icon %}" alt="こどもアイコン" style="width: 85px; height: auto; margin-right: 8px;">
                     <p class="fs-4 fw-bold text-white text-nowrap">{{ selected_child.child_name }}</p>
                     {% endif %}
                 </div>
@@ -291,7 +291,7 @@
                     </div>
                     {% if request.resolver_match.url_name != 'home' and request.resolver_match.url_name != 'prep_items' and request.resolver_match.url_name != 'new_items' and request.resolver_match.url_name != 'custom_items'%}
                     <div class="nav-item">
-                        <a class="nav-link" href="{% url 'schedule' %}"><img src="{% static 'images/button_icon/calendar4-week.png' %}" alt="schedule" width="60" height="60"></a>
+                        <a class="nav-link" href="{% url 'schedule' selected_child.id %}"><img src="{% static 'images/button_icon/calendar4-week.png' %}" alt="schedule" width="60" height="60"></a>
                     </div>
                     {% endif %}
                     <div class="nav-item">
@@ -310,7 +310,7 @@
                         </li>
                         {% if request.resolver_match.url_name != 'home' and request.resolver_match.url_name != 'prep_items' and request.resolver_match.url_name != 'new_items' and request.resolver_match.url_name != 'custom_items'%}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'schedule' %}"><img src="{% static 'images/button_icon/calendar4-week.png' %}" alt="schedule"></a>
+                            <a class="nav-link" href="{% url 'schedule' selected_child.id %}"><img src="{% static 'images/button_icon/calendar4-week.png' %}" alt="schedule"></a>
                         </li>
                         {% endif %}
                         <li class="nav-item">

@@ -109,7 +109,7 @@
             <button type="button" class="btn btn-link p-0 m-0">
                 <img src="{% static 'images/button_icon/btn_save.png' %}" alt="よていリスト保存" class="mx-1 my-4" style="width: 100px; height: auto;">
             </button>
-            <button type="button" class="btn btn-link p-0 m-0" onclick="location.href='{% url 'schedule_list' %}'">
+            <button type="button" class="btn btn-link p-0 m-0" onclick="location.href='{% url 'schedule_list' selected_child.id %}'">
                 <img src="{% static 'images/button_icon/btn_cancel.png' %}" alt="よていリストキャンセル" class="mx-1 my-4" style="width: 100px; height: auto;">
             </button>
         </div>
