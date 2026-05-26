@@ -838,5 +838,20 @@ class CreateScheduleView(LoginRequiredMixin, CreateView):
         return reverse_lazy("schedule_list", kwargs={"child_id": self.kwargs.get("child_id")})
 
 
+@login_required
+def schedule_delete_view(request, child_id, schedule_id):
+    if request.method == "POST":
+        schedule = get_object_or_404(
+            Schedule,
+            id=schedule_id,
+            child_id=child_id,
+            child__parent=request.user,
+            child__deleted_at__isnull=True,
+        )
+        schedule.delete()
+
+    return redirect("schedule_list", child_id=child_id)
+
+
 class SettingsView(LoginRequiredMixin, TemplateView):
     template_name = "kids_board/settings.html"
