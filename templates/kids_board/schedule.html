@@ -62,7 +62,7 @@
     .calendar-row-7 > * {
         flex: 0 0 auto;
         width: calc(100% / 7);
-        min-height: 40px;
+        min-height: 55px;
     }
     /*月カレンダーのボーダーの色指定*/
     .calendar-row-7 > * {
@@ -75,6 +75,15 @@
     justify-content: center;
     align-items: center;
     }
+    .month-day-link {
+        width: 100%;
+        min-height: 55px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+        color: inherit;
+    }
 </style>
 {% endblock %}
 
@@ -84,16 +93,16 @@
     <p class="m-4 fs-2 text-center">よていひょう</p>
     <!--日付表示-->
     <div class="d-flex flex-row flex-wrap justify-content-center align-items-center">
-        <p class="fs-1 fw-bold mx-2 my-0">4</p>
+        <p class="fs-1 fw-bold mx-2 my-0">{{ week_start.month }}</p>
         <p class="fs-4 mx-2 my-0">がつ</p>
-        <p class="fs-1 fw-bold mx-2 my-0">12</p>
+        <p class="fs-1 fw-bold mx-2 my-0">{{ week_start.day }}</p>
         <p class="fs-4 mx-2 my-0">にち から</p>
 
         <span class="w-100 d-md-none"></span> <!-- スマホのみここで改行 -->
 
-        <p class="fs-1 fw-bold mx-2 my-0">4</p>
+        <p class="fs-1 fw-bold mx-2 my-0">{{ week_end.month }}</p>
         <p class="fs-4 mx-2 my-0">がつ</p>
-        <p class="fs-1 fw-bold mx-2 my-0">18</p>
+        <p class="fs-1 fw-bold mx-2 my-0">{{ week_end.day }}</p>
         <p class="fs-4 mx-2 my-0">にち</p>
     </div>
     <!--予定表示-->
@@ -106,209 +115,79 @@
                     <thead>
                         <tr class="text-center">
                             <th style="background-color: var(--purple-100);"><!--記載なしでOK--></th>
-                            <th style="background-color: var(--purple-100);">12</th>
-                            <th style="background-color: var(--purple-100);">13</th>
-                            <th style="background-color: var(--purple-100);">14</th>
-                            <th style="background-color: var(--purple-100);">15</th>
-                            <th style="background-color: var(--purple-100);">16</th>
-                            <th style="background-color: var(--purple-100);">17</th>
-                            <th style="background-color: var(--purple-100);">18</th>
+                            {% for week_date in week_dates %}
+                            <th style="background-color: var(--purple-100);">{{ week_date.day }}</th>
+                            {% endfor %}
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="text-center">
                             <td style="background-color: var(--purple-100);"><!--記載なしでOK--></td>
-                            <td style="background-color: var(--purple-100);">にち</td>
-                            <td style="background-color: var(--purple-100);">げつ</td>
-                            <td style="background-color: var(--purple-100);">か</td>
-                            <td style="background-color: var(--purple-100);">すい</td>
-                            <td style="background-color: var(--purple-100);">もく</td>
-                            <td style="background-color: var(--purple-100);">きん</td>
-                            <td style="background-color: var(--purple-100);">ど</td>
+                            {% for weekday in week_weekdays %}
+                            <td style="background-color: var(--purple-100);">{{ weekday }}</td>
+                            {% endfor %}
                         </tr>
+                        {% for row in weekly_rows %}
                         <tr class="text-center">
-                            <td style="background-color: var(--purple-100);">7じ</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
+                            <td style="background-color: var(--purple-100);">{{ row.hour }}じ</td>
+                            {% for cell in row.cells %}
+                            <td {% if cell %}style="background-color: {{ cell.color_css }};"{% endif %}>
+                                {% if cell %}
+                                    {% if cell.title %}
+                                    <span class="small fw-bold">{{ cell.title }}</span>
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                            {% endfor %}
                         </tr>
-                        <tr class="text-center">
-                            <td style="background-color: var(--purple-100);">8じ</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr class="text-center">
-                            <td style="background-color: var(--purple-100);">9じ</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr class="text-center">
-                            <td style="background-color: var(--purple-100);">10じ</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr class="text-center">
-                            <td style="background-color: var(--purple-100);">11じ</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr class="text-center">
-                            <td style="background-color: var(--purple-100);">12じ</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr class="text-center">
-                            <td style="background-color: var(--purple-100);">13じ</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr class="text-center">
-                            <td style="background-color: var(--purple-100);">14じ</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr class="text-center">
-                            <td style="background-color: var(--purple-100);">15じ</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr class="text-center">
-                            <td style="background-color: var(--purple-100);">16じ</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr class="text-center">
-                            <td style="background-color: var(--purple-100);">17じ</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        <tr class="text-center">
-                            <td style="background-color: var(--purple-100);">18じ</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                     </table>
                 </div>
             </div>
         </div>
-        <!--カレンダー(右)-->
         <div class="col-12 col-xl-auto d-flex justify-content-center">
-            <div class="d-flex flex-column justify-content-center align-items-start month-pane">
-                <!--月ごと-->
-                <div class="rounded shadow" style="background-color: var(--purple-100);">
-                    <div class="m-2 p-3">
-                        <!-- ヘッダー：月切り替え部分 -->
-                        <div class="d-flex justify-content-between align-items-center rounded mb-3 " style="background-color: #fff">
-                            <button class="border-0 fw-bold" style="color: var(--secondary); background-color: #fff;">〈</button>
-                            <p class="current-month fs-5 m-2">4がつ</p>
-                            <button class="border-0 fw-bold" style="color: var(--secondary); background-color: #fff;">〉</button>
-                        </div>
-                        <!--曜日-->
-                        <div class="row calendar-row-7 justify-content-center align-items-center text-center">
-                            <div class="col text-nowrap" style="background-color: #fff;">にち</div>
-                            <div class="col text-nowrap" style="background-color: #fff;">げつ</div>
-                            <div class="col text-nowrap" style="background-color: #fff;">か</div>
-                            <div class="col text-nowrap" style="background-color: #fff;">すい</div>
-                            <div class="col text-nowrap" style="background-color: #fff;">もく</div>
-                            <div class="col text-nowrap" style="background-color: #fff;">きん</div>
-                            <div class="col text-nowrap" style="background-color: #fff;">ど</div>
-                        </div>
+            <!--カレンダー(右)-->
+            <div class="col-12 col-xl-auto d-flex flex-column justify-content-center align-items-center">
+                <div class="d-flex flex-column justify-content-center align-items-start month-pane">
+                    <!--月ごと-->
+                    <div class="rounded shadow" style="background-color: var(--purple-100);">
+                        <div class="m-2 p-3">
+                            <!-- ヘッダー：月切り替え部分 -->
+                            <div class="d-flex justify-content-between align-items-center rounded mb-3 " style="background-color: #fff">
+                                <a href="?{{ prev_month_query }}" class="border-0 fw-bold text-decoration-none px-2" style="color: var(--secondary); background-color: #fff;">〈</a>
+                                <p class="current-month fs-5 m-2">{{ month_label }}</p>
+                                <a href="?{{ next_month_query }}" class="border-0 fw-bold text-decoration-none px-2" style="color: var(--secondary); background-color: #fff;">〉</a>
+                            </div>
+                            <!--曜日-->
+                            <div class="row calendar-row-7 justify-content-center align-items-center text-center">
+                                {% for weekday in month_weekdays %}
+                                <div class="col text-nowrap" style="background-color: #fff;">{{ weekday }}</div>
+                                {% endfor %}
+                            </div>
 
-                        <!--日付-->
-                        <div class="row calendar-row-7 justify-content-start align-items-center text-center">
-                            <div class="col" style="background-color: #fff;">1</div>
-                            <div class="col" style="background-color: #fff;">2</div>
-                            <div class="col" style="background-color: #fff;">3</div>
-                            <div class="col" style="background-color: #fff;">4</div>
-                            <div class="col" style="background-color: #fff;">5</div>
-                            <div class="col" style="background-color: #fff;">6</div>
-                            <div class="col" style="background-color: #fff;">7</div>
-                            <div class="col" style="background-color: #fff;">8</div>
-                            <div class="col" style="background-color: #fff;">9</div>
-                            <div class="col" style="background-color: #fff;">10</div>
-                            <div class="col" style="background-color: #fff;">11</div>
-                            <div class="col" style="background-color: #fff;">12</div>
-                            <div class="col" style="background-color: #fff;">13</div>
-                            <div class="col" style="background-color: #fff;">14</div>
-                            <div class="col" style="background-color: #fff;">15</div>
-                            <div class="col" style="background-color: #fff;">16</div>
-                            <div class="col" style="background-color: #fff;">17</div>
-                            <div class="col" style="background-color: #fff;">18</div>
-                            <div class="col" style="background-color: #fff;">19</div>
-                            <div class="col" style="background-color: #fff;">20</div>
-                            <div class="col" style="background-color: #fff;">21</div>
-                            <div class="col" style="background-color: #fff;">22</div>
-                            <div class="col" style="background-color: #fff;">23</div>
-                            <div class="col" style="background-color: #fff;">24</div>
-                            <div class="col" style="background-color: #fff;">25</div>
-                            <div class="col" style="background-color: #fff;">26</div>
-                            <div class="col" style="background-color: #fff;">27</div>
-                            <div class="col" style="background-color: #fff;">28</div>
-                            <div class="col" style="background-color: #fff;">29</div>
-                            <div class="col" style="background-color: #fff;">30</div>
+                            <!--日付-->
+                            {% for week in month_weeks %}
+                            <div class="row calendar-row-7 justify-content-start align-items-center text-center">
+                                {% for cell in week %}
+                                <div class="col" style="background-color: #fff; {% if cell and cell.is_selected %}background-color: var(--yellow-200); font-weight: 700;{% elif cell and cell.is_today %}color: var(--primary); font-weight: 700;{% endif %}">
+                                    {% if cell %}
+                                    <a href="?month={{ display_month_query }}&date={{ cell.date|date:'Y-m-d' }}" class="month-day-link {% if cell.is_selected %}fw-bold{% endif %}">
+                                        {{ cell.day }}
+                                    </a>
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
+                {% if selected_child %}
+                <a href="{% url 'schedule_list' selected_child.id %}" type="button" class="btn btn-link p-0 m-0" style="background-color: transparent;">
+                    <img src="{% static 'images/button_icon/btn_list_schedule.png' %}" alt="よていリスト" class="mt-5" style="width: 300px; height: auto;">
+                </a>
+                {% endif %}
             </div>
         </div>
     </div>

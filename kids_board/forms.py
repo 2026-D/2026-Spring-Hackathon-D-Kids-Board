@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
-from .models import Child
+from .models import Child, Schedule
+from datetime import datetime
 
 
 class SignUpForm(UserCreationForm):  # UserCreationFormを継承
@@ -113,3 +114,66 @@ class ChildForm(forms.ModelForm):  # Childモデルと連動するフォーム
                 self.add_error("child_name", "同じ名前の子どもは既に登録されています。")
 
         return cleaned_data
+
+
+class ScheduleForm(forms.ModelForm):
+    TIME_CHOICES = [
+        ("", "はじまり"),
+        ("07:00", "7:00"),
+        ("08:00", "8:00"),
+        ("09:00", "9:00"),
+        ("10:00", "10:00"),
+        ("11:00", "11:00"),
+        ("12:00", "12:00"),
+        ("13:00", "13:00"),
+        ("14:00", "14:00"),
+        ("15:00", "15:00"),
+        ("16:00", "16:00"),
+        ("17:00", "17:00"),
+        ("18:00", "18:00"),
+    ]
+
+    schedule_date = forms.DateField(
+        required=True,
+        input_formats=["%Yねん%mがつ%dにち", "%Y-%m-%d"],
+        widget=forms.TextInput(attrs={"class": "form-control js-datepicker p-0 text-center"}),
+    )
+    start_time = forms.ChoiceField(
+        required=False,
+        choices=TIME_CHOICES,
+        widget=forms.Select(attrs={"class": "form-select mb-3", "style": "width: 95%;"}),
+    )
+    end_time = forms.ChoiceField(
+        required=False,
+        choices=TIME_CHOICES,
+        widget=forms.Select(attrs={"class": "form-select mb-3", "style": "width: 95%;"}),
+    )
+    color = forms.TypedChoiceField(
+        coerce=int,
+        choices=Schedule.ColorType.choices,
+        widget=forms.HiddenInput(),
+    )
+
+    class Meta:
+        model = Schedule
+        fields = ("title", "schedule_date", "color", "start_time", "end_time")
+        widgets = {
+            "title": forms.TextInput(attrs={"class": "form-control"}),
+        }
+        labels = {
+            "title": "なまえ",
+        }
+
+    # 時間の入力がない場合はnullを返すようにする
+    def clean_start_time(self):
+        value = self.cleaned_data.get("start_time")
+        if not value:
+            return None
+        return datetime.strptime(value, "%H:%M").time()
+
+    # 時間の入力がない場合はnullを返すようにする
+    def clean_end_time(self):
+        value = self.cleaned_data.get("end_time")
+        if not value:
+            return None
+        return datetime.strptime(value, "%H:%M").time()

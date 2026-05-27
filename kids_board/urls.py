@@ -2,6 +2,7 @@ from django.urls import path  # URLを書くためのpathを使う
 from .views import signup_view, login_view, logout_view
 from .views import child_create_view  # 関数ベース
 from .views import child_delete_view  # 関数ベース
+from .views import schedule_delete_view  # 関数ベース
 from .views import settings_view  # 関数ベース
 
 from .views import (
@@ -15,6 +16,8 @@ from .views import (
     CustomItemsEditView,
     NewItemsEditView,
     ScheduleView,
+    ScheduleListView,
+    CreateScheduleView,
 )
 
 
@@ -73,5 +76,25 @@ urlpatterns = [
     ),
     path(
         "schedule/", ScheduleView.as_view(template_name="kids_board/schedule.html"), name="schedule"
+    ),
+    path(
+        "schedule/<int:child_id>/",
+        ScheduleView.as_view(template_name="kids_board/schedule.html"),
+        name="schedule",
+    ),
+    path(
+        "schedule_list/<int:child_id>/",
+        ScheduleListView.as_view(template_name="kids_board/schedule_list.html"),
+        name="schedule_list",
+    ),
+    path(
+        "schedule/create/<int:child_id>/",
+        CreateScheduleView.as_view(template_name="kids_board/create_schedule.html"),
+        name="create_schedule",
+    ),
+    path(
+        "schedule/<int:child_id>/<int:schedule_id>/delete/",
+        schedule_delete_view,
+        name="schedule_delete",
     ),
 ]

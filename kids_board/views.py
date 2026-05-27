@@ -4,16 +4,22 @@ from django.contrib.auth import (
     logout,
 )  # 登録ユーザーをログイン状態にする # ログアウト状態にする
 from django.shortcuts import render, redirect  # renderはHTML表示 #redirectは別ページ移動
-from .forms import SignUpForm, LoginForm, ChildForm  # forms.pyからSignUpForm, LoginFormを読み込む
-from django.views.generic import TemplateView, ListView
+from .forms import (
+    SignUpForm,
+    LoginForm,
+    ChildForm,
+    ScheduleForm,
+)  # forms.pyからSignUpForm, LoginFormを読み込む
+from django.views.generic import TemplateView, ListView, CreateView
 from django.urls import reverse_lazy
-from .models import PrepItem, Child, PrepRule
+from .models import PrepItem, Child, PrepRule, Schedule
 from django.contrib.auth.mixins import LoginRequiredMixin  # ログイン必須のクラスを読み込む
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
-from datetime import date
+from datetime import date, timedelta
+import calendar
 import jpholiday
 
 
@@ -211,13 +217,16 @@ class PrepItemsMornView(LoginRequiredMixin, ListView):
 
         return queryset.distinct()  # 重複するお支度アイテムがある場合は、distinct()で重複を排除
 
-    # 追加のコンテキストで今日の日付をテンプレートに渡す
+    # 追加のコンテキストで今日の日付とヘッダーの子供をテンプレートに渡す
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         today = date.today()
         WEEKDAY_JP = ["げつ", "か", "すい", "もく", "きん", "ど", "にち"]
+        child_id = self.kwargs.get("child_id")
+        selected_child = Child.objects.get(id=child_id)
         context["today"] = today
         context["weekday_jp"] = WEEKDAY_JP[today.weekday()]
+        context["selected_child"] = selected_child
         return context
 
 
@@ -255,10 +264,13 @@ class PrepItemsAftView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        child_id = self.kwargs.get("child_id")
         today = date.today()
         WEEKDAY_JP = ["げつ", "か", "すい", "もく", "きん", "ど", "にち"]
+        selected_child = Child.objects.get(id=child_id)
         context["today"] = today
         context["weekday_jp"] = WEEKDAY_JP[today.weekday()]
+        context["selected_child"] = selected_child
         return context
 
 
@@ -296,10 +308,13 @@ class PrepItemsNiteView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        child_id = self.kwargs.get("child_id")
         today = date.today()
         WEEKDAY_JP = ["げつ", "か", "すい", "もく", "きん", "ど", "にち"]
+        selected_child = Child.objects.get(id=child_id)
         context["today"] = today
         context["weekday_jp"] = WEEKDAY_JP[today.weekday()]
+        context["selected_child"] = selected_child
         return context
 
 
@@ -683,3 +698,319 @@ class NewItemsEditView(TemplateView):
 
 class ScheduleView(LoginRequiredMixin, TemplateView):
     template_name = "kids_board/schedule.html"
+
+    COLOR_CSS_MAP = {
+        Schedule.ColorType.RED: "var(--red-400)",
+        Schedule.ColorType.YELLOW: "var(--yellow-200)",
+        Schedule.ColorType.GREEN: "var(--green-300)",
+        Schedule.ColorType.EMERALD_GREEN: "var(--teal-400)",
+        Schedule.ColorType.SKY_BLUE: "var(--cyan-300)",
+        Schedule.ColorType.BLUE: "var(--blue-400)",
+        Schedule.ColorType.PURPLE: "var(--indigo-300)",
+        Schedule.ColorType.PINK: "var(--pink-300)",
+        Schedule.ColorType.ORANGE: "var(--orange-300)",
+        Schedule.ColorType.WHITE: "var(--gray-100)",
+    }
+
+    MONTH_WEEKDAYS = ["にち", "げつ", "か", "すい", "もく", "きん", "ど"]
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        children = Child.objects.filter(parent=self.request.user, deleted_at__isnull=True)
+        child_id = self.kwargs.get("child_id")
+        selected_child = get_object_or_404(children, id=child_id) if child_id else children.first()
+        today = date.today()
+        month_param = self.request.GET.get(
+            "month"
+        )  # クエリパラメータから月を取得（例: "2026-05"）.
+        date_param = self.request.GET.get(
+            "date"
+        )  # クエリパラメータから日付を取得（例: "2026-05-15"）。
+        selected_date = today
+
+        # クエリパラメータから日付が指定されている場合は、selected_dateを更新
+        if date_param:
+            try:
+                selected_date = date.fromisoformat(date_param)
+            except ValueError:
+                pass
+
+        # selected_dateをもとに、表示する月の初日を計算。クエリパラメータで月が指定されている場合は、その月の初日にする。
+        display_month = selected_date.replace(day=1)
+
+        # クエリパラメータから月が指定されている場合は、その月の初日にする
+        if month_param:
+            try:
+                display_month = date.fromisoformat(f"{month_param}-01")
+            except ValueError:
+                pass
+
+        # 日曜始まりに固定: 月曜=0..日曜=6 のため +1 して 7 で剰余
+        days_since_sunday = (selected_date.weekday() + 1) % 7
+        week_start = selected_date - timedelta(days=days_since_sunday)
+        week_dates = [week_start + timedelta(days=i) for i in range(7)]
+        week_end = week_start + timedelta(days=6)
+        week_weekdays = ["にち", "げつ", "か", "すい", "もく", "きん", "ど"]
+        hours = list(range(7, 19))  # 7じ〜18じ
+        weekly_grid = {hour: [None] * 7 for hour in hours}
+        first_weekday, days_in_month = calendar.monthrange(display_month.year, display_month.month)
+        leading_blank_days = (first_weekday + 1) % 7
+        month_cells = [None] * leading_blank_days + [
+            {
+                "day": day,
+                "date": date(display_month.year, display_month.month, day),
+                "is_today": (
+                    display_month.year == today.year
+                    and display_month.month == today.month
+                    and day == today.day
+                ),
+                "is_selected": (
+                    display_month.year == selected_date.year
+                    and display_month.month == selected_date.month
+                    and day == selected_date.day
+                ),
+            }
+            for day in range(1, days_in_month + 1)
+        ]
+        trailing_blank_days = (
+            7 - (len(month_cells) % 7)
+        ) % 7  # 月のセル数が7の倍数になるように、末尾に空セルを追加
+        month_cells.extend([None] * trailing_blank_days)  # 末尾に空セルを追加
+        month_weeks = [
+            month_cells[index : index + 7] for index in range(0, len(month_cells), 7)
+        ]  # 月のセルを7日ごとに分割して週ごとのリストを作成
+        if (
+            display_month.month == 1
+        ):  # 1月のときは、前年の12月を前月として表示するため、年を1つ減らし、月を12にする
+            prev_month_year = display_month.year - 1
+            prev_month_month = 12
+        else:
+            prev_month_year = display_month.year
+            prev_month_month = display_month.month - 1
+
+        if (
+            display_month.month == 12
+        ):  # 12月のときは、翌年の1月を次月として表示するため、年を1つ増やし、月を1にする
+            next_month_year = display_month.year + 1
+            next_month_month = 1
+        else:
+            next_month_year = display_month.year
+            next_month_month = display_month.month + 1
+
+        # 予定を取得して、weekly_gridに配置
+        if selected_child:
+            schedules = Schedule.objects.filter(
+                child=selected_child,
+                schedule_date__range=(week_start, week_end),
+            )
+            # 予定を週のグリッドに配置するためのループ
+            for schedule in schedules:
+                day_index = (schedule.schedule_date - week_start).days
+                # 予定の日付が週の範囲外の場合はスキップ
+                if not (0 <= day_index < 7):
+                    continue
+
+                # 時刻のない予定は7じ枠に表示する想定
+                if schedule.start_time:
+                    start_hour = schedule.start_time.hour
+                    if schedule.end_time and schedule.end_time > schedule.start_time:
+                        end_hour = schedule.end_time.hour
+                    else:
+                        end_hour = start_hour + 1
+                else:
+                    # 時刻未設定の場合は7じ枠に表示
+                    start_hour = 7
+                    end_hour = 8
+
+                start_hour = max(start_hour, hours[0])  # 開始時間は表示する時間帯の最初の時間まで
+                end_hour = min(end_hour, hours[-1] + 1)  # 終了時間は表示する時間帯の次の時間まで
+                title_hour = start_hour + (
+                    (end_hour - start_hour) // 2
+                )  # タイトルを表示する時間帯の計算（予定の中央の時間帯に表示する想定）
+
+                for hour in range(start_hour, end_hour):
+                    # 予定が重なった場合、現状は先に入った1件を優先表示。
+                    if weekly_grid[hour][day_index] is None:
+                        weekly_grid[hour][day_index] = {
+                            "title": schedule.title
+                            if hour == title_hour
+                            else "",  # 中央の枠にだけタイトルを表示する
+                            "color_css": self.COLOR_CSS_MAP.get(
+                                schedule.color, "var(--gray-100)"
+                            ),  # 色のCSSを取得。デフォルトはグレー
+                        }
+
+        weekly_rows = [
+            {"hour": hour, "cells": weekly_grid[hour]} for hour in hours
+        ]  # 時間帯ごとの行データを作成
+
+        context["children"] = children
+        context["selected_child"] = selected_child
+        context["week_start"] = week_start
+        context["week_end"] = week_end
+        context["week_dates"] = week_dates
+        context["week_weekdays"] = week_weekdays
+        context["weekly_rows"] = weekly_rows
+        context["month_label"] = f"{display_month.month}がつ"  # 月の表示ラベル（例: "5がつ"）
+        context["display_month_query"] = (
+            f"{display_month.year}-{display_month.month:02d}"  # クエリパラメータ用の月の文字列（例: "2026-05"）
+        )
+        context["month_weekdays"] = self.MONTH_WEEKDAYS
+        context["month_weeks"] = month_weeks
+        context["prev_month_query"] = (
+            f"month={prev_month_year}-{prev_month_month:02d}"  # クエリパラメータ用の前月の文字列（例: "2026-04"）
+        )
+        context["next_month_query"] = (
+            f"month={next_month_year}-{next_month_month:02d}"  # クエリパラメータ用の次月の文字列（例: "2026-06"）
+        )
+        context["selected_date"] = selected_date
+        return context
+
+
+class ScheduleListView(LoginRequiredMixin, ListView):
+    template_name = "kids_board/schedule_list.html"
+    model = Schedule
+    context_object_name = "schedules"
+
+    COLOR_CSS_MAP = {
+        Schedule.ColorType.RED: "var(--red-400)",
+        Schedule.ColorType.YELLOW: "var(--yellow-200)",
+        Schedule.ColorType.GREEN: "var(--green-300)",
+        Schedule.ColorType.EMERALD_GREEN: "var(--teal-400)",
+        Schedule.ColorType.SKY_BLUE: "var(--cyan-300)",
+        Schedule.ColorType.BLUE: "var(--blue-400)",
+        Schedule.ColorType.PURPLE: "var(--indigo-300)",
+        Schedule.ColorType.PINK: "var(--pink-300)",
+        Schedule.ColorType.ORANGE: "var(--orange-300)",
+        Schedule.ColorType.WHITE: "var(--gray-100)",
+    }
+
+    def get_queryset(self):
+        child_id = self.kwargs.get("child_id")
+        selected_child = get_object_or_404(
+            Child,
+            id=child_id,
+            parent=self.request.user,
+            deleted_at__isnull=True,
+        )
+        return Schedule.objects.filter(
+            child__parent=self.request.user, child=selected_child
+        ).order_by(
+            "-schedule_date"
+        )  # ログインユーザーのスケジュールだけを取得するようにクエリセットを返す
+
+    # 追加のコンテキストでヘッダーの子供をテンプレートに渡す
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        child_id = self.kwargs.get("child_id")
+        selected_child = get_object_or_404(
+            Child,
+            id=child_id,
+            parent=self.request.user,
+            deleted_at__isnull=True,
+        )
+        context["schedule_color_choices"] = [
+            {
+                "value": color.value,
+                "label": color.label,
+                "css": self.COLOR_CSS_MAP[color],
+            }
+            for color in Schedule.ColorType
+        ]
+        context["schedule_form"] = ScheduleForm()
+        context["selected_child"] = selected_child
+        return context
+
+
+class CreateScheduleView(LoginRequiredMixin, CreateView):
+    template_name = "kids_board/create_schedule.html"
+
+    COLOR_CSS_MAP = {
+        Schedule.ColorType.RED: "var(--red-400)",
+        Schedule.ColorType.YELLOW: "var(--yellow-200)",
+        Schedule.ColorType.GREEN: "var(--green-300)",
+        Schedule.ColorType.EMERALD_GREEN: "var(--teal-400)",
+        Schedule.ColorType.SKY_BLUE: "var(--cyan-300)",
+        Schedule.ColorType.BLUE: "var(--blue-400)",
+        Schedule.ColorType.PURPLE: "var(--indigo-300)",
+        Schedule.ColorType.PINK: "var(--pink-300)",
+        Schedule.ColorType.ORANGE: "var(--orange-300)",
+        Schedule.ColorType.WHITE: "var(--gray-100)",
+    }
+
+    form_class = ScheduleForm
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial["color"] = Schedule.ColorType.RED
+        return initial
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        child_id = self.kwargs.get("child_id")
+        selected_child = get_object_or_404(
+            Child,
+            id=child_id,
+            parent=self.request.user,
+            deleted_at__isnull=True,
+        )
+        context["selected_child"] = selected_child
+        context["schedule_color_choices"] = [
+            {
+                "value": color.value,
+                "label": color.label,
+                "css": self.COLOR_CSS_MAP[color],
+            }
+            for color in Schedule.ColorType
+        ]
+        context["schedule"] = {
+            "colors": [
+                {
+                    "value": color.value,
+                    "label": color.label,
+                    "css": self.COLOR_CSS_MAP[color],
+                    "checked": False,
+                }
+                for color in Schedule.ColorType
+            ],
+        }
+        return context
+
+    def form_valid(self, form):
+        child = get_object_or_404(
+            Child,
+            id=self.kwargs.get("child_id"),
+            parent=self.request.user,
+            deleted_at__isnull=True,
+        )
+        form.instance.child = child
+        return super().form_valid(form)
+
+    # フォームの入力が無効な場合にエラーメッセージ。スケジュール作成画面を再表示。
+    def form_invalid(self, form):
+        context = self.get_context_data(form=form)
+        context["error_message"] = "入力内容を確認してください。"
+        return render(self.request, self.template_name, context, status=400)
+
+    # CreateViewのform_validが成功した後、スケジュールの保存後にスケジュール一覧画面にリダイレクトするようにする。
+    def get_success_url(self):
+        return reverse_lazy("schedule_list", kwargs={"child_id": self.kwargs.get("child_id")})
+
+
+@login_required
+def schedule_delete_view(request, child_id, schedule_id):
+    if request.method == "POST":
+        schedule = get_object_or_404(
+            Schedule,
+            id=schedule_id,
+            child_id=child_id,
+            child__parent=request.user,
+            child__deleted_at__isnull=True,
+        )
+        schedule.delete()
+
+    return redirect("schedule_list", child_id=child_id)
+
+
+class SettingsView(LoginRequiredMixin, TemplateView):
+    template_name = "kids_board/settings.html"

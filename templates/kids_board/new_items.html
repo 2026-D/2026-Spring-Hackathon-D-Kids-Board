@@ -283,6 +283,7 @@
 {% endblock %}
 
 {% block extra_js %}
+{{ block.super }}
 <!-- アプリ側用意カードをクリックしたときに、選択クラスをつける -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {

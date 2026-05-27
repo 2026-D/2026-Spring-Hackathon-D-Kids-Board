@@ -1,0 +1,159 @@
+{% extends 'kids_board/base.html' %}
+
+{% load django_bootstrap5 %}
+{% load static %}
+
+{% block title %}Schedule List{% endblock %}
+
+{% block extra_css %}
+<style>
+    /*よてい入力欄のスタイル*/
+    .prep-card {
+        width: clamp(200px, 28vw, 200px);
+        height: clamp(200px, 28vw, 200px);
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+    /* Alpine.jsの表示・非表示制御 */
+    [x-cloak] { display: none !important; } 
+    /*閲覧モードの無効セレクトを薄くしない*/
+    .color-select-readonly:disabled {
+        opacity: 1;
+        color: var(--bs-body-color);
+        background-color: #fff;
+        border-color: var(--bs-border-color);
+    }
+    /* 閲覧モードの無効ラジオを薄くしない */
+    .color-radio-readonly:disabled {
+        opacity: 1;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!--よていリスト表示欄-->
+<div class="m-3 p-4 p-md-2 rounded shadow" style= "background-color: var(--purple-100)">
+    <div class="d-flex flex-column flex-sm-row align-items-center justify-content-around">
+        <div class="d-flex flex-row align-items-center justify-content-center gap-0 gap-sm-2">
+            <p class="m-0 m-sm-3 p-2 fs-2 nowrap">よてい いちらん</p>
+            <img src="{% static 'images/button_icon/calendar4-week.png' %}" alt="カレンダーアイコン" class="" style="width: 45px; height: auto;">
+        </div>
+        <a href="{% url 'create_schedule' selected_child.id %}" class="btn btn-link p-0 m-0 ms-auto" aria-label="やることリストを追加" style="background-color: transparent;">
+            <img src="{% static 'images/button_icon/btn_add_calendar.png' %}" alt="あたらしくつくる" class="mx-md-4 mx-0 my-4" style="width: 300px; height: auto;">
+        </a>
+    </div>
+    {% for schedule in schedules %}
+    <div class="rounded shadow m-2 m-lg-4 p-2 pe-lg-3 d-flex flex-column flex-lg-row align-items-center justify-content-around"
+        :style="editMode? 'background-color:#fff; border: 3px solid var(--cyan-400);' : 'background-color: #fff; border: 3px solid #fff;'"
+        x-data="{editMode: false}"><!--editModeがfalseは表示モード、trueは編集モード-->
+        <!--表示モード-->
+        <!--カード-->
+        <div class="prep-card rounded shadow border-0 m-3 p-2" style="background-color: #fff;" type="button" x-show.important="!editMode" x-cloak>
+            <div class="form-floating mb-3" style="width: 95%;">
+                <input type="text" class="form-control" id="floatingInput" value="{{ schedule.title }}" readonly>
+                <label for="floatingInput">なまえ</label>
+            </div>
+            <select class="form-select mb-3 color-select-readonly" style="width: 95%;" aria-label="はじまり" disabled>
+                <option selected>{{ schedule.start_time|default:"はじまり" }}</option>
+            </select>
+            <select class="form-select mb-3 color-select-readonly" style="width: 95%;" aria-label="おわり" disabled>
+                <option selected>{{ schedule.end_time|default:"おわり" }}</option>
+            </select>
+        </div>
+        <!--入力欄（閲覧専用）-->
+        <div class="d-flex flex-column justify-content-center align-items-start gap-2 text" x-show.important="!editMode" x-cloak>
+            <div class="d-flex flex-row flex-wrap flex-md-nowrap gap-4 align-items-center justify-content-start form-check" style="pointer-events: none;">
+                <input class="form-check-input" type="checkbox" role="switch" tabindex="-1"
+                id="switchCheckDate{{ schedule.id }}" 
+                {% if schedule.schedule_date %}checked{% endif %}>
+                <label class="form-check-label text-nowrap" 
+                for="switchCheckDate{{ schedule.id }}">ひづけを していする</label>
+                <input type="text" readonly tabindex="-1" class="form-control p-0 text-center"
+                value="{% if schedule.schedule_date %}{{ schedule.schedule_date|date:'Y年n月j日' }}{% endif %}">
+            </div>
+            <p class="m-0">らべるの いろを えらぶ</p>
+            <div class="d-flex flex-wrap flex-row gap-2 align-items-center">
+                {% for color_choice in schedule_color_choices %}
+                <div class="form-check form-check-inline mb-0" style="pointer-events: none;">
+                    <input class="form-check-input color-radio-readonly" type="radio" name="readonly_color_{{ schedule.id }}" id="checkColor{{ schedule.id }}_{{ color_choice.value }}" value="{{ color_choice.value }}" {% if schedule.color == color_choice.value %}checked{% endif %} disabled>
+                    <div class="rounded-circle" style="width: 24px; height: 24px; background-color: {{ color_choice.css }}; border: {% if schedule.color == color_choice.value %}1.5px solid var(--bs-primary){% else %}1px solid #ccc{% endif %};" title="{{ color_choice.label }}"></div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <!-- 編集モード -->
+        <!-- カード -->
+        <div class="prep-card rounded shadow border-0 m-3 p-2" style="background-color: #fff;" type="button" x-show.important="editMode" x-cloak>
+            <div class="form-floating mb-3" style="width: 95%;">
+                <input type="text" class="form-control" id="editScheduleTitle{{ schedule.id }}" name="title_{{ schedule.id }}" value="{{ schedule.title|default:'' }}">
+                <label for="editScheduleTitle{{ schedule.id }}">なまえ</label>
+            </div>
+            <select class="form-select mb-3" style="width: 95%;" aria-label="はじまり" name="start_time_{{ schedule.id }}">
+                {% for value, label in schedule_form.fields.start_time.choices %}
+                <option value="{{ value }}" {% if schedule.start_time and schedule.start_time|time:'H:i' == value %}selected{% elif not schedule.start_time and value == '' %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+            <select class="form-select mb-3" style="width: 95%;" aria-label="おわり" name="end_time_{{ schedule.id }}">
+                {% for value, label in schedule_form.fields.end_time.choices %}
+                <option value="{{ value }}" {% if schedule.end_time and schedule.end_time|time:'H:i' == value %}selected{% elif not schedule.end_time and value == '' %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <!--入力欄-->
+        <div class="d-flex flex-column justify-content-center align-items-start gap-2" x-show.important="editMode" x-cloak>
+            <div class="d-flex flex-row flex-wrap flex-md-nowrap gap-4 align-items-center justify-content-start form-check">
+                <input class="form-check-input" type="checkbox" role="switch"
+                       id="editSwitchCheckDate{{ schedule.id }}"
+                       name="has_schedule_date_{{ schedule.id }}"
+                       {% if schedule.schedule_date %}checked{% endif %}>
+                <label class="form-check-label text-nowrap"
+                       for="editSwitchCheckDate{{ schedule.id }}">ひづけを していする</label>
+                <input type="text" class="form-control js-datepicker p-0 text-center"
+                       name="schedule_date_{{ schedule.id }}"
+                       value="{% if schedule.schedule_date %}{{ schedule.schedule_date|date:'Y年n月j日' }}{% endif %}"
+                       placeholder="クリックで せんたく">
+            </div>
+            <p class="m-0">らべるの いろを えらぶ</p>
+            <div class="d-flex flex-wrap flex-row gap-2 align-items-center">
+                {% for color_choice in schedule_color_choices %}
+                <div class="form-check form-check-inline mb-0">
+                    <input class="form-check-input" type="radio" name="color_{{ schedule.id }}" id="editCheckColor{{ schedule.id }}_{{ color_choice.value }}" value="{{ color_choice.value }}" {% if schedule.color == color_choice.value %}checked{% endif %}>
+                    <div class="rounded-circle" style="width: 24px; height: 24px; background-color: {{ color_choice.css }}; border: {% if schedule.color == color_choice.value %}1.5px solid var(--bs-primary){% else %}1px solid #ccc{% endif %};" title="{{ color_choice.label }}"></div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <!--ボタン(表示モード時)-->
+        <div class="d-flex flex-row justify-content-center align-items-end gap-4 align-self-end" x-show.important="!editMode" x-cloak>
+            <button type="button" class="btn btn-link p-0 m-0" @click="editMode = !editMode">
+                <img src="{% static 'images/button_icon/btn_pen_edit.png' %}" alt="よていリスト編集" class="mx-1 my-4" style="width: 100px; height: auto;">
+            </button>
+            <form method="post" action="{% url 'schedule_delete' selected_child.id schedule.id %}" class="m-0 p-0">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-link p-0 m-0" x-show.important="!editMode" x-cloak>
+                    <img src="{% static 'images/button_icon/btn_trash.png' %}" alt="よていリスト削除" class="mx-1 my-4" style="width: 100px; height: auto;">
+                </button>
+            </form>
+        </div>
+        <!--ボタン(編集モード時)-->
+        <!--保存ボタンは、POST成功後に表示モードへ切り替える形へ後日修正-->
+        <div class="d-flex flex-row justify-content-center align-items-end gap-4 align-self-end" x-show.important="editMode" x-cloak>
+            <button type="button" class="btn btn-link p-0 m-0" @click="editMode = false">
+                <img src="{% static 'images/button_icon/btn_save.png' %}" alt="よていリスト保存" class="mx-1 my-4" style="width: 100px; height: auto;">
+            </button>
+            <button type="button" class="btn btn-link p-0 m-0" href="#" x-show.important="editMode" x-cloak @click="editMode = false">
+                <img src="{% static 'images/button_icon/btn_cancel.png' %}" alt="よていリストキャンセル" class="mx-1 my-4" style="width: 100px; height: auto;">
+            </button>
+        </div>
+    </div>
+    {% empty %}
+    <div class="rounded shadow m-2 m-lg-4 p-4 pe-lg-5 text-center" style="background-color: #fff;">
+        <p class="m-0">よていが ありません。<br>あたらしく つくってみましょう！</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

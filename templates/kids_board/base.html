@@ -266,11 +266,10 @@
             <div class="col-2 d-flex align-items-center justify-content-center">
                 <!-- ログイン中のみ表示 -->
                 {% if user.is_authenticated %}
-                <div class="nav-item d-flex flex-row align-items-center justify-content-center">
-                    {% if child.name %}
-                        <img class="button-image" src="{% static 'images/avatar_icon/12_lion.png' %}" alt="こどもアイコン">
-                        <p class="fs-4 fw-bold text-white text-nowrap">こども</p>
-                        {% comment %}<p>{{ child.name }}</p>{% endcomment %}
+                <div class="nav-item d-flex align-items-center justify-content-center d-none d-md-flex">
+                    {% if selected_child.child_name %}
+                    <img class="button-image" src="{% static selected_child.child_icon %}" alt="こどもアイコン" style="width: 85px; height: auto; margin-right: 8px;">
+                    <p class="fs-4 fw-bold text-white text-nowrap">{{ selected_child.child_name }}</p>
                     {% endif %}
                 </div>
                 {% endif %}
@@ -290,11 +289,17 @@
                     <div class="nav-item">
                         <a class="nav-link" href="{% url 'prep_items' %}"><img src="{% static 'images/button_icon/check-circle.png' %}" alt="prep-items" width="60" height="60"></a>
                     </div>
+                    {% if request.resolver_match.url_name != 'home' and request.resolver_match.url_name != 'prep_items' and request.resolver_match.url_name != 'new_items' and request.resolver_match.url_name != 'custom_items'%}
                     <div class="nav-item">
+                        {% if selected_child %}
+                        <a class="nav-link" href="{% url 'schedule' selected_child.id %}"><img src="{% static 'images/button_icon/calendar4-week.png' %}" alt="schedule" width="60" height="60"></a>
+                        {% else %}
                         <a class="nav-link" href="{% url 'schedule' %}"><img src="{% static 'images/button_icon/calendar4-week.png' %}" alt="schedule" width="60" height="60"></a>
+                        {% endif %}
                     </div>
+                    {% endif %}
                     <div class="nav-item">
-                        <a class="nav-link" href="#"><img src="{% static 'images/button_icon/volume-up.png' %}" alt="volume" width="60" height="60"></a>
+                        <button class="nav-link bg-transparent border-0 mute_btn" type="button" onclick="mute()"><img src="{% static 'images/button_icon/volume-up.png' %}" alt="volume" width="60" height="60"></button>
                     </div>
                     <div class="nav-item">
                         <button class="nav-link bg-transparent border-0" type="button" data-bs-toggle="modal" data-bs-target="#enterSettingsModal"><img src="{% static 'images/button_icon/gear.png' %}" alt="settings" width="60" height="60"></button>
@@ -307,11 +312,17 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'prep_items' %}"><img src="{% static 'images/button_icon/check-circle.png' %}" alt="prep-items"></a>
                         </li>
+                        {% if request.resolver_match.url_name != 'home' and request.resolver_match.url_name != 'prep_items' and request.resolver_match.url_name != 'new_items' and request.resolver_match.url_name != 'custom_items'%}
                         <li class="nav-item">
+                            {% if selected_child %}
+                            <a class="nav-link" href="{% url 'schedule' selected_child.id %}"><img src="{% static 'images/button_icon/calendar4-week.png' %}" alt="schedule"></a>
+                            {% else %}
                             <a class="nav-link" href="{% url 'schedule' %}"><img src="{% static 'images/button_icon/calendar4-week.png' %}" alt="schedule"></a>
+                            {% endif %}
                         </li>
+                        {% endif %}
                         <li class="nav-item">
-                            <a class="nav-link" href="#"><img src="{% static 'images/button_icon/volume-up.png' %}" alt="volume"></a>
+                            <button class="nav-link bg-transparent border-0 mute_btn" type="button" onclick="mute()"><img src="{% static 'images/button_icon/volume-up.png' %}" alt="volume"></button>
                         </li>
                         <li class="nav-item">
                             <button class="nav-link bg-transparent border-0" type="button" data-bs-toggle="modal" data-bs-target="#enterSettingsModal"><img src="{% static 'images/button_icon/gear.png' %}" alt="settings"></button>
@@ -408,6 +419,12 @@
     {% include "kids_board/modals/choice_prep_item_icons.html" %}
 </div>
 
+<!-- ==== ボタン音声 ==== -->
+<audio id="btn_audio">
+    <source src="{% static 'audio/btn_cardclick.mp3' %}" type="audio/mpeg">
+</audio>
+
+<!-- JSファイル読み込み -->
 {% bootstrap_javascript %}  {# JSは</body>直前が正しい #}
 {% block extra_js %}
 <script src="{% static 'js/settings.js' %}"></script>
@@ -417,5 +434,7 @@
 <script src="{% static 'js/delete_child.js' %}"></script>
 <script src="{% static 'js/choice_prep_item_icons.js' %}"></script>
 {% endblock %}
+<!-- ボタン音声再生用のJSファイルの読み込み。子テンプレートのextra_jsで上書きされないように、ここに配置 -->
+<script src="{% static 'js/btn_audio.js' %}"></script> 
 </body>
 </html>

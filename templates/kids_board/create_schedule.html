@@ -1,0 +1,111 @@
+{% extends 'kids_board/base.html' %}
+
+{% load django_bootstrap5 %}
+{% load static %}
+
+{% block title %}Create Schedule{% endblock %}
+
+{% block extra_css %}
+<style>
+    /*よてい入力欄のスタイル*/
+    .prep-card {
+        width: clamp(150px, 21vw, 240px);
+        height: clamp(150px, 21vw, 240px);
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="m-3 p-4 p-md-2 rounded shadow" style= "background-color: var(--purple-100)">
+    <div class="d-flex flex-column flex-sm-row align-items-center justify-content-start">
+        <p class="m-0 m-sm-3 p-2 fs-2 nowrap">あたらしい よていを つくる</p>
+        <img src="{% static 'images/button_icon/calendar-plus.png' %}" alt="カレンダーアイコン" class="" style="width: 45px; height: auto;">
+    </div>
+    {% if error_message %}
+    <div class="mx-2 mx-lg-4 mt-2 alert alert-danger" role="alert">
+        {{ error_message }}
+    </div>
+    {% endif %}
+    {% if form.errors %}
+    <div class="mx-2 mx-lg-4 mt-2 alert alert-danger" role="alert">
+        {{ form.non_field_errors }}
+    </div>
+    {% endif %}
+    <form class="rounded shadow m-2 m-lg-4 p-2 pe-lg-3 d-flex flex-column flex-lg-row align-items-center justify-content-around"
+          style="background-color:#fff; border: 3px solid var(--cyan-400);"
+          method="post">
+        {% csrf_token %}
+        <input type="hidden" name="child_id" value="{{ selected_child.id }}">
+
+        <div class="prep-card rounded shadow border-0 m-3 p-2" style="background-color: #fff;" type="button">
+            <div class="form-floating mb-3" style="width: 95%;">
+                <input type="text" class="form-control" id="scheduleTitle" name="title" value="{{ form.title.value|default_if_none:'' }}">
+                <label for="scheduleTitle">なまえ</label>
+            </div>
+            <select class="form-select mb-3" style="width: 95%;" aria-label="はじまり" name="start_time">
+                <option value="" {% if not form.start_time.value %}selected{% endif %}>はじまり</option>
+                <option value="07:00" {% if form.start_time.value == '07:00' %}selected{% endif %}>7:00</option>
+                <option value="08:00" {% if form.start_time.value == '08:00' %}selected{% endif %}>8:00</option>
+                <option value="09:00" {% if form.start_time.value == '09:00' %}selected{% endif %}>9:00</option>
+                <option value="10:00" {% if form.start_time.value == '10:00' %}selected{% endif %}>10:00</option>
+                <option value="11:00" {% if form.start_time.value == '11:00' %}selected{% endif %}>11:00</option>
+                <option value="12:00" {% if form.start_time.value == '12:00' %}selected{% endif %}>12:00</option>
+                <option value="13:00" {% if form.start_time.value == '13:00' %}selected{% endif %}>13:00</option>
+                <option value="14:00" {% if form.start_time.value == '14:00' %}selected{% endif %}>14:00</option>
+                <option value="15:00" {% if form.start_time.value == '15:00' %}selected{% endif %}>15:00</option>
+                <option value="16:00" {% if form.start_time.value == '16:00' %}selected{% endif %}>16:00</option>
+                <option value="17:00" {% if form.start_time.value == '17:00' %}selected{% endif %}>17:00</option>
+                <option value="18:00" {% if form.start_time.value == '18:00' %}selected{% endif %}>18:00</option>
+            </select>
+            <select class="form-select mb-3" style="width: 95%;" aria-label="おわり" name="end_time">
+                <option value="" {% if not form.end_time.value %}selected{% endif %}>おわり</option>
+                <option value="07:00" {% if form.end_time.value == '07:00' %}selected{% endif %}>7:00</option>
+                <option value="08:00" {% if form.end_time.value == '08:00' %}selected{% endif %}>8:00</option>
+                <option value="09:00" {% if form.end_time.value == '09:00' %}selected{% endif %}>9:00</option>
+                <option value="10:00" {% if form.end_time.value == '10:00' %}selected{% endif %}>10:00</option>
+                <option value="11:00" {% if form.end_time.value == '11:00' %}selected{% endif %}>11:00</option>
+                <option value="12:00" {% if form.end_time.value == '12:00' %}selected{% endif %}>12:00</option>
+                <option value="13:00" {% if form.end_time.value == '13:00' %}selected{% endif %}>13:00</option>
+                <option value="14:00" {% if form.end_time.value == '14:00' %}selected{% endif %}>14:00</option>
+                <option value="15:00" {% if form.end_time.value == '15:00' %}selected{% endif %}>15:00</option>
+                <option value="16:00" {% if form.end_time.value == '16:00' %}selected{% endif %}>16:00</option>
+                <option value="17:00" {% if form.end_time.value == '17:00' %}selected{% endif %}>17:00</option>
+                <option value="18:00" {% if form.end_time.value == '18:00' %}selected{% endif %}>18:00</option>
+            </select>
+        </div>
+
+        <div class="d-flex flex-column justify-content-center align-items-start gap-2">
+            <div class="d-flex flex-row flex-wrap flex-md-nowrap gap-4 align-items-center justify-content-start form-check">
+                <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDateNewSchedule" name="has_schedule_date" {% if form.schedule_date.value %}checked{% endif %}>
+                <label class="form-check-label text-nowrap" for="switchCheckDateNewSchedule">ひづけを していする</label>
+                <input type="text" class="form-control js-datepicker p-0 text-center" name="schedule_date" value="{{ form.schedule_date.value|default_if_none:'' }}" placeholder="クリックで せんたく">
+            </div>
+            <p class="m-0">らべるの いろを えらぶ</p>
+            <div class="d-flex flex-wrap flex-row gap-2 align-items-center">
+                {% for color_choice in schedule_color_choices %}
+                <div class="form-check form-check-inline mb-0">
+                    <input class="form-check-input" type="radio" name="color" id="newCheckColor{{ color_choice.value }}" value="{{ color_choice.value }}" {% if form.color.value|stringformat:'s' == color_choice.value|stringformat:'s' %}checked{% endif %}>
+                    <div class="rounded-circle" style="width: 24px; height: 24px; background-color: {{ color_choice.css }}; border: 1px solid #ccc;" title="{{ color_choice.label }}"></div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="d-flex flex-row justify-content-center align-items-end gap-4 align-self-end">
+            <button type="submit" class="btn btn-link p-0 m-0">
+                <img src="{% static 'images/button_icon/btn_save.png' %}" alt="よていリスト保存" class="mx-1 my-4" style="width: 100px; height: auto;" method="post">
+            </button>
+            <button type="button" class="btn btn-link p-0 m-0" onclick="location.href='{% url 'schedule_list' selected_child.id %}'">
+                <img src="{% static 'images/button_icon/btn_cancel.png' %}" alt="よていリストキャンセル" class="mx-1 my-4" style="width: 100px; height: auto;">
+            </button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

@@ -58,7 +58,7 @@
             {% if prep_items %}
                 {% for prep_item in prep_items %}
                 <div class="col d-flex justify-content-center align-items-center">
-                    <button class="prep-card rounded shadow border-0 m-2 p-2" style="background-color: #fff;" type="button">
+                    <button class="prep-card rounded shadow border-0 m-2 p-2" style="background-color: #fff;" type="button" onclick="audio()">
                         {% comment "お支度名とアイコン画像がなかったら、何も表示しない" %}{% endcomment %}
                         <p class="m-0">
                             {% if prep_item.item_name %}
