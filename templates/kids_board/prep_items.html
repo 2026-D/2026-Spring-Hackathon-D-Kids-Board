@@ -99,7 +99,7 @@
             </div>
             <p class="m-0">こどもせんたく</p>
             <div class="d-flex flex-wrap flex-row gap-4 align-items-start">
-                {% for child in prep_item.children %}
+                {% for child in prep_item.children_options %}
                 <div class="form-check" style="pointer-events: none;">
                     <input class="form-check-input" type="checkbox" tabindex="-1" value="" id="checkChild{{ prep_item.id }}_{{ forloop.counter }}" {% if child.checked %}checked{% endif %}>
                     <label class="form-check-label" for="checkChild{{ prep_item.id }}_{{ forloop.counter }}">{{ child.name }}</label>
@@ -158,7 +158,7 @@
             </div>
             <p class="m-0">こどもせんたく</p>
             <div class="d-flex flex-wrap flex-row gap-4 align-items-start">
-                {% for child in prep_item.children %}
+                {% for child in prep_item.children_options %}
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" value="" id="checkChild{{ prep_item.id }}_{{ forloop.counter }}" {% if child.checked %}checked{% endif %}>
                     <label class="form-check-label" for="checkChild{{ prep_item.id }}_{{ forloop.counter }}">{{ child.name }}</label>
