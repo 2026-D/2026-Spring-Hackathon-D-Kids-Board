@@ -12,7 +12,7 @@ from .forms import (
 )  # forms.pyからSignUpForm, LoginFormを読み込む
 from django.views.generic import TemplateView, ListView, CreateView
 from django.urls import reverse_lazy
-from .models import PrepItem, Child, PrepRule, Schedule
+from .models import Child, PrepRule, Schedule, PrepItem
 from django.contrib.auth.mixins import LoginRequiredMixin  # ログイン必須のクラスを読み込む
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
@@ -318,117 +318,112 @@ class PrepItemsNiteView(LoginRequiredMixin, ListView):
         return context
 
 
-class PrepItemsView(LoginRequiredMixin, TemplateView):
+class PrepItemsView(LoginRequiredMixin, ListView):
+    model = PrepItem
     template_name = "kids_board/prep_items.html"
+    context_object_name = "prep_items"
+    paginate_by = 15  # 1ページに表示するアイテム数
+    ordering = ["-created_at"]  # 新しい順に表示
+
+    WEEKDAY_JP = [
+        "げつようび",
+        "かようび",
+        "すいようび",
+        "もくようび",
+        "きんようび",
+        "どようび",
+        "にちようび",
+    ]  # 曜日を日本語で表示するためのリスト
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.filter(parent=self.request.user, is_active=True).prefetch_related(
+            "rules", "children"
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        children = Child.objects.filter(
+            parent=self.request.user,
+            deleted_at__isnull=True,
+        )
+        prep_items = context.get("prep_items", [])
 
-        # prep_itemsの仮データ
-        context["prep_items"] = [
-            {
-                "id": 1,
-                "name": "ごはん",
-                "prep_icon": "images/prep_item/12_cutlery.png",
-                "weekdays": [
-                    {"name": "げつようび", "checked": True},
-                    {"name": "かようび", "checked": True},
-                    {"name": "すいようび", "checked": True},
-                    {"name": "もくようび", "checked": True},
-                    {"name": "きんようび", "checked": True},
-                    {"name": "どようび", "checked": True},
-                    {"name": "にちようび", "checked": True},
-                ],
-                "holiday": [{"name": "しゅくじつ", "checked": False}],
-                "special_date": [{"name": "ひづけしてい", "checked": False, "value": None}],
-                "category_type": [
-                    {"name": "あさ", "checked": True},
-                    {"name": "かえってきてから", "checked": False},
-                    {"name": "よる", "checked": True},
-                ],
-                "children": [
-                    {"name": "こども1", "checked": True},
-                    {"name": "こども2", "checked": True},
-                ],
-            },
-            {
-                "id": 2,
-                "name": "トイレ",
-                "prep_icon": "images/prep_item/5_toilet.png",
-                "weekdays": [
-                    {"name": "げつようび", "checked": True},
-                    {"name": "かようび", "checked": True},
-                    {"name": "すいようび", "checked": False},
-                    {"name": "もくようび", "checked": True},
-                    {"name": "きんようび", "checked": False},
-                    {"name": "どようび", "checked": False},
-                    {"name": "にちようび", "checked": False},
-                ],
-                "holiday": [{"name": "しゅくじつ", "checked": False}],
-                "special_date": [{"name": "ひづけしてい", "checked": False, "value": None}],
-                "category_type": [
-                    {"name": "あさ", "checked": True},
-                    {"name": "かえってきてから", "checked": False},
-                    {"name": "よる", "checked": False},
-                ],
-                "children": [
-                    {"name": "こども1", "checked": True},
-                    {"name": "こども2", "checked": False},
-                ],
-            },
-            {
-                "id": 3,
-                "name": "しゅくだい",
-                "prep_icon": "images/prep_item/22_paper_and_pen.png",
-                "weekdays": [
-                    {"name": "げつようび", "checked": True},
-                    {"name": "かようび", "checked": True},
-                    {"name": "すいようび", "checked": True},
-                    {"name": "もくようび", "checked": True},
-                    {"name": "きんようび", "checked": True},
-                    {"name": "どようび", "checked": True},
-                    {"name": "にちようび", "checked": True},
-                ],
-                "holiday": [{"name": "しゅくじつ", "checked": False}],
-                "special_date": [{"name": "ひづけしてい", "checked": False, "value": None}],
-                "category_type": [
-                    {"name": "あさ", "checked": False},
-                    {"name": "かえってきてから", "checked": True},
-                    {"name": "よる", "checked": False},
-                ],
-                "children": [
-                    {"name": "こども1", "checked": True},
-                    {"name": "こども2", "checked": True},
-                ],
-            },
-            {
-                "id": 4,
-                "name": "えんそくのじゅんびみたいにながいもじがはいっているときの表示の仕方を確認するようにする",
-                "prep_icon": "images/prep_item/2_backpack.png",
-                "weekdays": [
-                    {"name": "げつようび", "checked": False},
-                    {"name": "かようび", "checked": False},
-                    {"name": "すいようび", "checked": False},
-                    {"name": "もくようび", "checked": False},
-                    {"name": "きんようび", "checked": False},
-                    {"name": "どようび", "checked": False},
-                    {"name": "にちようび", "checked": False},
-                ],
-                "holiday": [{"name": "しゅくじつ", "checked": False}],
-                "special_date": [
-                    {"name": "ひづけしてい", "checked": True, "value": "2026ねん5がつ30にち"}
-                ],
-                "category_type": [
-                    {"name": "あさ", "checked": False},
-                    {"name": "かえってきてから", "checked": True},
-                    {"name": "よる", "checked": False},
-                ],
-                "children": [
-                    {"name": "こども1", "checked": True},
-                    {"name": "こども2", "checked": True},
-                ],
-            },
-        ]
+        for prep_item in prep_items:
+            prep_item.name = prep_item.item_name
+
+            # 曜日チェック（平日ルール + 曜日指定ルール）
+            day_of_week_set = set(
+                prep_item.rules.filter(
+                    rule_type=PrepRule.RuleType.DAY_OF_WEEK,
+                    day_of_week__isnull=False,
+                ).values_list("day_of_week", flat=True)
+            )
+            has_weekday_rule = prep_item.rules.filter(rule_type=PrepRule.RuleType.WEEKDAY).exists()
+
+            weekdays = []
+            for day_index, day_name in enumerate(self.WEEKDAY_JP):
+                checked = (day_index in day_of_week_set) or (has_weekday_rule and day_index <= 4)
+                weekdays.append({"name": day_name, "checked": checked})
+            prep_item.weekdays = weekdays
+
+            # 平日だけ（祝日含まない）スイッチ
+            prep_item.holiday = [{"name": "しゅくじつ", "checked": has_weekday_rule}]
+
+            # 特定日
+            specific_dates = list(
+                prep_item.rules.filter(
+                    rule_type=PrepRule.RuleType.SPECIFIC,
+                    specific_date__isnull=False,
+                )
+                .order_by("specific_date")
+                .values_list("specific_date", flat=True)
+            )
+            if specific_dates:
+                prep_item.special_date = [
+                    {
+                        "name": "ひづけしてい",
+                        "checked": True,
+                        "value": f"{d.year}ねん{d.month}がつ{d.day}にち",
+                    }
+                    for d in specific_dates
+                ]
+            else:
+                prep_item.special_date = [{"name": "ひづけしてい", "checked": False, "value": None}]
+
+            # カテゴリ
+            prep_item.category_type = [
+                {
+                    "name": "あさ",
+                    "checked": prep_item.category_type == PrepItem.CategoryType.MORNING,
+                },
+                {
+                    "name": "かえってきてから",
+                    "checked": prep_item.category_type == PrepItem.CategoryType.AFTERNOON,
+                },
+                {
+                    "name": "よる",
+                    "checked": prep_item.category_type == PrepItem.CategoryType.NIGHT,
+                },
+            ]
+
+            assigned_child_ids = {child.id for child in prep_item.children.all()}
+            prep_item.children_options = [
+                {
+                    "id": child.id,
+                    "name": child.child_name,
+                    "checked": child.id in assigned_child_ids,
+                }
+                for child in children
+            ]
+
+        selected_child_id = self.kwargs.get("child_id")
+        selected_child = (
+            children.filter(id=selected_child_id).first() if selected_child_id else children.first()
+        )
+        context["children"] = children
+        context["selected_child"] = selected_child
+        context["selected_child_id"] = selected_child_id
         return context
 
 
