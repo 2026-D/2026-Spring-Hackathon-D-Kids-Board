@@ -257,7 +257,7 @@
             <!-- 左：ロゴ -->
             <div class="col-5 d-flex align-items-center">
                 <div class="nav-item">
-                    <a class="nav-link logo" href="{% url 'home' %}">
+                    <a class="nav-link logo" href="{% if user.is_authenticated %}{% url 'home' %}{% else %}{% url 'top' %}{% endif %}">
                         <img src="{% static 'images/kids-board.png' %}" alt="ホーム" width="125" height="24">
                     </a>
                 </div>

@@ -61,7 +61,7 @@ def login_view(request):  # login/へのアクセス時に動く処理
 
 def logout_view(request):  # logout/へのアクセス時に動く処理
     logout(request)  # ログイン状態を解除する
-    return redirect("login")  # ログアウト後にloginページへ移動する
+    return redirect("top")  # ログアウト後にトップページへ移動する
 
 
 @login_required
@@ -139,6 +139,10 @@ def settings_view(request):  # settings画面を表示
             "children": children,  # コンテキスト
         },
     )
+
+
+class TopView(TemplateView):
+    template_name = "kids_board/top.html"
 
 
 class KidsBoardView(LoginRequiredMixin, TemplateView):
