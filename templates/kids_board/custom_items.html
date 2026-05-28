@@ -101,7 +101,7 @@
         <div class="d-flex flex-wrap flex-row gap-4 align-items-start">
             {% for category in category_type %}
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" name="category_type" value="{{ category.value }}" id="checkCategory_create_{{ forloop.counter }}" {% if category.checked %}checked{% endif %}>
+                <input class="form-check-input" type="radio" name="category_type" value="{{ category.value }}" id="checkCategory_create_{{ forloop.counter }}" {% if category.checked %}checked{% endif %}>
                 <label class="form-check-label" for="checkCategory_create_{{ forloop.counter }}">{{ category.name }}</label>
             </div>
             {% endfor %}
@@ -183,7 +183,7 @@
             <div class="d-flex flex-wrap flex-row gap-4 align-items-start">
                 {% for category in prep_item.category_type %}
                 <div class="form-check" style="pointer-events: none;">
-                    <input class="form-check-input" type="checkbox" tabindex="-1" value="" id="checkCategory{{ prep_item.id }}_{{ forloop.counter }}" {% if category.checked %}checked{% endif %}>
+                    <input class="form-check-input" type="radio" name="category_type_{{ prep_item.id }}" tabindex="-1" value="{{ category.value }}" id="checkCategory{{ prep_item.id }}_{{ forloop.counter }}" {% if category.checked %}checked{% endif %}>
                     <label class="form-check-label" for="checkCategory{{ prep_item.id }}_{{ forloop.counter }}">{{ category.name }}</label>
                 </div>
                 {% endfor %}
@@ -192,7 +192,7 @@
             <div class="d-flex flex-wrap flex-row gap-4 align-items-start">
                 {% for child in prep_item.children_options %}
                 <div class="form-check" style="pointer-events: none;">
-                    <input class="form-check-input" type="checkbox" tabindex="-1" value="" id="checkChild{{ prep_item.id }}_{{ forloop.counter }}" {% if child.checked %}checked{% endif %}>
+                    <input class="form-check-input" type="checkbox" name="children_options_{{ prep_item.id }}" tabindex="-1" value="{{ child.value }}" id="checkChild{{ prep_item.id }}_{{ forloop.counter }}" {% if child.checked %}checked{% endif %}>
                     <label class="form-check-label" for="checkChild{{ prep_item.id }}_{{ forloop.counter }}">{{ child.name }}</label>
                 </div>
                 {% endfor %}
