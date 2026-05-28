@@ -267,9 +267,11 @@
                 <!-- ログイン中のみ表示 -->
                 {% if user.is_authenticated %}
                 <div class="nav-item d-flex align-items-center justify-content-center d-none d-md-flex">
-                    {% if selected_child.child_name %}
-                    <img class="button-image" src="{% static selected_child.child_icon %}" alt="こどもアイコン" style="width: 85px; height: auto; margin-right: 8px;">
-                    <p class="fs-4 fw-bold text-white text-nowrap">{{ selected_child.child_name }}</p>
+                    {% if request.resolver_match.url_name != 'home' and request.resolver_match.url_name != 'prep_items' and request.resolver_match.url_name != 'new_items' and request.resolver_match.url_name != 'custom_items'%}
+                        {% if selected_child.child_name %}
+                        <img class="button-image" src="{% static selected_child.child_icon %}" alt="こどもアイコン" style="width: 85px; height: auto; margin-right: 8px;">
+                        <p class="fs-4 fw-bold text-white text-nowrap">{{ selected_child.child_name }}</p>
+                        {% endif %}
                     {% endif %}
                 </div>
                 {% endif %}
