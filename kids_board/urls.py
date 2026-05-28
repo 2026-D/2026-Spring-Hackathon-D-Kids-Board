@@ -7,6 +7,7 @@ from .views import schedule_delete_view  # 関数ベース
 from .views import settings_view  # 関数ベース
 
 from .views import (
+    TopView,
     HomeView,
     KidsBoardView,
     PrepItemsMornView,
@@ -26,6 +27,7 @@ urlpatterns = [
     path("signup/", signup_view, name="signup"),  # http://localhost:8000/signup/
     path("login/", login_view, name="login"),  # login/
     path("logout/", logout_view, name="logout"),  # logout/
+    path("", TopView.as_view(), name="top"),
     # path("kids_board/",kids_board_view,name="kids_board"), # kids_board/
     path("settings/child/add/", child_create_view, name="child_create"),
     path("settings/child/<int:child_id>/delete/", child_delete_view, name="child_delete"),
