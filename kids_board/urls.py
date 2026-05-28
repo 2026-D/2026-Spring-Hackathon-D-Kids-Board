@@ -13,7 +13,7 @@ from .views import (
     PrepItemsNiteView,
     PrepItemsView,
     PrepItemEditView,
-    CustomItemsEditView,
+    CustomItemsView,
     NewItemsEditView,
     ScheduleView,
     ScheduleListView,
@@ -66,7 +66,7 @@ urlpatterns = [
     ),
     path(
         "custom_items/",
-        CustomItemsEditView.as_view(template_name="kids_board/custom_items.html"),
+        CustomItemsView.as_view(template_name="kids_board/custom_items.html"),
         name="custom_items",
     ),
     path(
