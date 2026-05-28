@@ -336,7 +336,7 @@
                     <div class="nav-item">
                         <a class="btn btn-outline-primary btn-sign" href="{% url 'signup' %}" role="button">Sign Up</a>
                     </div>
-                    {% elif request.resolver_match.url_name == 'signup' %}
+                    {% elif request.resolver_match.url_name == 'signup' or request.resolver_match.url_name == 'top' %}
                     <div class="nav-item">
                         <a class="btn btn-outline-primary btn-sign" href="{% url 'login' %}" role="button">Login</a>
                     </div>
@@ -355,7 +355,7 @@
     <main class="flex-grow-1">
         {% block content %}{% endblock %}
     </main>
-    {% if request.resolver_match.url_name != 'home' and request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'signup' %}
+    {% if request.resolver_match.url_name != 'home' and request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'signup' and request.resolver_match.url_name != 'top' %}
         <a class="px-4 my-3" href="javascript:history.back()">
             <img src="{% static 'images/button_icon/btn_back.png' %}" alt="もどる" width="75rem" height="auto">
         </a>
