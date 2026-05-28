@@ -428,6 +428,22 @@ class PrepItemsView(LoginRequiredMixin, ListView):
         return context
 
 
+# prep_item.htmlのやることリスト一覧からやることを削除するためのビュー関数を定義
+@login_required
+def prep_item_delete_view(request, prep_item_id):
+    if request.method == "POST":
+        prep_item = get_object_or_404(
+            PrepItem,
+            id=prep_item_id,
+            parent=request.user,
+            is_active=True,
+        )
+        prep_item.is_active = False
+        prep_item.save(update_fields=["is_active", "updated_at"])
+
+    return redirect("prep_items")
+
+
 class PrepItemEditView(UpdateView, LoginRequiredMixin):
     template_name = "kids_board/prep_items.html"
     model = PrepItem  # モデルを指定
@@ -473,9 +489,9 @@ class CustomItemsView(LoginRequiredMixin, View):
             {"id": c.id, "name": c.child_name, "checked": False} for c in children_qs
         ]
 
-        # やること一覧（is_custom=True のものだけ表示）
+        # やること一覧（is_active=True のものだけ表示）
         prep_items_qs = PrepItem.objects.filter(
-            parent=self.request.user, is_custom=True
+            parent=self.request.user, is_active=True
         ).prefetch_related("rules", "children")
 
         formatted_items = []
