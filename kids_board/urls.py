@@ -62,7 +62,7 @@ urlpatterns = [
     ),
     path(
         "prep_items/<int:prep_item_id>/edit/",
-        PrepItemEditView.as_view(template_name="kids_board/prep_items.html"),
+        PrepItemEditView.as_view(),
         name="prep_items_edit_api",
     ),
     path(

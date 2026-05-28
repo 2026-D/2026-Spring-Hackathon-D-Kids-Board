@@ -10,14 +10,14 @@ from .forms import (
     ChildForm,
     ScheduleForm,
 )  # forms.pyからSignUpForm, LoginFormを読み込む
-from django.views.generic import TemplateView, ListView, CreateView, UpdateView, View
+from django.views.generic import TemplateView, ListView, CreateView, View
 from django.urls import reverse_lazy
 from .models import Child, PrepRule, Schedule, PrepItem
 from django.contrib.auth.mixins import LoginRequiredMixin  # ログイン必須のクラスを読み込む
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.db.models import Q
 from datetime import date, timedelta, datetime
 import calendar
@@ -396,14 +396,17 @@ class PrepItemsView(LoginRequiredMixin, ListView):
             prep_item.category_type = [
                 {
                     "name": "あさ",
+                    "value": PrepItem.CategoryType.MORNING,
                     "checked": prep_item.category_type == PrepItem.CategoryType.MORNING,
                 },
                 {
                     "name": "かえってきてから",
+                    "value": PrepItem.CategoryType.AFTERNOON,
                     "checked": prep_item.category_type == PrepItem.CategoryType.AFTERNOON,
                 },
                 {
                     "name": "よる",
+                    "value": PrepItem.CategoryType.NIGHT,
                     "checked": prep_item.category_type == PrepItem.CategoryType.NIGHT,
                 },
             ]
@@ -444,18 +447,101 @@ def prep_item_delete_view(request, prep_item_id):
     return redirect("prep_items")
 
 
-class PrepItemEditView(UpdateView, LoginRequiredMixin):
-    template_name = "kids_board/prep_items.html"
-    model = PrepItem  # モデルを指定
-    fields = [
-        "name",
-        "weekdays",
-        "holiday",
-        "special_date",
-        "category_type",
-        "children",
-    ]  # 編集可能なフィールドを指定
-    success_url = reverse_lazy("prep_items")  # 編集成功後のリダイレクト先を指定
+# prep_item.htmlのやることリスト一覧からやることを編集するためのビュー関数を定義
+class PrepItemEditView(LoginRequiredMixin, View):
+    # POSTリクエストを処理するためのメソッドを定義
+    def post(self, request, prep_item_id, *args, **kwargs):
+        prep_item = get_object_or_404(
+            PrepItem,
+            id=prep_item_id,
+            parent=request.user,
+            is_active=True,
+        )
+
+        item_name = request.POST.get(
+            "item_name", ""
+        ).strip()  # やることの名前をPOSTデータから取得し、前後の空白を削除
+        category_type = request.POST.get(
+            "category_type", ""
+        ).strip()  # カテゴリをPOSTデータから取得し、前後の空白を削除
+        # ルールの更新は、後でまとめて行うため、ここではitem_nameとcategory_typeの更新だけ行う
+        update_fields = ["updated_at"]
+        if item_name:
+            prep_item.item_name = item_name
+            update_fields.append("item_name")
+        # category_typeは、PrepItem.CategoryTypeのchoicesにある値だけを受け入れるようにする
+        valid_categories = {choice[0] for choice in PrepItem.CategoryType.choices}
+        # もしcategory_typeがvalid_categoriesの中にある値なら、prep_itemのcategory_typeを更新する
+        if category_type in valid_categories:
+            prep_item.category_type = category_type
+            update_fields.append("category_type")
+
+        prep_item.save(
+            update_fields=update_fields
+        )  # item_nameとcategory_typeを更新した後、updated_atも更新するためにupdate_fieldsに"updated_at"を入れている
+
+        # ルール更新（曜日/平日/特定日を作り直し）
+        prep_item.rules.filter(
+            rule_type__in=[
+                PrepRule.RuleType.DAY_OF_WEEK,
+                PrepRule.RuleType.WEEKDAY,
+                PrepRule.RuleType.SPECIFIC,
+            ]
+        ).delete()
+        # 曜日ルールの更新
+        weekday_values = request.POST.getlist("weekday")
+        for day_str in weekday_values:
+            try:
+                day_of_week = int(day_str)
+            except (TypeError, ValueError):
+                continue
+            if 0 <= day_of_week <= 6:
+                PrepRule.objects.create(
+                    prep_item=prep_item,
+                    rule_type=PrepRule.RuleType.DAY_OF_WEEK,
+                    day_of_week=day_of_week,
+                )
+        # 祝日を除くスイッチがオンの場合は、平日ルールを追加
+        if request.POST.get("is_not_holiday"):
+            PrepRule.objects.create(
+                prep_item=prep_item,
+                rule_type=PrepRule.RuleType.WEEKDAY,
+            )
+        # 特定日が指定されている場合は、特定日ルールを追加
+        if request.POST.get("use_specific_date"):
+            specific_date_str = request.POST.get("specific_date", "").strip()
+            # 特定日が「yyyy-mm-dd」形式か「yyyyねんmがつdにち」形式で入力されることを想定し、両方の形式に対応してパースする
+            if specific_date_str:
+                parsed_specific_date = None  # 入力内容の解析に失敗した場合はNoneのままにする
+                # まずは「yyyy-mm-dd」形式で解析を試みる
+                try:
+                    if "ねん" in specific_date_str:
+                        parsed_specific_date = datetime.strptime(
+                            specific_date_str, "%Yねん%mがつ%dにち"
+                        ).date()
+                    else:
+                        parsed_specific_date = date.fromisoformat(specific_date_str)
+                except ValueError:
+                    parsed_specific_date = None
+                # 解析に成功し、parsed_specific_dateがNoneでない場合は、特定日ルールを作成する
+                if parsed_specific_date:
+                    PrepRule.objects.create(
+                        prep_item=prep_item,
+                        rule_type=PrepRule.RuleType.SPECIFIC,
+                        specific_date=parsed_specific_date,
+                    )
+
+        # 子ども紐づけ更新
+        child_ids = request.POST.getlist("child_ids")
+        # child_idsは文字列のリストで送られてくるため、整数のリストに変換する
+        assigned_children = Child.objects.filter(
+            id__in=child_ids,
+            parent=request.user,
+            deleted_at__isnull=True,
+        )
+        prep_item.children.set(assigned_children)
+
+        return redirect("prep_items")
 
 
 class CustomItemsView(LoginRequiredMixin, View):
@@ -551,8 +637,14 @@ class CustomItemsView(LoginRequiredMixin, View):
         """POST: データ保存"""
         # PrepItem フォーム検証
         item_name = request.POST.get("item_name", "").strip()
-        category_type = request.POST.get("category_type", "").strip()
+        category_type_values = request.POST.getlist("category_type")
         prep_icon = request.POST.get("prep_icon", "").strip() or "images/prep_item/12_cutlery.png"
+
+        valid_categories = {choice[0] for choice in PrepItem.CategoryType.choices}
+        category_types = []
+        for category in category_type_values:
+            if category in valid_categories and category not in category_types:
+                category_types.append(category)
 
         # 特定日（yyyy-mm-dd / yyyyねんmがつdにち）を正規化
         parsed_specific_date = None
@@ -573,55 +665,57 @@ class CustomItemsView(LoginRequiredMixin, View):
                     )
                     return render(request, self.template_name, context, status=400)
 
-        if not item_name or not category_type:
+        if not item_name or not category_types:
             context = self.get_context_data()
+            context["error_message"] = "やるタイミングを 1つ いじょう えらんでください。"
             return render(request, self.template_name, context, status=400)
 
-        # PrepItem を保存
-        prep_item = PrepItem(
-            parent=request.user,
-            item_name=item_name,
-            category_type=category_type,
-            prep_icon=prep_icon,
-            is_custom=True,
-        )
+        # 子ども M2M を取得（作成する各カテゴリに同じ設定を適用）
+        child_ids = request.POST.getlist("child_ids")
+        assigned_children = Child.objects.filter(id__in=child_ids, parent=request.user)
+
         try:
-            prep_item.save()
+            with transaction.atomic():
+                for category_type in category_types:
+                    prep_item = PrepItem.objects.create(
+                        parent=request.user,
+                        item_name=item_name,
+                        category_type=category_type,
+                        prep_icon=prep_icon,
+                        is_custom=True,
+                    )
+
+                    # 曜日ルール（チェックボックス value は 0〜6）
+                    for day_str in request.POST.getlist("weekday"):
+                        PrepRule.objects.create(
+                            prep_item=prep_item,
+                            rule_type=PrepRule.RuleType.DAY_OF_WEEK,
+                            day_of_week=int(day_str),
+                        )
+
+                    # 平日ルール
+                    if request.POST.get("is_not_holiday"):
+                        PrepRule.objects.create(
+                            prep_item=prep_item,
+                            rule_type=PrepRule.RuleType.WEEKDAY,
+                        )
+
+                    # 特定日ルール
+                    if parsed_specific_date:
+                        PrepRule.objects.create(
+                            prep_item=prep_item,
+                            rule_type=PrepRule.RuleType.SPECIFIC,
+                            specific_date=parsed_specific_date,
+                        )
+
+                    if assigned_children.exists():
+                        prep_item.children.set(assigned_children)
         except IntegrityError:
             context = self.get_context_data()
             context["error_message"] = (
                 "おなじ『なまえ + やるタイミング』は すでに とうろく されています。"
             )
             return render(request, self.template_name, context, status=400)
-
-        # 曜日ルール（チェックボックス value は 0〜6）
-        for day_str in request.POST.getlist("weekday"):
-            PrepRule.objects.create(
-                prep_item=prep_item,
-                rule_type=PrepRule.RuleType.DAY_OF_WEEK,
-                day_of_week=int(day_str),
-            )
-
-        # 平日ルール
-        if request.POST.get("is_not_holiday"):
-            PrepRule.objects.create(
-                prep_item=prep_item,
-                rule_type=PrepRule.RuleType.WEEKDAY,
-            )
-
-        # 特定日ルール
-        if parsed_specific_date:
-            PrepRule.objects.create(
-                prep_item=prep_item,
-                rule_type=PrepRule.RuleType.SPECIFIC,
-                specific_date=parsed_specific_date,
-            )
-
-        # 子ども M2M を設定（1件のPrepItemに対して複数の子どもを紐づける）
-        child_ids = request.POST.getlist("child_ids")
-        if child_ids:
-            assigned_children = Child.objects.filter(id__in=child_ids, parent=request.user)
-            prep_item.children.set(assigned_children)
 
         return redirect(self.success_url)
 
