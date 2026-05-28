@@ -2,6 +2,7 @@ from django.urls import path  # URLを書くためのpathを使う
 from .views import signup_view, login_view, logout_view
 from .views import child_create_view  # 関数ベース
 from .views import child_delete_view  # 関数ベース
+from .views import prep_item_delete_view  # 関数ベース
 from .views import schedule_delete_view  # 関数ベース
 from .views import settings_view  # 関数ベース
 
@@ -63,6 +64,11 @@ urlpatterns = [
         "prep_items/<int:prep_item_id>/edit/",
         PrepItemEditView.as_view(template_name="kids_board/prep_items.html"),
         name="prep_items_edit_api",
+    ),
+    path(
+        "prep_items/<int:prep_item_id>/delete/",
+        prep_item_delete_view,
+        name="prep_item_delete",
     ),
     path(
         "custom_items/",

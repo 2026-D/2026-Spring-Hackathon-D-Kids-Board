@@ -171,9 +171,12 @@
             <button type="button" class="btn btn-link p-0 m-0" @click="editMode = !editMode">
                 <img src="{% static 'images/button_icon/btn_pen_edit.png' %}" alt="やることリスト編集" class="mx-1 my-4" style="width: 100px; height: auto;">
             </button>
-            <button type="button" class="btn btn-link p-0 m-0" href="#" x-show.important="!editMode" x-cloak>
-                <img src="{% static 'images/button_icon/btn_trash.png' %}" alt="やることリスト削除" class="mx-1 my-4" style="width: 100px; height: auto;">
-            </button>
+            <form method="post" action="{% url 'prep_item_delete' prep_item.id %}" class="p-0 m-0" x-show.important="!editMode" x-cloak>
+                {% csrf_token %}
+                <button type="submit" class="btn btn-link p-0 m-0">
+                    <img src="{% static 'images/button_icon/btn_trash.png' %}" alt="やることリスト削除" class="mx-1 my-4" style="width: 100px; height: auto;">
+                </button>
+            </form>
         </div>
         <!--ボタン(編集モード時)-->
         <!--保存ボタンは、POST成功後に表示モードへ切り替える形へ後日修正-->
