@@ -74,7 +74,7 @@ def child_create_view(request):  # 子ども追加処理
             child = form.save(commit=False)  # Childデータを作る、しかしDBには保存はしない
             child.parent = request.user  # ログインしているユーザーを、子どもの親として設定
             child.save()  # childrenテーブルに保存
-            return redirect("home")  # home画面へ遷移
+            return redirect("settings")  # settings画面へ遷移
 
         # こども追加に失敗した時は、再度子ども情報とフォームを渡してsettings.htmlを表示する
         children = Child.objects.filter(
@@ -121,7 +121,7 @@ def child_delete_view(request, child_id):  # ログインしている人だけ�
 
         child.save()  # 変更をDBに保存
 
-    return redirect("home")  # 削除後にhome画面へ戻る
+    return redirect("settings")  # 削除後にsettings画面へ戻る
 
 
 @login_required
