@@ -15,7 +15,18 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
+     overflow: visible;
+    position: relative;
+}
+
+.prep-card .completion-badge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -45%);
+    width: 78%;
+    height: 90%;
+    z-index: 10;
 }
 </style>
 {% endblock %}
@@ -68,6 +79,10 @@
                         {% if prep_item.prep_icon %}
                         <img src="{% static prep_item.prep_icon %}" alt="{{ prep_item.item_name }}" class="mx-auto w-35 h-auto">
                         {% endif %}
+                        {% if show_badge %}
+                        <!-- 完了ロゴマーク（中央に配置） -->
+                        <img src="{% static 'images/i_did_it.png' %}" alt="完了" class="completion-badge">
+                        {% endif %}   
                     </button>
                 </div>
                 {% endfor %}

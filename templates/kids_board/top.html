@@ -23,6 +23,12 @@
             width: 70%;
         }
     }
+    /*始めるのボタン表示（PC)の位置を調整*/
+    @media (min-width: 992px) {
+    .pc-only-padding {
+        padding: 0 0 0 40rem;
+        }
+    }
 </style> 
 {% endblock %}
 {% block content %}
@@ -49,7 +55,7 @@
         <span class="visually-hidden">Next</span>
     </button>
 </div>
-<div class="">
-    <button type="button" class="btn btn-outline-primary btn-lg d-block mx-auto mt-4" onclick="location.href='{% url 'signup' %}'">はじめる</button>
+<div class="pc-only-padding d-none d-md-flex flex-row justify-content-center align-items-center mt-md-5">
+    <button type="button" class="btn btn-outline-primary btn-lg d-block mx-auto" onclick="location.href='{% url 'signup' %}'">はじめる</button>
 </div>  
 {% endblock %}
