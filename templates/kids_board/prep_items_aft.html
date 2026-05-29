@@ -15,7 +15,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-     overflow: visible;
+    overflow: visible;
     position: relative;
 }
 
@@ -64,13 +64,10 @@
 <div class="d-flex justify-content-center align-items-center">
     <div class="mx-3 p-4 shadow rounded container text-center" style="background-color: var(--teal-300);">
         <div class="row row-cols-3 row-cols-sm-5">
-            {% comment "todo:できたマークの表示の実装" %}{% endcomment %}
             {% comment "お支度名とアイコン画像がなかったら、やることリストを登録するように誘導" %}{% endcomment %}
             {% if prep_items %}
                 {% for prep_item in prep_items %}
                 <div class="col d-flex justify-content-center align-items-center">
-                    <button class="prep-card rounded shadow border-0 m-2 p-2" style="background-color: #fff;" type="button" onclick="audio()">
-
 
                     <form method="post"
                         action="{% url 'prep_item_toggle_complete' selected_child.id prep_item.id %}">
@@ -79,10 +76,11 @@
 
                         <button class="prep-card rounded shadow border-0 m-2 p-2"
                                 style="background-color: #fff;"
-                                type="submit">
+                                type="submit"
+                                onclick="audio()">
 
                             {% if prep_item.logs.first.is_completed %}
-                            <div class="mb-1 fs-3">💮</div>
+                            <img src="{% static 'images/i_did_it.png' %}" alt="完了" class="completion-badge">
                             {% endif %}
 
                             <p class="m-0">
@@ -99,23 +97,6 @@
 
                         </button>
                     </form>
-                    {% comment %} しほ：ここまで {% endcomment %}
-
-                    {% comment %} <button class="prep-card rounded shadow border-0 m-2 p-2" style="background-color: #fff;" type="button"> {% endcomment %}
-                        {% comment "お支度名とアイコン画像がなかったら、何も表示しない" %}{% endcomment %}
-                        <p class="m-0">
-                            {% if prep_item.item_name %}
-                            {{ prep_item.item_name }}
-                            {% endif %}
-                        </p>
-                        {% if prep_item.prep_icon %}
-                        <img src="{% static prep_item.prep_icon %}" alt="{{ prep_item.item_name }}" class="mx-auto w-35 h-auto">
-                        {% endif %}
-                        {% if show_badge %}
-                        <!-- 完了ロゴマーク（中央に配置） -->
-                        <img src="{% static 'images/i_did_it.png' %}" alt="完了" class="completion-badge">
-                        {% endif %}
-                    </button>
                 </div>
                 {% endfor %}
             {% else %}
@@ -126,62 +107,6 @@
                     </div>
                 </div>
             {% endif %}
-            {% comment "表示用のサンプル" %}
-            <div class="col d-flex justify-content-center align-items-center">
-                <button class="prep-card rounded shadow border-0 m-2 p-2" style="background-color: #fff;" type="button">
-                    <p class="m-0">かみをとく</p>
-                    <img src="{% static 'images/prep_item/9_hair.png' %}" alt="かみをとく" class="mx-auto w-35 h-auto">
-                </button>
-            </div>
-            <div class="col d-flex justify-content-center align-items-center">
-                <button class="prep-card rounded shadow border-0 m-2 p-2" style="background-color: #fff;" type="button">
-                    <p class="m-0">ごはん</p>
-                    <img src="{% static 'images/prep_item/12_cutlery.png' %}" alt="カトラリー" class="mx-auto w-35 h-auto">
-                </button>
-            </div>
-            <div class="col d-flex justify-content-center align-items-center">
-                <button class="prep-card rounded shadow border-0 m-2 p-2" style="background-color: #fff;" type="button">
-                    <p class="m-0">ごはん</p>
-                    <img src="{% static 'images/prep_item/12_cutlery.png' %}" alt="カトラリー" class="mx-auto w-35 h-auto">
-                </button>
-            </div>
-            <div class="col d-flex justify-content-center align-items-center">
-                <button class="prep-card rounded shadow border-0 m-2 p-2" style="background-color: #fff;" type="button">
-                    <p class="m-0">ごはん</p>
-                    <img src="{% static 'images/prep_item/12_cutlery.png' %}" alt="カトラリー" class="mx-auto w-35 h-auto">
-                </button>
-            </div>
-            <div class="col d-flex justify-content-center align-items-center">
-                <button class="prep-card rounded shadow border-0 m-2 p-2" style="background-color: #fff;" type="button">
-                    <p class="m-0">ごはん</p>
-                    <img src="{% static 'images/prep_item/12_cutlery.png' %}" alt="カトラリー" class="mx-auto w-35 h-auto">
-                </button>
-            </div>
-            <div class="col d-flex justify-content-center align-items-center">
-                <button class="prep-card rounded shadow border-0 m-2 p-2" style="background-color: #fff;" type="button">
-                    <p class="m-0">ごはん</p>
-                    <img src="{% static 'images/prep_item/12_cutlery.png' %}" alt="カトラリー" class="mx-auto w-35 h-auto">
-                </button>
-            </div>
-            <div class="col d-flex justify-content-center align-items-center">
-                <button class="prep-card rounded shadow border-0 m-2 p-2" style="background-color: #fff;" type="button">
-                    <p class="m-0">ごはん</p>
-                    <img src="{% static 'images/prep_item/12_cutlery.png' %}" alt="カトラリー" class="mx-auto w-35 h-auto">
-                </button>
-            </div>
-            <div class="col d-flex justify-content-center align-items-center">
-                <button class="prep-card rounded shadow border-0 m-2 p-2" style="background-color: #fff;" type="button">
-                    <p class="m-0">ごはん</p>
-                    <img src="{% static 'images/prep_item/12_cutlery.png' %}" alt="カトラリー" class="mx-auto w-35 h-auto">
-                </button>
-            </div>
-            <div class="col d-flex justify-content-center align-items-center">
-                <button class="prep-card rounded shadow border-0 m-2 p-2" style="background-color: #fff;" type="button">
-                    <p class="m-0">ごはん</p>
-                    <img src="{% static 'images/prep_item/12_cutlery.png' %}" alt="カトラリー" class="mx-auto w-35 h-auto">
-                </button>
-            </div>
-            {% endcomment %}
         </div>
     </div>
 </div>
