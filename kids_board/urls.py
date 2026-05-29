@@ -67,7 +67,7 @@ urlpatterns = [
     path(
         "prep_item_toggle_complete/<int:child_id>/<int:prep_item_id>",
         PrepItemToggleCompleteView.as_view(),
-        name="prep_items_nite",
+        name="prep_item_toggle_complete",
     ),
     path(
         "prep_items/",
