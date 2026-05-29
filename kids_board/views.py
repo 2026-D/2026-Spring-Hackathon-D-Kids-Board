@@ -202,9 +202,29 @@ class KidsBoardView(LoginRequiredMixin, TemplateView):
             for color in Schedule.ColorType
         ]
 
-        # 花丸を表示する場合はTrueにする。
-        # 子供のタスク達成状況などに応じてTrue/Falseを切り替える想定。
-        context["show_badge"] = False
+        if selected_child:
+            context["show_badge_morn"] = should_show_badge_by_category(
+                self.request.user,
+                selected_child.id,
+                PrepItem.CategoryType.MORNING,
+                today,
+            )
+            context["show_badge_aft"] = should_show_badge_by_category(
+                self.request.user,
+                selected_child.id,
+                PrepItem.CategoryType.AFTERNOON,
+                today,
+            )
+            context["show_badge_nite"] = should_show_badge_by_category(
+                self.request.user,
+                selected_child.id,
+                PrepItem.CategoryType.NIGHT,
+                today,
+            )
+        else:
+            context["show_badge_morn"] = False
+            context["show_badge_aft"] = False
+            context["show_badge_nite"] = False
 
         return context
 
@@ -226,6 +246,65 @@ def get_today_rule_type(target_date):
         return PrepRule.RuleType.WEEKDAY
 
     return PrepRule.RuleType.DAY_OF_WEEK
+
+
+# 花丸表示の判定ロジックを関数化
+def should_show_badge(prep_items):
+    """当日の表示対象prep_itemsがすべて完了ならTrueを返す。"""
+    items = list(prep_items)
+    if not items:
+        return False
+
+    # すべてのお支度アイテムについて、当日の子供のログが存在し、かつ完了しているかを確認
+    for prep_item in items:
+        today_logs = getattr(prep_item, "today_child_logs", None)
+        if not today_logs:
+            return False
+        if not today_logs[0].is_completed:
+            return False
+
+    return True
+
+
+def should_show_badge_by_category(user, child_id, category_type, target_date):
+    """指定カテゴリの当日表示対象prep_itemsがすべて完了ならTrueを返す。"""
+    rule_type = get_today_rule_type(target_date)
+
+    prep_item_show_rule = Q(
+        rules__rule_type=PrepRule.RuleType.SPECIFIC,
+        rules__specific_date=target_date,
+    ) | Q(
+        rules__rule_type=PrepRule.RuleType.DAY_OF_WEEK,
+        rules__day_of_week=target_date.weekday(),
+    )
+
+    if rule_type == PrepRule.RuleType.HOLIDAY:
+        prep_item_show_rule |= Q(rules__rule_type=PrepRule.RuleType.HOLIDAY)
+    elif rule_type == PrepRule.RuleType.WEEKDAY:
+        prep_item_show_rule |= Q(rules__rule_type=PrepRule.RuleType.WEEKDAY)
+
+    prep_items = (
+        PrepItem.objects.filter(
+            parent=user,
+            is_active=True,
+            category_type=category_type,
+            children__id=child_id,
+        )
+        .filter(prep_item_show_rule)
+        .prefetch_related(
+            Prefetch(
+                "logs",
+                queryset=PrepItemLog.objects.filter(
+                    child_id=child_id,
+                    target_date=target_date,
+                ),
+                to_attr="today_child_logs",
+            )
+        )
+        .distinct()
+    )
+
+    return should_show_badge(prep_items)
 
 
 # 朝のお支度項目一覧画面
