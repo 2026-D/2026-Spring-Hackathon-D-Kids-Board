@@ -79,7 +79,7 @@
                                 type="submit"
                                 onclick="audio()">
 
-                            {% if prep_item.logs.first.is_completed %}
+                            {% if prep_item.today_child_logs and prep_item.today_child_logs.0.is_completed %}
                             <img src="{% static 'images/i_did_it.png' %}" alt="完了" class="completion-badge">
                             {% endif %}
 

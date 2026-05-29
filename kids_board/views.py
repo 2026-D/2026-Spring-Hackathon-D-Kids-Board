@@ -18,7 +18,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from django.db import IntegrityError, transaction
-from django.db.models import Q
+from django.db.models import Q, Prefetch
 from datetime import date, timedelta, datetime
 import calendar
 import jpholiday
@@ -221,6 +221,17 @@ class PrepItemsMornView(LoginRequiredMixin, ListView):
             children__id=child_id,
         ).filter(prep_item_show_rule)
 
+        queryset = queryset.prefetch_related(
+            Prefetch(
+                "logs",
+                queryset=PrepItemLog.objects.filter(
+                    child_id=child_id,
+                    target_date=target_date,
+                ),
+                to_attr="today_child_logs",
+            )
+        )
+
         return queryset.distinct()  # 重複するお支度アイテムがある場合は、distinct()で重複を排除
 
     # 追加のコンテキストで今日の日付とヘッダーの子供をテンプレートに渡す
@@ -229,7 +240,12 @@ class PrepItemsMornView(LoginRequiredMixin, ListView):
         today = date.today()
         WEEKDAY_JP = ["げつ", "か", "すい", "もく", "きん", "ど", "にち"]
         child_id = self.kwargs.get("child_id")
-        selected_child = Child.objects.get(id=child_id)
+        selected_child = get_object_or_404(
+            Child,
+            id=child_id,
+            parent=self.request.user,
+            deleted_at__isnull=True,
+        )
         context["today"] = today
         context["weekday_jp"] = WEEKDAY_JP[today.weekday()]
         context["selected_child"] = selected_child
@@ -266,6 +282,17 @@ class PrepItemsAftView(LoginRequiredMixin, ListView):
             children__id=child_id,
         ).filter(prep_item_show_rule)
 
+        queryset = queryset.prefetch_related(
+            Prefetch(
+                "logs",
+                queryset=PrepItemLog.objects.filter(
+                    child_id=child_id,
+                    target_date=target_date,
+                ),
+                to_attr="today_child_logs",
+            )
+        )
+
         return queryset.distinct()
 
     def get_context_data(self, **kwargs):
@@ -273,7 +300,12 @@ class PrepItemsAftView(LoginRequiredMixin, ListView):
         child_id = self.kwargs.get("child_id")
         today = date.today()
         WEEKDAY_JP = ["げつ", "か", "すい", "もく", "きん", "ど", "にち"]
-        selected_child = Child.objects.get(id=child_id)
+        selected_child = get_object_or_404(
+            Child,
+            id=child_id,
+            parent=self.request.user,
+            deleted_at__isnull=True,
+        )
         context["today"] = today
         context["weekday_jp"] = WEEKDAY_JP[today.weekday()]
         context["selected_child"] = selected_child
@@ -310,6 +342,17 @@ class PrepItemsNiteView(LoginRequiredMixin, ListView):
             children__id=child_id,
         ).filter(prep_item_show_rule)
 
+        queryset = queryset.prefetch_related(
+            Prefetch(
+                "logs",
+                queryset=PrepItemLog.objects.filter(
+                    child_id=child_id,
+                    target_date=target_date,
+                ),
+                to_attr="today_child_logs",
+            )
+        )
+
         return queryset.distinct()
 
     def get_context_data(self, **kwargs):
@@ -317,7 +360,12 @@ class PrepItemsNiteView(LoginRequiredMixin, ListView):
         child_id = self.kwargs.get("child_id")
         today = date.today()
         WEEKDAY_JP = ["げつ", "か", "すい", "もく", "きん", "ど", "にち"]
-        selected_child = Child.objects.get(id=child_id)
+        selected_child = get_object_or_404(
+            Child,
+            id=child_id,
+            parent=self.request.user,
+            deleted_at__isnull=True,
+        )
         context["today"] = today
         context["weekday_jp"] = WEEKDAY_JP[today.weekday()]
         context["selected_child"] = selected_child
@@ -1180,11 +1228,28 @@ class PrepItemToggleCompleteView(LoginRequiredMixin, View):
         # PrepItemLogは日付ごとの履歴だから、今日のログを探すために必須
         today = date.today()
 
+        # ログイン中ユーザーの子どものみ対象にする
+        child = get_object_or_404(
+            Child,
+            id=child_id,
+            parent=request.user,
+            deleted_at__isnull=True,
+        )
+
+        # ログイン中ユーザーの項目かつ、その子どもに紐づく項目のみ対象にする
+        prep_item = get_object_or_404(
+            PrepItem,
+            id=prep_item_id,
+            parent=request.user,
+            is_active=True,
+            children=child,
+        )
+
         # DBにやることリストがあれば取得、なければその日付の空箱を作成する
         prep_item_log, _ = PrepItemLog.objects.get_or_create(
             # 子どもid,お支度項目id, 日付でログを探す
-            child_id=child_id,
-            prep_item_id=prep_item_id,
+            child=child,
+            prep_item=prep_item,
             target_date=today,
             # もしDBにログが存在しなくても空箱を新規作成する場合、最初は未完了　Falseで作成
             defaults={"is_completed": False},
