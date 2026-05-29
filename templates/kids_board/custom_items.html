@@ -41,60 +41,67 @@
 {% endblock %}
 
 {% block content %}
+{% if error_message %}
+<div class="alert alert-danger m-3" role="alert">{{ error_message }}</div>
+{% endif %}
 <!--やることリスト作成欄-->
+<form method="POST" action="{% url 'custom_items' %}">
+{% csrf_token %}
+{# 選択アイコンを JS から受け取る隠しインプット（未選択時はデフォルト） #}
+<input type="hidden" name="prep_icon" id="selected_prep_icon" value="images/prep_item/12_cutlery.png">
 <div class="m-3 p-2 p-sm-4 p-md-5 rounded shadow d-flex flex-column flex-md-row justify-content-between align-items-center" style= "background-color: var(--pink-100)">
     <!--入力欄（カスタム作成）-->
     <div class="d-flex flex-wrap flex-column justify-content-center align-items-start p-2 gap-2 order-2 order-md-1" x-show.important="editMode" x-cloak>
-        <input class="form-control form-control-lg w-50 me-4 mb-4" type="text" placeholder="タイトル" aria-label=".form-control-lg example">
+        <input class="form-control form-control-lg w-50 me-4 mb-4" type="text" name="item_name" placeholder="タイトル" aria-label=".form-control-lg example" required>
         <p class="m-0">ようびを していする</p>
         <div class="d-flex flex-wrap flex-row gap-2 align-items-start">
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" value="" id="">
-                <label class="form-check-label" for="">げつようび</label>
+                <input class="form-check-input" type="checkbox" name="weekday" value="0" id="create_day_0">
+                <label class="form-check-label" for="create_day_0">げつようび</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" value="" id="">
-                <label class="form-check-label" for="">かようび</label>
+                <input class="form-check-input" type="checkbox" name="weekday" value="1" id="create_day_1">
+                <label class="form-check-label" for="create_day_1">かようび</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" value="" id="">
-                <label class="form-check-label" for="">すいようび</label>
+                <input class="form-check-input" type="checkbox" name="weekday" value="2" id="create_day_2">
+                <label class="form-check-label" for="create_day_2">すいようび</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" value="" id="">
-                <label class="form-check-label" for="">もくようび</label>
+                <input class="form-check-input" type="checkbox" name="weekday" value="3" id="create_day_3">
+                <label class="form-check-label" for="create_day_3">もくようび</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" value="" id="">
-                <label class="form-check-label" for="">きんようび</label>
+                <input class="form-check-input" type="checkbox" name="weekday" value="4" id="create_day_4">
+                <label class="form-check-label" for="create_day_4">きんようび</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" value="" id="">
-                <label class="form-check-label" for="">どようび</label>
+                <input class="form-check-input" type="checkbox" name="weekday" value="5" id="create_day_5">
+                <label class="form-check-label" for="create_day_5">どようび</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" value="" id="">
-                <label class="form-check-label" for="">にちようび</label>
+                <input class="form-check-input" type="checkbox" name="weekday" value="6" id="create_day_6">
+                <label class="form-check-label" for="create_day_6">にちようび</label>
             </div>
         </div>
         <div class="form-check form-switch ">
-            <input class="form-check-input" type="checkbox" role="switch" id="">
-            <label class="form-check-label" for="">へいじつだけに する（しゅくじつは ふくまない）</label>
+            <input class="form-check-input" type="checkbox" role="switch" name="is_not_holiday" value="1" id="create_is_not_holiday">
+            <label class="form-check-label" for="create_is_not_holiday">へいじつだけに する（しゅくじつは ふくまない）</label>
         </div>
         <div class="d-flex flex-row flex-wrap flex-md-nowrap gap-4 align-items-center justify-content-start form-check">
-            <input class="form-check-input" type="checkbox" role="switch" 
-                    id="" >
-            <label class="form-check-label text-nowrap" 
-                    for="">ひづけを していする</label>
+            <input class="form-check-input" type="checkbox" role="switch"
+                    name="use_specific_date" value="1" id="create_use_specific_date">
+            <label class="form-check-label text-nowrap"
+                    for="create_use_specific_date">ひづけを していする</label>
             <input type="text" class="form-control js-datepicker p-0 text-center"
-                    value=""
+                    name="specific_date" value=""
                     placeholder="クリックで せんたく">
         </div>
         <p class="m-0">やるタイミング</p>
         <div class="d-flex flex-wrap flex-row gap-4 align-items-start">
             {% for category in category_type %}
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="checkbox" value="" id="checkCategory_create_{{ forloop.counter }}" {% if category.checked %}checked{% endif %}>
+                <input class="form-check-input" type="radio" name="category_type" value="{{ category.value }}" id="checkCategory_create_{{ forloop.counter }}" {% if category.checked %}checked{% endif %}>
                 <label class="form-check-label" for="checkCategory_create_{{ forloop.counter }}">{{ category.name }}</label>
             </div>
             {% endfor %}
@@ -103,7 +110,7 @@
         <div class="d-flex flex-wrap flex-row gap-4 align-items-start">
             {% for child in children %}
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="checkChild_create_{{ forloop.counter }}" {% if child.checked %}checked{% endif %}>
+                <input class="form-check-input" type="checkbox" name="child_ids" value="{{ child.id }}" id="checkChild_create_{{ forloop.counter }}" {% if child.checked %}checked{% endif %}>
                 <label class="form-check-label" for="checkChild_create_{{ forloop.counter }}">{{ child.name }}</label>
             </div>
             {% endfor %}
@@ -118,15 +125,16 @@
         </button>
         <div class="d-none d-md-flex flex-row justify-content-center align-items-center mt-md-5">
             <a class="btn btn-outline-primary mt-2 btn-lg btn-cancel" href="{% url 'prep_items' %}">キャンセル</a>
-            <button class="btn btn-primary mt-2 btn-lg">つくる</button>
+            <button type="submit" class="btn btn-primary mt-2 btn-lg">つくる</button>
         </div>
     </div>
     <!--スマホ用ボタン-->
     <div class="d-flex d-md-none flex-row justify-content-center align-items-center order-3">
         <a class="btn btn-outline-primary mt-2 btn-lg btn-cancel" href="{% url 'prep_items' %}">キャンセル</a>
-        <button class="btn btn-primary mt-2 btn-lg">つくる</button>
+        <button type="submit" class="btn btn-primary mt-2 btn-lg">つくる</button>
     </div>
 </div>
+</form>
 <!--やることリスト表示欄-->
 <div class="m-3 p-2 p-md-5 rounded shadow" style= "background-color: var(--yellow-200)">
     <div class="d-flex flex-row align-items-center">
@@ -175,16 +183,16 @@
             <div class="d-flex flex-wrap flex-row gap-4 align-items-start">
                 {% for category in prep_item.category_type %}
                 <div class="form-check" style="pointer-events: none;">
-                    <input class="form-check-input" type="checkbox" tabindex="-1" value="" id="checkCategory{{ prep_item.id }}_{{ forloop.counter }}" {% if category.checked %}checked{% endif %}>
+                    <input class="form-check-input" type="radio" name="category_type_{{ prep_item.id }}" tabindex="-1" value="{{ category.value }}" id="checkCategory{{ prep_item.id }}_{{ forloop.counter }}" {% if category.checked %}checked{% endif %}>
                     <label class="form-check-label" for="checkCategory{{ prep_item.id }}_{{ forloop.counter }}">{{ category.name }}</label>
                 </div>
                 {% endfor %}
             </div>
             <p class="m-0">こどもせんたく</p>
             <div class="d-flex flex-wrap flex-row gap-4 align-items-start">
-                {% for child in prep_item.children %}
+                {% for child in prep_item.children_options %}
                 <div class="form-check" style="pointer-events: none;">
-                    <input class="form-check-input" type="checkbox" tabindex="-1" value="" id="checkChild{{ prep_item.id }}_{{ forloop.counter }}" {% if child.checked %}checked{% endif %}>
+                    <input class="form-check-input" type="checkbox" name="children_options_{{ prep_item.id }}" tabindex="-1" value="{{ child.value }}" id="checkChild{{ prep_item.id }}_{{ forloop.counter }}" {% if child.checked %}checked{% endif %}>
                     <label class="form-check-label" for="checkChild{{ prep_item.id }}_{{ forloop.counter }}">{{ child.name }}</label>
                 </div>
                 {% endfor %}

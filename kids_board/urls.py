@@ -2,10 +2,12 @@ from django.urls import path  # URLを書くためのpathを使う
 from .views import signup_view, login_view, logout_view
 from .views import child_create_view  # 関数ベース
 from .views import child_delete_view  # 関数ベース
+from .views import prep_item_delete_view  # 関数ベース
 from .views import schedule_delete_view  # 関数ベース
 from .views import settings_view  # 関数ベース
 
 from .views import (
+    TopView,
     HomeView,
     KidsBoardView,
     PrepItemsMornView,
@@ -13,11 +15,13 @@ from .views import (
     PrepItemsNiteView,
     PrepItemsView,
     PrepItemEditView,
-    CustomItemsEditView,
+    CustomItemsView,
     NewItemsEditView,
     ScheduleView,
     ScheduleListView,
     CreateScheduleView,
+    # しほ追加：完了/未完了View
+    PrepItemToggleCompleteView,
 )
 
 
@@ -25,6 +29,7 @@ urlpatterns = [
     path("signup/", signup_view, name="signup"),  # http://localhost:8000/signup/
     path("login/", login_view, name="login"),  # login/
     path("logout/", logout_view, name="logout"),  # logout/
+    path("", TopView.as_view(), name="top"),
     # path("kids_board/",kids_board_view,name="kids_board"), # kids_board/
     path("settings/child/add/", child_create_view, name="child_create"),
     path("settings/child/<int:child_id>/delete/", child_delete_view, name="child_delete"),
@@ -39,20 +44,30 @@ urlpatterns = [
         KidsBoardView.as_view(template_name="kids_board/kids_board.html"),
         name="kids_board",
     ),
+    # 🔽朝のやることリスト一覧
     path(
         "prep_items_morn/<int:child_id>/",
         PrepItemsMornView.as_view(template_name="kids_board/prep_items_morn.html"),
         name="prep_items_morn",
     ),
+    # 🔽帰宅後のやることリスト一覧
     path(
         "prep_items_aft/<int:child_id>/",
         PrepItemsAftView.as_view(template_name="kids_board/prep_items_aft.html"),
         name="prep_items_aft",
     ),
+    # 🔽夜のやることリスト一覧
     path(
         "prep_items_nite/<int:child_id>/",
         PrepItemsNiteView.as_view(template_name="kids_board/prep_items_nite.html"),
         name="prep_items_nite",
+    ),
+    # ✅しほ追加
+    # 🔽やることリスト一覧　完了/未完了フラグ
+    path(
+        "prep_item_toggle_complete/<int:child_id>/<int:prep_item_id>",
+        PrepItemToggleCompleteView.as_view(),
+        name="prep_item_toggle_complete",
     ),
     path(
         "prep_items/",
@@ -61,12 +76,17 @@ urlpatterns = [
     ),
     path(
         "prep_items/<int:prep_item_id>/edit/",
-        PrepItemEditView.as_view(template_name="kids_board/prep_items.html"),
+        PrepItemEditView.as_view(),
         name="prep_items_edit_api",
     ),
     path(
+        "prep_items/<int:prep_item_id>/delete/",
+        prep_item_delete_view,
+        name="prep_item_delete",
+    ),
+    path(
         "custom_items/",
-        CustomItemsEditView.as_view(template_name="kids_board/custom_items.html"),
+        CustomItemsView.as_view(template_name="kids_board/custom_items.html"),
         name="custom_items",
     ),
     path(

@@ -35,12 +35,13 @@
 <div class="m-3 p=2 p-md-5 rounded shadow" style= "background-color: var(--pink-100)">
     <p class="m-3 p-2 fs-2">あたらしく つくる</p>
     <div class="d-flex flex-wrap justify-content-center align-items-center gap-4 pc-only-padding">
-        <a class="p-0 m-0" href="{% url 'new_items' %}">
+        <a class="p-0 m-0" href="{% url 'custom_items' %}">
             <img src="{% static 'images/button_icon/btn_pen.png' %}" alt="やることリスト作成" class="mx-3 mb-4" style="width: 135px; height: auto;">
         </a>
+        {% comment %} --- 実装が間に合わないためボタン表示を消す ---
         <a class="p-0 m-0" href="{% url 'custom_items' %}">
             <img src="{% static 'images/button_icon/btn_custom.png' %}" alt="カスタム作成" class="mx-3 mb-4" style="width: 135px; height: auto; ">
-        </a>
+        </a>{% endcomment %}
     </div>
 </div>
 <!--やることリスト表示欄-->
@@ -52,8 +53,9 @@
     <!-- prep_items(表示用) -->
     {% for prep_item in prep_items %}
     <div class="rounded shadow m-2 m-lg-4 p-4 pe-lg-5 d-flex flex-column flex-lg-row align-items-center justify-content-between"
+        data-prep-item-id="{{ prep_item.id }}"
         :style="editMode? 'background-color:#fff; border: 3px solid var(--cyan-400);' : 'background-color: #fff; border: 3px solid #fff;'"
-        x-data="{editMode: false}"><!--editModeがfalseは表示モード、trueは編集モード-->
+        x-data="prepItemCard({{ prep_item.id }})"><!--editModeがfalseは表示モード、trueは編集モード-->
         <!--表示モード-->
         <!--カード-->
         <div class="prep-card rounded shadow border-0 m-4 p-2" style="background-color: #fff;" type="button" x-show.important="!editMode" x-cloak>
@@ -92,75 +94,16 @@
             <div class="d-flex flex-wrap flex-row gap-4 align-items-start">
                 {% for category in prep_item.category_type %}
                 <div class="form-check" style="pointer-events: none;">
-                    <input class="form-check-input" type="checkbox" tabindex="-1" value="" id="checkCategory{{ prep_item.id }}_{{ forloop.counter }}" {% if category.checked %}checked{% endif %}>
+                    <input class="form-check-input" type="radio" tabindex="-1" value="" id="checkCategory{{ prep_item.id }}_{{ forloop.counter }}" {% if category.checked %}checked{% endif %}>
                     <label class="form-check-label" for="checkCategory{{ prep_item.id }}_{{ forloop.counter }}">{{ category.name }}</label>
                 </div>
                 {% endfor %}
             </div>
             <p class="m-0">こどもせんたく</p>
             <div class="d-flex flex-wrap flex-row gap-4 align-items-start">
-                {% for child in prep_item.children %}
+                {% for child in prep_item.children_options %}
                 <div class="form-check" style="pointer-events: none;">
                     <input class="form-check-input" type="checkbox" tabindex="-1" value="" id="checkChild{{ prep_item.id }}_{{ forloop.counter }}" {% if child.checked %}checked{% endif %}>
-                    <label class="form-check-label" for="checkChild{{ prep_item.id }}_{{ forloop.counter }}">{{ child.name }}</label>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-        <!-- 編集モード -->
-        <!-- カード -->
-        <div class="prep-card rounded shadow border-0 m-4 p-2" style="background-color: #fff;" type="button" x-show.important="editMode" x-cloak>
-            <input class="m-0" value="{{ prep_item.name }}" style="width: 75%; text-align: center;">
-            <div class="d-flex flex-row justify-content-center align-items-center m-2 gap-2">
-                <img src="{% static prep_item.prep_icon %}" class="mx-auto w-35 h-auto">
-                <button type="button" class="p-0 border-0 bg-transparent my-2" data-bs-toggle="modal" data-bs-target="#choicePrepItemIconsModal" aria-label="アイコンを編集">
-                    <img src="{% static 'images/button_icon/pencil-square.png' %}" alt="編集" style="width: 20px; height: auto;">
-                </button>
-            </div>
-        </div>
-        <!--入力欄-->
-        <div class="d-flex flex-column justify-content-center align-items-start gap-2" x-show.important="editMode" x-cloak>
-            <p class="m-0">ようびを していする</p>
-            <div class="d-flex flex-wrap flex-row gap-2 align-items-start">
-                {% for day in prep_item.weekdays%}
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="checkDay{{ prep_item.id }}_{{ forloop.counter }}" {% if day.checked %}checked{% endif %}>
-                    <label class="form-check-label" for="checkDay{{ prep_item.id }}_{{ forloop.counter }}">{{ day.name }}</label>
-                </div>
-                {% endfor %}
-            </div>
-            {% for is_not_holiday in prep_item.holiday %}
-            <div class="form-check form-switch ">
-                <input class="form-check-input" type="checkbox" role="switch" id="switchCheckHoliday{{ prep_item.id }}_{{ forloop.counter }}" {% if is_not_holiday.checked %}checked{% endif %}>
-                <label class="form-check-label" for="switchCheckHoliday{{ prep_item.id }}_{{ forloop.counter }}">へいじつだけに する（しゅくじつは ふくまない）</label>
-            </div>
-            {% endfor %}
-            {% for date in prep_item.special_date %}
-            <div class="d-flex flex-row flex-wrap flex-md-nowrap gap-4 align-items-center justify-content-start form-check">
-                <input class="form-check-input" type="checkbox" role="switch" 
-                        id="switchCheckDate{{ prep_item.id }}_{{ forloop.counter }}" 
-                        {% if date.checked %}checked{% endif %}>
-                <label class="form-check-label text-nowrap" 
-                        for="switchCheckDate{{ prep_item.id }}_{{ forloop.counter }}">ひづけを していする</label>
-                <input type="text" class="form-control js-datepicker p-0 text-center"
-                        value="{{ date.value|default:'' }}"
-                        placeholder="クリックで せんたく">
-            </div>
-            {% endfor %}
-            <p class="m-0">やるタイミング</p>
-            <div class="d-flex flex-wrap flex-row gap-4 align-items-start">
-                {% for category in prep_item.category_type %}
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="checkCategory{{ prep_item.id }}_{{ forloop.counter }}" {% if category.checked %}checked{% endif %}>
-                    <label class="form-check-label" for="checkCategory{{ prep_item.id }}_{{ forloop.counter }}">{{ category.name }}</label>
-                </div>
-                {% endfor %}
-            </div>
-            <p class="m-0">こどもせんたく</p>
-            <div class="d-flex flex-wrap flex-row gap-4 align-items-start">
-                {% for child in prep_item.children %}
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="" id="checkChild{{ prep_item.id }}_{{ forloop.counter }}" {% if child.checked %}checked{% endif %}>
                     <label class="form-check-label" for="checkChild{{ prep_item.id }}_{{ forloop.counter }}">{{ child.name }}</label>
                 </div>
                 {% endfor %}
@@ -171,20 +114,84 @@
             <button type="button" class="btn btn-link p-0 m-0" @click="editMode = !editMode">
                 <img src="{% static 'images/button_icon/btn_pen_edit.png' %}" alt="やることリスト編集" class="mx-1 my-4" style="width: 100px; height: auto;">
             </button>
-            <button type="button" class="btn btn-link p-0 m-0" href="#" x-show.important="!editMode" x-cloak>
-                <img src="{% static 'images/button_icon/btn_trash.png' %}" alt="やることリスト削除" class="mx-1 my-4" style="width: 100px; height: auto;">
-            </button>
+            <form method="post" action="{% url 'prep_item_delete' prep_item.id %}" class="p-0 m-0" x-show.important="!editMode" x-cloak>
+                {% csrf_token %}
+                <button type="submit" class="btn btn-link p-0 m-0">
+                    <img src="{% static 'images/button_icon/btn_trash.png' %}" alt="やることリスト削除" class="mx-1 my-4" style="width: 100px; height: auto;">
+                </button>
+            </form>
         </div>
-        <!--ボタン(編集モード時)-->
-        <!--保存ボタンは、POST成功後に表示モードへ切り替える形へ後日修正-->
-        <div class="d-flex flex-row justify-content-center align-items-end gap-4 align-self-end" x-show.important="editMode" x-cloak>
-            <button type="button" class="btn btn-link p-0 m-0" @click="editMode = false">
-                <img src="{% static 'images/button_icon/btn_save.png' %}" alt="やることリスト保存" class="mx-1 my-4" style="width: 100px; height: auto;">
-            </button>
-            <button type="button" class="btn btn-link p-0 m-0" href="#" x-show.important="editMode" x-cloak @click="editMode = false">
-                <img src="{% static 'images/button_icon/btn_cancel.png' %}" alt="やることリストキャンセル" class="mx-1 my-4" style="width: 100px; height: auto;">
-            </button>
-        </div>
+        <!-- 編集モード -->
+        <form method="post" action="{% url 'prep_items_edit_api' prep_item.id %}" class="d-flex flex-column flex-lg-row align-items-center justify-content-between w-100" x-show.important="editMode" x-cloak @submit.prevent="submitEdit($event)">
+            {% csrf_token %}
+            <!-- カード -->
+            <div class="prep-card rounded shadow border-0 m-4 p-2" style="background-color: #fff;" type="button">
+                <input class="m-0" name="item_name" value="{{ prep_item.name }}" style="width: 75%; text-align: center;">
+                <div class="d-flex flex-row justify-content-center align-items-center m-2 gap-2">
+                    <img src="{% static prep_item.prep_icon %}" class="mx-auto w-35 h-auto">
+                    <button type="button" class="p-0 border-0 bg-transparent my-2" data-bs-toggle="modal" data-bs-target="#choicePrepItemIconsModal" aria-label="アイコンを編集">
+                        <img src="{% static 'images/button_icon/pencil-square.png' %}" alt="編集" style="width: 20px; height: auto;">
+                    </button>
+                </div>
+            </div>
+            <!--入力欄-->
+            <div class="d-flex flex-column justify-content-center align-items-start gap-2">
+                <p class="m-0">ようびを していする</p>
+                <div class="d-flex flex-wrap flex-row gap-2 align-items-start">
+                    {% for day in prep_item.weekdays%}
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="weekday" value="{{ forloop.counter0 }}" id="editCheckDay{{ prep_item.id }}_{{ forloop.counter }}" {% if day.checked %}checked{% endif %}>
+                        <label class="form-check-label" for="editCheckDay{{ prep_item.id }}_{{ forloop.counter }}">{{ day.name }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% for is_not_holiday in prep_item.holiday %}
+                <div class="form-check form-switch ">
+                    <input class="form-check-input" type="checkbox" role="switch" name="is_not_holiday" value="1" id="editSwitchCheckHoliday{{ prep_item.id }}_{{ forloop.counter }}" {% if is_not_holiday.checked %}checked{% endif %}>
+                    <label class="form-check-label" for="editSwitchCheckHoliday{{ prep_item.id }}_{{ forloop.counter }}">へいじつだけに する（しゅくじつは ふくまない）</label>
+                </div>
+                {% endfor %}
+                {% for date in prep_item.special_date %}
+                <div class="d-flex flex-row flex-wrap flex-md-nowrap gap-4 align-items-center justify-content-start form-check">
+                    <input class="form-check-input" type="checkbox" role="switch" name="use_specific_date" value="1"
+                            id="editSwitchCheckDate{{ prep_item.id }}_{{ forloop.counter }}"
+                            {% if date.checked %}checked{% endif %}>
+                    <label class="form-check-label text-nowrap"
+                            for="editSwitchCheckDate{{ prep_item.id }}_{{ forloop.counter }}">ひづけを していする</label>
+                    <input type="text" name="specific_date" class="form-control js-datepicker p-0 text-center"
+                            value="{{ date.value|default:'' }}"
+                            placeholder="クリックで せんたく">
+                </div>
+                {% endfor %}
+                <p class="m-0">やるタイミング</p>
+                <div class="d-flex flex-wrap flex-row gap-4 align-items-start">
+                    {% for category in prep_item.category_type %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="category_type" value="{{ category.value }}" id="editCheckCategory{{ prep_item.id }}_{{ forloop.counter }}" {% if category.checked %}checked{% endif %}>
+                        <label class="form-check-label" for="editCheckCategory{{ prep_item.id }}_{{ forloop.counter }}">{{ category.name }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+                <p class="m-0">こどもせんたく</p>
+                <div class="d-flex flex-wrap flex-row gap-4 align-items-start">
+                    {% for child in prep_item.children_options %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="child_ids" value="{{ child.id }}" id="editCheckChild{{ prep_item.id }}_{{ forloop.counter }}" {% if child.checked %}checked{% endif %}>
+                        <label class="form-check-label" for="editCheckChild{{ prep_item.id }}_{{ forloop.counter }}">{{ child.name }}</label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <!--ボタン(編集モード時)-->
+            <div class="d-flex flex-row justify-content-center align-items-end gap-4 align-self-end">
+                <button type="submit" class="btn btn-link p-0 m-0">
+                    <img src="{% static 'images/button_icon/btn_save.png' %}" alt="やることリスト保存" class="mx-1 my-4" style="width: 100px; height: auto;">
+                </button>
+                <button type="button" class="btn btn-link p-0 m-0" @click="editMode = false">
+                    <img src="{% static 'images/button_icon/btn_cancel.png' %}" alt="やることリストキャンセル" class="mx-1 my-4" style="width: 100px; height: auto;">
+                </button>
+            </div>
+        </form>
     </div>
     {% empty %}
     <div class="rounded shadow m-2 m-lg-4 p-4 pe-lg-5 text-center" style="background-color: #fff;">
@@ -192,4 +199,48 @@
     </div>
     {% endfor %}    
 </div>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+    function prepItemCard(prepItemId) {
+        return {
+            editMode: false,
+            async submitEdit(event) {
+                const form = event.target;
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        body: new FormData(form),
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                        },
+                        credentials: 'same-origin',
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('save failed');
+                    }
+
+                    const html = await response.text();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+
+                    const selector = `[data-prep-item-id="${prepItemId}"]`;
+                    const nextCard = doc.querySelector(selector);
+                    const currentCard = this.$root;
+
+                    if (nextCard && currentCard) {
+                        currentCard.replaceWith(nextCard);
+                    } else {
+                        window.location.reload();
+                    }
+                } catch (error) {
+                    form.submit();
+                }
+            },
+        };
+    }
+</script>
 {% endblock %}
