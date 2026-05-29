@@ -20,6 +20,8 @@ from .views import (
     ScheduleView,
     ScheduleListView,
     CreateScheduleView,
+    # しほ追加：完了/未完了View
+    PrepItemToggleCompleteView,
 )
 
 
@@ -42,19 +44,29 @@ urlpatterns = [
         KidsBoardView.as_view(template_name="kids_board/kids_board.html"),
         name="kids_board",
     ),
+    # 🔽朝のやることリスト一覧
     path(
         "prep_items_morn/<int:child_id>/",
         PrepItemsMornView.as_view(template_name="kids_board/prep_items_morn.html"),
         name="prep_items_morn",
     ),
+    # 🔽帰宅後のやることリスト一覧
     path(
         "prep_items_aft/<int:child_id>/",
         PrepItemsAftView.as_view(template_name="kids_board/prep_items_aft.html"),
         name="prep_items_aft",
     ),
+    # 🔽夜のやることリスト一覧
     path(
         "prep_items_nite/<int:child_id>/",
         PrepItemsNiteView.as_view(template_name="kids_board/prep_items_nite.html"),
+        name="prep_items_nite",
+    ),
+    # ✅しほ追加
+    # 🔽やることリスト一覧　完了/未完了フラグ
+    path(
+        "prep_item_toggle_complete/<int:child_id>/<int:prep_item_id>",
+        PrepItemToggleCompleteView.as_view(),
         name="prep_items_nite",
     ),
     path(

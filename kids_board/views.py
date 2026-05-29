@@ -12,7 +12,7 @@ from .forms import (
 )  # forms.pyからSignUpForm, LoginFormを読み込む
 from django.views.generic import TemplateView, ListView, CreateView, View
 from django.urls import reverse_lazy
-from .models import Child, PrepRule, Schedule, PrepItem
+from .models import Child, PrepRule, Schedule, PrepItem, PrepItemLog
 from django.contrib.auth.mixins import LoginRequiredMixin  # ログイン必須のクラスを読み込む
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
@@ -186,6 +186,7 @@ def get_today_rule_type(target_date):
     return PrepRule.RuleType.DAY_OF_WEEK
 
 
+# 朝のお支度項目一覧画面
 class PrepItemsMornView(LoginRequiredMixin, ListView):
     template_name = "kids_board/prep_items_morn.html"
     model = PrepItem
@@ -1166,3 +1167,38 @@ def schedule_delete_view(request, child_id, schedule_id):
 
 class SettingsView(LoginRequiredMixin, TemplateView):
     template_name = "kids_board/settings.html"
+
+
+# ✅しほ追加：その日のやることリストの 完了/未完了 切り替え用ビュー
+class PrepItemToggleCompleteView(LoginRequiredMixin, View):
+    # POSTリクエスト
+    # child_id:どのfamilyの子供か
+    # prep_item_id:どのお支度項目か
+    def post(self, request, child_id, prep_item_id):
+
+        # 今日の日付を取得
+        # PrepItemLogは日付ごとの履歴だから、今日のログを探すために必須
+        today = date.today()
+
+        # DBにやることリストがあれば取得、なければその日付の空箱を作成する
+        prep_item_log, _ = PrepItemLog.objects.get_or_create(
+            # 子どもid,お支度項目id, 日付でログを探す
+            child_id=child_id,
+            prep_item_id=prep_item_id,
+            target_date=today,
+            # もしDBにログが存在しなくても空箱を新規作成する場合、最初は未完了　Falseで作成
+            defaults={"is_completed": False},
+        )
+
+        # フラグのトグル
+        # 未完了FalseならTrue/完了TrueならFalseに戻す
+        prep_item_log.is_completed = not prep_item_log.is_completed
+
+        # 変更した完了状態をDBに保存
+        prep_item_log.save()
+
+        # トグルを変更した際に元いた画面に戻る(表示させていたやることリスト一覧)
+        # get():METAの中からHTTP_REFERERを取得(HTTP_REFERER：元いた画面URL)
+        # もし元画面URLが取れないときはhomeに戻る
+        # request.META：ブラウザから送られてくるURl情報が入ってる箱
+        return redirect(request.META.get("HTTP_REFERER", "home"))

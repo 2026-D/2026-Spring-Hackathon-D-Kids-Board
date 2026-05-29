@@ -59,6 +59,38 @@
                 {% for prep_item in prep_items %}
                 <div class="col d-flex justify-content-center align-items-center">
                     <button class="prep-card rounded shadow border-0 m-2 p-2" style="background-color: #fff;" type="button" onclick="audio()">
+
+
+                    <form method="post"
+                        action="{% url 'prep_item_toggle_complete' selected_child.id prep_item.id %}">
+
+                        {% csrf_token %}
+
+                        <button class="prep-card rounded shadow border-0 m-2 p-2"
+                                style="background-color: #fff;"
+                                type="submit">
+
+                            {% if prep_item.logs.first.is_completed %}
+                            <div class="mb-1 fs-3">💮</div>
+                            {% endif %}
+
+                            <p class="m-0">
+                                {% if prep_item.item_name %}
+                                {{ prep_item.item_name }}
+                                {% endif %}
+                            </p>
+
+                            {% if prep_item.prep_icon %}
+                            <img src="{% static prep_item.prep_icon %}"
+                                alt="{{ prep_item.item_name }}"
+                                class="mx-auto w-35 h-auto">
+                            {% endif %}
+
+                        </button>
+                    </form>
+                    {% comment %} しほ：ここまで {% endcomment %}
+
+                    {% comment %} <button class="prep-card rounded shadow border-0 m-2 p-2" style="background-color: #fff;" type="button"> {% endcomment %}
                         {% comment "お支度名とアイコン画像がなかったら、何も表示しない" %}{% endcomment %}
                         <p class="m-0">
                             {% if prep_item.item_name %}
