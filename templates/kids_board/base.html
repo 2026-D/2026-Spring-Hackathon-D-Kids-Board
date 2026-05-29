@@ -356,9 +356,21 @@
         {% block content %}{% endblock %}
     </main>
     {% if request.resolver_match.url_name != 'home' and request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'signup' and request.resolver_match.url_name != 'top' %}
-        <a class="px-4 my-3" href="javascript:history.back()">
-            <img src="{% static 'images/button_icon/btn_back.png' %}" alt="もどる" width="75rem" height="auto">
-        </a>
+        {% if request.resolver_match.url_name == 'prep_items_morn' or request.resolver_match.url_name == 'prep_items_aft' or request.resolver_match.url_name == 'prep_items_nite' %}
+            {% if selected_child %}
+                <a class="px-4 my-3" href="{% url 'kids_board' selected_child.id %}">
+                    <img src="{% static 'images/button_icon/btn_back.png' %}" alt="もどる" width="75rem" height="auto">
+                </a>
+            {% else %}
+                <a class="px-4 my-3" href="javascript:history.back()">
+                    <img src="{% static 'images/button_icon/btn_back.png' %}" alt="もどる" width="75rem" height="auto">
+                </a>
+            {% endif %}
+        {% else %}
+            <a class="px-4 my-3" href="javascript:history.back()">
+                <img src="{% static 'images/button_icon/btn_back.png' %}" alt="もどる" width="75rem" height="auto">
+            </a>
+        {% endif %}
     {% endif %}
     <footer>
         <p>&copy; 2026 Kids-Board App</p>
@@ -376,6 +388,13 @@
 
 
     <script>
+        // 戻る操作でBFCacheから復元された場合は再読込して最新の表示状態にする
+        window.addEventListener("pageshow", function (event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
+
         // jQuery UI Datepickerの初期化設定
         $(function () {
             $(".js-datepicker").datepicker({

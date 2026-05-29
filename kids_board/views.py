@@ -155,15 +155,77 @@ class KidsBoardView(LoginRequiredMixin, TemplateView):
         children = Child.objects.filter(parent=self.request.user, deleted_at__isnull=True)
         child_id = self.kwargs.get("child_id")
         selected_child = children.filter(id=child_id).first() if child_id else children.first()
+
+        COLOR_CSS_MAP = {
+            Schedule.ColorType.RED: "var(--red-400)",
+            Schedule.ColorType.YELLOW: "var(--yellow-200)",
+            Schedule.ColorType.GREEN: "var(--green-300)",
+            Schedule.ColorType.EMERALD_GREEN: "var(--teal-400)",
+            Schedule.ColorType.SKY_BLUE: "var(--cyan-300)",
+            Schedule.ColorType.BLUE: "var(--blue-400)",
+            Schedule.ColorType.PURPLE: "var(--indigo-300)",
+            Schedule.ColorType.PINK: "var(--pink-300)",
+            Schedule.ColorType.ORANGE: "var(--orange-300)",
+            Schedule.ColorType.WHITE: "var(--gray-100)",
+        }
+
+        # スケジュール表示用のデータを作成
         today = date.today()
+        if selected_child:
+            schedules = Schedule.objects.filter(
+                child=selected_child,
+                schedule_date=today,
+            ).order_by("start_time")  # スケジュールを開始時間順に並べる
+
+            # 色情報をCSSに変換してコンテキストに追加
+            schedules_with_color = [
+                {
+                    "title": schedule.title,
+                    "color": COLOR_CSS_MAP.get(schedule.color, "var(--gray-100)"),
+                }
+                for schedule in schedules
+            ]
+            context["schedules"] = schedules_with_color
+        else:
+            context["schedules"] = []
         WEEKDAY_JP = ["げつ", "か", "すい", "もく", "きん", "ど", "にち"]
         context["children"] = children
         context["selected_child"] = selected_child
         context["today"] = today
         context["weekday_jp"] = WEEKDAY_JP[today.weekday()]
-        # 花丸を表示する場合はTrueにする。
-        # 子供のタスク達成状況などに応じてTrue/Falseを切り替える想定。
-        context["show_badge"] = False
+        context["schedule_color_choices"] = [
+            {
+                "value": color.value,
+                "label": color.label,
+                "css": COLOR_CSS_MAP[color],
+            }
+            for color in Schedule.ColorType
+        ]
+
+        if selected_child:
+            context["show_badge_morn"] = should_show_badge_by_category(
+                self.request.user,
+                selected_child.id,
+                PrepItem.CategoryType.MORNING,
+                today,
+            )
+            context["show_badge_aft"] = should_show_badge_by_category(
+                self.request.user,
+                selected_child.id,
+                PrepItem.CategoryType.AFTERNOON,
+                today,
+            )
+            context["show_badge_nite"] = should_show_badge_by_category(
+                self.request.user,
+                selected_child.id,
+                PrepItem.CategoryType.NIGHT,
+                today,
+            )
+        else:
+            context["show_badge_morn"] = False
+            context["show_badge_aft"] = False
+            context["show_badge_nite"] = False
+
         return context
 
 
@@ -184,6 +246,65 @@ def get_today_rule_type(target_date):
         return PrepRule.RuleType.WEEKDAY
 
     return PrepRule.RuleType.DAY_OF_WEEK
+
+
+# 花丸表示の判定ロジックを関数化
+def should_show_badge(prep_items):
+    """当日の表示対象prep_itemsがすべて完了ならTrueを返す。"""
+    items = list(prep_items)
+    if not items:
+        return False
+
+    # すべてのお支度アイテムについて、当日の子供のログが存在し、かつ完了しているかを確認
+    for prep_item in items:
+        today_logs = getattr(prep_item, "today_child_logs", None)
+        if not today_logs:
+            return False
+        if not today_logs[0].is_completed:
+            return False
+
+    return True
+
+
+def should_show_badge_by_category(user, child_id, category_type, target_date):
+    """指定カテゴリの当日表示対象prep_itemsがすべて完了ならTrueを返す。"""
+    rule_type = get_today_rule_type(target_date)
+
+    prep_item_show_rule = Q(
+        rules__rule_type=PrepRule.RuleType.SPECIFIC,
+        rules__specific_date=target_date,
+    ) | Q(
+        rules__rule_type=PrepRule.RuleType.DAY_OF_WEEK,
+        rules__day_of_week=target_date.weekday(),
+    )
+
+    if rule_type == PrepRule.RuleType.HOLIDAY:
+        prep_item_show_rule |= Q(rules__rule_type=PrepRule.RuleType.HOLIDAY)
+    elif rule_type == PrepRule.RuleType.WEEKDAY:
+        prep_item_show_rule |= Q(rules__rule_type=PrepRule.RuleType.WEEKDAY)
+
+    prep_items = (
+        PrepItem.objects.filter(
+            parent=user,
+            is_active=True,
+            category_type=category_type,
+            children__id=child_id,
+        )
+        .filter(prep_item_show_rule)
+        .prefetch_related(
+            Prefetch(
+                "logs",
+                queryset=PrepItemLog.objects.filter(
+                    child_id=child_id,
+                    target_date=target_date,
+                ),
+                to_attr="today_child_logs",
+            )
+        )
+        .distinct()
+    )
+
+    return should_show_badge(prep_items)
 
 
 # 朝のお支度項目一覧画面
@@ -246,9 +367,39 @@ class PrepItemsMornView(LoginRequiredMixin, ListView):
             parent=self.request.user,
             deleted_at__isnull=True,
         )
+
+        # スケジュール表示用の色マップ
+        COLOR_CSS_MAP = {
+            Schedule.ColorType.RED: "var(--red-400)",
+            Schedule.ColorType.YELLOW: "var(--yellow-200)",
+            Schedule.ColorType.GREEN: "var(--green-300)",
+            Schedule.ColorType.EMERALD_GREEN: "var(--teal-400)",
+            Schedule.ColorType.SKY_BLUE: "var(--cyan-300)",
+            Schedule.ColorType.BLUE: "var(--blue-400)",
+            Schedule.ColorType.PURPLE: "var(--indigo-300)",
+            Schedule.ColorType.PINK: "var(--pink-300)",
+            Schedule.ColorType.ORANGE: "var(--orange-300)",
+            Schedule.ColorType.WHITE: "var(--gray-100)",
+        }
+
+        # スケジュール取得・色変換
+        schedules = Schedule.objects.filter(
+            child=selected_child,
+            schedule_date=today,
+        ).order_by("start_time")
+
+        schedules_with_color = [
+            {
+                "title": schedule.title,
+                "color": COLOR_CSS_MAP.get(schedule.color, "var(--gray-100)"),
+            }
+            for schedule in schedules
+        ]
+
         context["today"] = today
         context["weekday_jp"] = WEEKDAY_JP[today.weekday()]
         context["selected_child"] = selected_child
+        context["schedules"] = schedules_with_color
         return context
 
 
@@ -306,9 +457,39 @@ class PrepItemsAftView(LoginRequiredMixin, ListView):
             parent=self.request.user,
             deleted_at__isnull=True,
         )
+
+        # スケジュール表示用の色マップ
+        COLOR_CSS_MAP = {
+            Schedule.ColorType.RED: "var(--red-400)",
+            Schedule.ColorType.YELLOW: "var(--yellow-200)",
+            Schedule.ColorType.GREEN: "var(--green-300)",
+            Schedule.ColorType.EMERALD_GREEN: "var(--teal-400)",
+            Schedule.ColorType.SKY_BLUE: "var(--cyan-300)",
+            Schedule.ColorType.BLUE: "var(--blue-400)",
+            Schedule.ColorType.PURPLE: "var(--indigo-300)",
+            Schedule.ColorType.PINK: "var(--pink-300)",
+            Schedule.ColorType.ORANGE: "var(--orange-300)",
+            Schedule.ColorType.WHITE: "var(--gray-100)",
+        }
+
+        # スケジュール取得・色変換
+        schedules = Schedule.objects.filter(
+            child=selected_child,
+            schedule_date=today,
+        ).order_by("start_time")
+
+        schedules_with_color = [
+            {
+                "title": schedule.title,
+                "color": COLOR_CSS_MAP.get(schedule.color, "var(--gray-100)"),
+            }
+            for schedule in schedules
+        ]
+
         context["today"] = today
         context["weekday_jp"] = WEEKDAY_JP[today.weekday()]
         context["selected_child"] = selected_child
+        context["schedules"] = schedules_with_color
         return context
 
 
@@ -366,6 +547,35 @@ class PrepItemsNiteView(LoginRequiredMixin, ListView):
             parent=self.request.user,
             deleted_at__isnull=True,
         )
+
+        # スケジュール表示用の色マップ
+        COLOR_CSS_MAP = {
+            Schedule.ColorType.RED: "var(--red-400)",
+            Schedule.ColorType.YELLOW: "var(--yellow-200)",
+            Schedule.ColorType.GREEN: "var(--green-300)",
+            Schedule.ColorType.EMERALD_GREEN: "var(--teal-400)",
+            Schedule.ColorType.SKY_BLUE: "var(--cyan-300)",
+            Schedule.ColorType.BLUE: "var(--blue-400)",
+            Schedule.ColorType.PURPLE: "var(--indigo-300)",
+            Schedule.ColorType.PINK: "var(--pink-300)",
+            Schedule.ColorType.ORANGE: "var(--orange-300)",
+            Schedule.ColorType.WHITE: "var(--gray-100)",
+        }
+
+        # スケジュール取得・色変換
+        schedules = Schedule.objects.filter(
+            child=selected_child,
+            schedule_date=today,
+        ).order_by("start_time")
+
+        schedules_with_color = [
+            {
+                "title": schedule.title,
+                "color": COLOR_CSS_MAP.get(schedule.color, "var(--gray-100)"),
+            }
+            for schedule in schedules
+        ]
+        context["schedules"] = schedules_with_color
         context["today"] = today
         context["weekday_jp"] = WEEKDAY_JP[today.weekday()]
         context["selected_child"] = selected_child

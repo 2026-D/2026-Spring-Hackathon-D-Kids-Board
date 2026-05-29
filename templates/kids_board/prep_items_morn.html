@@ -55,18 +55,17 @@
     <div class="d-flex flex-column justify-content-center align-items-center">
         <p class="fs-3 m-3">きょうの よてい</p>
         <div class="d-flex flex-row justify-content-center align-items-center gap-4">
-            {% comment "予定変数受け取り" %}
             {% if schedules %}
+            <div class="d-flex flex-row justify-content-center align-items-center gap-4">
                 {% for schedule in schedules %}
-                <p class="fs-2 fw-bold m-0 px-3 rounded" style="background-color: {{ schedule.bg_color }};">
-                {{ schedule.label }}
+                <p class="fs-2 fw-bold m-0 px-3 rounded" style="background-color: {{ schedule.color }};">
+                {{ schedule.title }}
                 </p>
                 {% endfor %}
+            </div>
             {% else %}
-                <p class="fs-5">なし</p>
-            {% endif %}{% endcomment %}
-            <p class="fs-2 fw-bold m-0 px-3 rounded" style="background-color: var(--cyan-400);"> がっこう </p>
-            <p class="fs-2 fw-bold m-0 px-3 rounded" style="background-color: var(--pink-200);"> ルーム </p>
+            <p class="fs-4 m-0">なし</p>
+            {% endif %}
         </div>
     </div>
 </div>
